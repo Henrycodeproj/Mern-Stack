@@ -5,7 +5,7 @@ import cors from 'cors';
 const app = express()
 app.use(cors())
 
-const DB_URL = 'mongodb+srv://admin:Creation101@cluster0.dlurz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const DB_URL = 'mongodb+srv://admin:<password>@cluster0.dlurz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
 const PORT = process.env.PORT || 3001
 
