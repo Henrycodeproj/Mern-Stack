@@ -6,6 +6,6 @@ const UserSchema = new mongoose.Schema({
     email: String,
 })
 
-const UserModel = mongoose.model("Users",UserSchema)
+const UserModel = mongoose.model("Users", UserSchema)
 
-module.exports = UserModel
+export default UserModel

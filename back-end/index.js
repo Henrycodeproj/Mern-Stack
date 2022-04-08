@@ -1,11 +1,19 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import dotenv from 'dotenv'
+import UserModel from './Models/Users.js';
+
 
 const app = express()
-app.use(cors())
 
-const DB_URL = 'mongodb+srv://admin:Creation101@cluster0.dlurz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+app.use(cors());
+app.use(express.json());
+dotenv.config()
+
+const password = process.env.password
+
+const DB_URL = `mongodb+srv://admin:${password}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
 
 const PORT = process.env.PORT || 3001
 
@@ -15,6 +23,16 @@ mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 
 app.get("/", (req,res) => {
     res.send('HOMEPAGE')
+})
+
+app.get("/api", (req,res) => {
+    UserModel.find({name:"test"}, (error, result) => {
+        if (error){
+            console.log(error)
+        } else{
+            res.json(result)
+        }
+    })
 })
 
 app.listen(PORT, () => {
