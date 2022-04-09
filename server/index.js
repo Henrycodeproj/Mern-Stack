@@ -29,10 +29,14 @@ app.get("/api", (req,res) => {
     UserModel.find({name:"test"}, (error, result) => {
         if (error){
             console.log(error)
-        } else{
+        } else {
             res.json(result)
         }
     })
+})
+
+app.post("/createUser", (req,res) => {
+    console.log(req.body)
 })
 
 app.listen(PORT, () => {
