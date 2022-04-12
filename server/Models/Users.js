@@ -1,10 +1,14 @@
-    import mongoose from "mongoose";
+import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-    username:String,
+    username:{
+        type:String,
+        required:true,
+        unique:true
+    },
     password:String,
-    email: String,
-})
+    email: String
+}, {timestamps:true})
 
 const UserModel = mongoose.model("Users", UserSchema)
 

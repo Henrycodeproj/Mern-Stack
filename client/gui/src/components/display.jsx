@@ -11,6 +11,7 @@ export const Display = () =>{
     .then(res => setPeople(res.data))
     },[])
 
+    console.log(peoples)
 
     return (
         <div>
