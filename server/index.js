@@ -26,7 +26,7 @@ app.get("/", (req,res) => {
 })
 
 app.get("/api", (req,res) => {
-    UserModel.find({username:"ass"}, (error, result) => {
+    UserModel.find({}, (error, result) => {
         if (error){
             console.log(error)
         } else {
@@ -36,14 +36,22 @@ app.get("/api", (req,res) => {
 })
 
 app.post("/createUser", (req,res) => {
-    try{
-        const data = req.body
-        const newUser = new UserModel(data)
-        newUser.save() 
-        console.log(newUser)
-    } catch (error) {
-        console.log(error)
-    }
+    const data = req.body
+    UserModel.find({ username:'henry' }, (error, result)=>{
+        if (error){
+            return error
+        } else {
+            return result
+        }
+    try {
+            const newUser = new UserModel(data)
+            newUser.save()
+            res.status(200).send(data)
+        } catch(error) {
+            console.log(error)
+            res.status(400).send(error)
+        }
+    })
 })
 
 app.listen(PORT, () => {
