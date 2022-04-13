@@ -35,21 +35,20 @@ app.get("/api", (req,res) => {
     })
 })
 
-app.post("/createUser", (req,res) => {
+app.post("/createUser", async (req,res) => {
     const data = req.body
-    UserModel.find({ username:'henry' }, (error, result)=>{
-        if (error){
-            return error
-        } else {
-            return result
-        }
-    try {
-            const newUser = new UserModel(data)
-            newUser.save()
-            res.status(200).send(data)
-        } catch(error) {
-            console.log(error)
-            res.status(400).send(error)
+    const newUser = new UserModel(data)
+
+    await newUser.save().then(response =>{
+        res.status(201).send(response)
+
+    }).catch (error => {
+        if (error.keyValue.username && error.code === 11000){
+            console.log(error.keyValue.username)
+            res.status(406).send(`${error.keyValue.username} is unavailable`)
+        } else if (error.keyValue.email && error.code === 11000){
+            console.log(error.keyValue.email)
+            res.status(406).send(`${error.keyValue.email} is already taken.`);
         }
     })
 })

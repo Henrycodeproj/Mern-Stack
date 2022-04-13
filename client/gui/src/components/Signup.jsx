@@ -1,5 +1,6 @@
-import { useState} from 'react'
+import {useState} from 'react'
 import axios from 'axios'
+import Alert from '@mui/material/Alert';
 
 export const Signup = () =>{
 
@@ -11,18 +12,23 @@ export const Signup = () =>{
     })
 
     const [formErrors, setformErrors] = useState({})
+    const[serverError, setServerError] = useState('')
+    const[createdAccount, setCreatedAccount] = useState(false)
 
     const submitHandler = async (e) => {
         e.preventDefault()
         if (formValidate(newUser)){
-        await axios.post('http://localhost:3001/createUser', newUser)
+          await axios.post('http://localhost:3001/createUser', newUser)
         .then(response => {
-            console.log(response)
+          if (response.status === 201){
+            setCreatedAccount(true)
+          }
         })
-        .catch(error => console.log(error)) 
-        } else{
-          console.log('There was an error with your form')
-        }
+        .catch(error =>{
+          console.log(Object.getOwnPropertyNames(error))
+          setServerError(error.response.data)
+        }) 
+      }
     }
     // adds input values into newUser hook
     const handleForm = (e) =>{
@@ -59,6 +65,8 @@ export const Signup = () =>{
 
     return (
         <form className='signup' onSubmit={submitHandler}>
+          {serverError && <Alert variant="filled" severity="warning">{serverError}</Alert>}
+          {createdAccount && <Alert severity="success">You have successfully created your account</Alert>}
             <label>Username</label>
                 <input name = "username" 
                   value = {newUser.username} 
