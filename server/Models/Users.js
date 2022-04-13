@@ -7,7 +7,11 @@ const UserSchema = new mongoose.Schema({
         unique:true
     },
     password:String,
-    email: String
+    email: {
+        type:String,
+        required:true,
+        unique:true
+    }
 }, {timestamps:true})
 
 const UserModel = mongoose.model("Users", UserSchema)
