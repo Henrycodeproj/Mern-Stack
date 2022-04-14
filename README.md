@@ -6,7 +6,7 @@
  
  **GOAL: I want to connect students and foster face to face interactions with their own campus body because college loneliness is a real problem.**
 
-**Libararies:**
+**Libararies:**\
 Express\
 NodeJS\
 Material UI\
