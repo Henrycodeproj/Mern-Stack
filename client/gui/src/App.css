@@ -14,13 +14,16 @@ body {
   align-items: center;
   height:100vh !important;
   width:100vw !important; */
+  box-sizing: border-box;
+}
+h1{
+  margin:0;
 }
 p{
   margin:0;
   padding:0;
   color:red;
 }
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -28,4 +31,71 @@ code {
 .signup{
   display:flex;
   flex-direction: column;
+  justify-content: space-evenly;
+  height:inherit;
+  width: inherit;
+}
+nav{
+  display:flex;
+  justify-content: space-around;
+  align-items: center;
+  height:5vh;
+  background:pink;
+}
+.list-container{
+  display:flex;
+  padding:0;
+  margin:0;
+  list-style: none;
+}
+
+li{
+  padding-right: 25px;
+}
+main{
+  display:flex;
+  height:75vh;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.signup-container{
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  background: rgb(228, 227, 227);
+  width:400px;
+  max-height: fit-content;
+  padding:30px;
+  border-style: solid;
+  border-radius: 5px;
+}
+img{
+  max-width: 100%;
+}
+input{
+  height:25px;
+}
+.logo{
+  color:orange;
+  font-weight: bolder;
+  font-size: xx-large;
+}
+label{
+  display:flex;
+  flex-direction: column;
+  margin: 13px 0px;
+}
+.signup-submit-button{
+  margin-top:30px !important;
+}
+.du {
+  border-style: solid;
+}
+.test{
+  position: absolute;
+}
+.signup-title{
+  padding-bottom:10px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(180, 180, 180);
 }
