@@ -7,9 +7,9 @@
  **GOAL: I want to connect students and foster face to face interactions with their own campus body because college loneliness is a real problem.**
 
 **Libararies:**\
-Express\
-NodeJS\
-Material UI\
-Mongodb\
-Mongoose\
-React JS
+-Express\
+-NodeJS\
+-Material UI\
+-Mongodb\
+-Mongoose\
+-React JS
