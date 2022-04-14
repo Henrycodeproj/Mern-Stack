@@ -14,7 +14,7 @@ export const Display = () =>{
     console.log(peoples)
 
     return (
-        <div>
+        <div className='du'>
             {peoples.map((people) => <h1>{people.email}</h1>)}
         </div>
     )

@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import axios from 'axios'
-import Alert from '@mui/material/Alert';
+import {Button, Alert} from '@mui/material/';
+
 
 export const Signup = () =>{
 
@@ -17,6 +18,7 @@ export const Signup = () =>{
 
     const submitHandler = async (e) => {
         e.preventDefault()
+        //axios to send information
         if (formValidate(newUser)){
           await axios.post('http://localhost:3001/createUser', newUser)
         .then(response => {
@@ -25,17 +27,18 @@ export const Signup = () =>{
           }
         })
         .catch(error =>{
-          console.log(Object.getOwnPropertyNames(error))
           setServerError(error.response.data)
         }) 
       }
     }
+
     // adds input values into newUser hook
     const handleForm = (e) =>{
       const {name,value} = e.target
       setnewUser({...newUser, [name]:value});
     }
 
+    //if no errors, submit handler code will pass because of truthy value
     const errorChecker = (errors) =>{
       if (Object.keys(errors).length === 0){
         return true
@@ -44,13 +47,14 @@ export const Signup = () =>{
       }
     }
 
+    //checks for any empty field and if field input is valid
     const formValidate = (values) => {
       const errors = {};
       if (values.password !== values.ConfirmPassword){
          errors.ConfirmPassword = "Passwords do not match";
       }
       if (!values.password){
-         errors.password = 'password field is empty'
+         errors.password = 'Password field is empty'
       }
       if (!values.ConfirmPassword){
         errors.Confirmpassword = 'Input your password again'
@@ -58,45 +62,60 @@ export const Signup = () =>{
       if (!values.username){
         errors.username = 'Username is required'
       }
+      if (!values.email){
+        errors.email = 'Email is empty'
+      }
       setformErrors(errors)
 
       return errorChecker(errors)
     }
 
     return (
+      <div>
+        {serverError && <Alert variant="filled" severity="warning" onClose = {()=> setServerError('')}>{serverError}</Alert>}
+        {createdAccount && <Alert severity="success" onClose={()=>setCreatedAccount(false)}>You have successfully created your account!</Alert>}
+        <h1 className='signup-title'>Sign Up</h1>
         <form className='signup' onSubmit={submitHandler}>
-          {serverError && <Alert variant="filled" severity="warning">{serverError}</Alert>}
-          {createdAccount && <Alert severity="success">You have successfully created your account</Alert>}
-            <label>Username</label>
+            <label>
+              Username
                 <input name = "username" 
                   value = {newUser.username} 
                   onChange={handleForm}
                 />
-            <p>{formErrors.username}</p>
-            <label>Password</label>
+                <p>{formErrors.username}</p>
+            </label>
+            <label>
+              Password
                 <input 
                   name = "password" 
                   type = "password"  
                   value = {newUser.password} 
                   onChange={handleForm}
                 />
-            <p>{formErrors.password}</p>
-            <label>Confirm Password</label>
+                <p>{formErrors.password}</p>
+            </label>
+            <label>
+              Confirm Password
                 <input 
                   name = "ConfirmPassword" 
                   type = "password" 
                   value = {newUser.ConfirmPassword} 
                   onChange={handleForm}
                 />
-            <p>{formErrors.ConfirmPassword}</p>
-            <label>Email</label>
-                <input 
+                <p>{formErrors.ConfirmPassword}</p>
+            </label>
+            <label>
+              Email
+                <input
+                  type = "email" 
                   name = "email" 
                   value = {newUser.email} 
                   onChange = {handleForm}
                 />
-            <p>{formErrors.email}</p>
-            <button type='submit'>submit</button>
+                <p>{formErrors.email}</p>
+            </label>
+            <Button variant="contained" color='warning' type='submit' className='signup-submit-button'>Contained</Button>
         </form>
+      </div>
     )
 }

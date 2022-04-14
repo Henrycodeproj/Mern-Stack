@@ -45,10 +45,10 @@ app.post("/createUser", async (req,res) => {
     }).catch (error => {
         if (error.keyValue.username && error.code === 11000){
             console.log(error.keyValue.username)
-            res.status(406).send(`${error.keyValue.username} is unavailable`)
+            res.status(406).send(`This username ${error.keyValue.username} is already taken`)
         } else if (error.keyValue.email && error.code === 11000){
             console.log(error.keyValue.email)
-            res.status(406).send(`${error.keyValue.email} is already taken.`);
+            res.status(406).send(`This email ${error.keyValue.email} has already been signed up.`);
         }
     })
 })
