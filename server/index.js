@@ -44,7 +44,6 @@ app.post("/createUser", async (req,res) => {
 
     }).catch (error => {
         if (error.keyValue.username && error.code === 11000){
-            console.log(error.keyValue.username)
             res.status(406).send(`This username ${error.keyValue.username} is already taken`)
         } else if (error.keyValue.email && error.code === 11000){
             console.log(error.keyValue.email)

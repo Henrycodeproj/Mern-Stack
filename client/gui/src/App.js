@@ -1,8 +1,8 @@
 import './App.css';
 import  { Signup } from './components/signup/Signup';
 import { Display } from './components/display';
-import {Navbar} from './components/navigation/navbar'
-import {SideImage} from './components/signup/SideImage'
+import { Navbar } from './components/navigation/navbar'
+import { SideImage } from './components/signup/SideImage'
 
 function App() {
 

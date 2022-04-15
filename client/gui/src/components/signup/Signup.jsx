@@ -1,6 +1,6 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import axios from 'axios'
-import {Button, Alert} from '@mui/material/';
+import { Button, Alert } from '@mui/material/';
 
 
 export const Signup = () =>{
@@ -8,13 +8,18 @@ export const Signup = () =>{
     const [newUser,setnewUser] = useState({
       username:'',
       password:'',
-      ConfirmPassword:'',
+      Confirm:'',
       email:''
     })
-
+    
+    //state errors and account hook
     const [formErrors, setformErrors] = useState({})
     const[serverError, setServerError] = useState('')
     const[createdAccount, setCreatedAccount] = useState(false)
+
+    //states for password requirements
+    const [requirements, setRequirements] = useState({uppercase:'black', numbers:'black'})
+    const[confirm, setConfirm] = useState('')
 
     const submitHandler = async (e) => {
         e.preventDefault()
@@ -35,6 +40,7 @@ export const Signup = () =>{
     // adds input values into newUser hook
     const handleForm = (e) =>{
       const {name,value} = e.target
+      passwordRequirements(name,value)
       setnewUser({...newUser, [name]:value});
     }
 
@@ -47,22 +53,42 @@ export const Signup = () =>{
       }
     }
 
-    //checks for any empty field and if field input is valid
-    const formValidate = (values) => {
-      const errors = {};
-      if (values.password !== values.ConfirmPassword){
-         errors.ConfirmPassword = "Passwords do not match";
+    const passwordRequirements = (name, testCase) =>{
+      const email = /edu/;
+      const numbers = /[0-9]/;
+      const uppercase = /[A-Z]/;
+      let data = {}
+
+      if (numbers.test(testCase) && name === 'password'){
+        data = {...requirements, numbers:'green'}
       }
-      if (!values.password){
+      if(uppercase.test(testCase) && name === 'password'){
+        data = {...requirements, uppercase:'green'}
+      }
+      if(!testCase){
+        data = {uppercase:'black', numbers:'black'}
+      }
+
+      console.log(data)
+      setRequirements(data)
+    }
+
+    //checks for any empty field and if field input is valid
+    const formValidate = (inputValues) => {
+      const errors = {};
+      if (inputValues.password !== confirm){
+         errors.Confirm = "Passwords do not match";
+      }
+      if (!inputValues.password){
          errors.password = 'Password field is empty'
       }
-      if (!values.ConfirmPassword){
-        errors.Confirmpassword = 'Input your password again'
-      }
-      if (!values.username){
+      if (!inputValues.password){
+        errors.Confirm = 'Confirm Password field is empty'
+     }
+      if (!inputValues.username){
         errors.username = 'Username is required'
       }
-      if (!values.email){
+      if (!inputValues.email){
         errors.email = 'Email is empty'
       }
       setformErrors(errors)
@@ -93,16 +119,18 @@ export const Signup = () =>{
                   onChange={handleForm}
                 />
                 <p>{formErrors.password}</p>
+                <p style ={{color:`${requirements.uppercase}`}}>UpperCase</p>
+                <p style ={{color:`${requirements.numbers}`}}>numbers</p>
             </label>
             <label>
               Confirm Password
                 <input 
-                  name = "ConfirmPassword" 
+                  name = "Confirm" 
                   type = "password" 
-                  value = {newUser.ConfirmPassword} 
-                  onChange={handleForm}
+                  //value = {newUser.Confirm} 
+                  onChange={(e)=> setConfirm(e.target.value)}
                 />
-                <p>{formErrors.ConfirmPassword}</p>
+                <p>{formErrors.Confirm}</p>
             </label>
             <label>
               Email
@@ -114,7 +142,7 @@ export const Signup = () =>{
                 />
                 <p>{formErrors.email}</p>
             </label>
-            <Button variant="contained" color='warning' type='submit' className='signup-submit-button'>Contained</Button>
+            <Button variant="contained" color='warning' type='submit' className='signup-submit-button'>Sign up</Button>
         </form>
       </div>
     )
