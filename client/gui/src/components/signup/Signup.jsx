@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import axios from 'axios'
 import { Button, Alert } from '@mui/material/';
+import axios from 'axios'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 
 
 export const Signup = () =>{
@@ -20,11 +22,14 @@ export const Signup = () =>{
     //states for password requirements
     const [requirements, setRequirements] = useState({uppercase:'black', numbers:'black'})
     const[confirm, setConfirm] = useState('')
+    const [valid, setValid] = useState({})
 
     const submitHandler = async (e) => {
         e.preventDefault()
         //axios to send information
-        if (formValidate(newUser)){
+        formCheck(newUser)
+        if ((Object.keys(valid).length === 0 && Object.keys(formErrors).length ===0)){
+          console.log(valid, newUser,formErrors, 'asdasd')
           await axios.post('http://localhost:3001/createUser', newUser)
         .then(response => {
           if (response.status === 201){
@@ -34,66 +39,63 @@ export const Signup = () =>{
         .catch(error =>{
           setServerError(error.response.data)
         }) 
+      } else{
+        console.log(valid, newUser,formErrors,)
       }
     }
 
     // adds input values into newUser hook
     const handleForm = (e) =>{
       const {name,value} = e.target
-      passwordRequirements(name,value)
+      passwordRequirements(value)
       setnewUser({...newUser, [name]:value});
+      console.log(requirements)
     }
 
-    //if no errors, submit handler code will pass because of truthy value
-    const errorChecker = (errors) =>{
-      if (Object.keys(errors).length === 0){
-        return true
-      } else{
-        return false
-      }
-    }
-
-    const passwordRequirements = (name, testCase) =>{
+    const passwordRequirements = (testCase) =>{
       const email = /edu/;
       const numbers = /[0-9]/;
       const uppercase = /[A-Z]/;
-      let data = {}
+      const errors = {}
 
-      if (numbers.test(testCase) && name === 'password'){
-        data = {...requirements, numbers:'green'}
-      }
-      if(uppercase.test(testCase) && name === 'password'){
-        data = {...requirements, uppercase:'green'}
-      }
-      if(!testCase){
-        data = {uppercase:'black', numbers:'black'}
+      if (numbers.test(testCase)){
+        requirements.numbers = 'green'
+        delete valid.number
+      } else {
+        requirements.numbers = 'black'
+        errors.number = false
       }
 
-      console.log(data)
-      setRequirements(data)
+      if (uppercase.test(testCase)){
+        requirements.uppercase = 'green'
+        delete valid.uppercase
+      } else {
+        requirements.uppercase = 'black'
+        errors.uppercase = false
+      }
+
+      setValid(errors)
     }
 
     //checks for any empty field and if field input is valid
-    const formValidate = (inputValues) => {
-      const errors = {};
-      if (inputValues.password !== confirm){
-         errors.Confirm = "Passwords do not match";
-      }
+    const formCheck = (inputValues) => {
+      const Errors = {};
       if (!inputValues.password){
-         errors.password = 'Password field is empty'
+         Errors.password = 'Password field is empty'
       }
-      if (!inputValues.password){
-        errors.Confirm = 'Confirm Password field is empty'
-     }
+      if (!confirm){
+        Errors.Confirm = 'Confirm Password field is empty'
+      }
       if (!inputValues.username){
-        errors.username = 'Username is required'
+        Errors.username = 'Username is required'
       }
       if (!inputValues.email){
-        errors.email = 'Email is empty'
+        Errors.email = 'Email is empty'
       }
-      setformErrors(errors)
-
-      return errorChecker(errors)
+      if (inputValues.password !== confirm){
+        Errors.match = "Passwords do not match";
+      }
+      setformErrors(Errors)
     }
 
     return (
@@ -110,6 +112,7 @@ export const Signup = () =>{
                 />
                 <p>{formErrors.username}</p>
             </label>
+
             <label>
               Password
                 <input 
@@ -119,8 +122,15 @@ export const Signup = () =>{
                   onChange={handleForm}
                 />
                 <p>{formErrors.password}</p>
-                <p style ={{color:`${requirements.uppercase}`}}>UpperCase</p>
-                <p style ={{color:`${requirements.numbers}`}}>numbers</p>
+
+                <p className='requirement-warning' style ={{color:`${requirements.uppercase}`}}>
+                  One upper case letter (A-Z)
+                  {requirements.uppercase ==='green' && <CheckCircleIcon className='password-checkmark'/>}
+                </p>
+                <p className='requirement-warning' style ={{color:`${requirements.numbers}`}}>
+                  One number (0-9)
+                  {requirements.numbers ==='green' && <CheckCircleIcon className='password-checkmark'/>}
+                </p>
             </label>
             <label>
               Confirm Password
@@ -142,7 +152,10 @@ export const Signup = () =>{
                 />
                 <p>{formErrors.email}</p>
             </label>
+            <a>Have an account?</a>
+            <div>
             <Button variant="contained" color='warning' type='submit' className='signup-submit-button'>Sign up</Button>
+            </div>
         </form>
       </div>
     )
