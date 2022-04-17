@@ -16,20 +16,24 @@ export const Signup = () =>{
     
     //state errors and account hook
     const [formErrors, setformErrors] = useState({})
-    const[serverError, setServerError] = useState('')
-    const[createdAccount, setCreatedAccount] = useState(false)
+    const [serverError, setServerError] = useState('')
+    const [createdAccount, setCreatedAccount] = useState(false)
 
     //states for password requirements
     const [requirements, setRequirements] = useState({uppercase:'black', numbers:'black'})
-    const[confirm, setConfirm] = useState('')
+    const [confirm, setConfirm] = useState({})
     const [valid, setValid] = useState({})
+    const [passwordError, setPasswordError] = useState(false)
 
     const submitHandler = async (e) => {
         e.preventDefault()
+
+        if (formCheck(newUser)){
+          return
+        }
+        confirmPassword(newUser)
         //axios to send information
-        formCheck(newUser)
-        if ((Object.keys(valid).length === 0 && Object.keys(formErrors).length ===0)){
-          console.log(valid, newUser,formErrors, 'asdasd')
+        if ((Object.keys(valid).length === 0 && Object.keys(formErrors).length === 0 && Object.keys(confirm).length === 0)){
           await axios.post('http://localhost:3001/createUser', newUser)
         .then(response => {
           if (response.status === 201){
@@ -39,42 +43,50 @@ export const Signup = () =>{
         .catch(error =>{
           setServerError(error.response.data)
         }) 
-      } else{
-        console.log(valid, newUser,formErrors,)
+      } else {
+        setPasswordError(true)
       }
     }
-
-    // adds input values into newUser hook
+    // adds input values into newUser object hook
     const handleForm = (e) =>{
       const {name,value} = e.target
-      passwordRequirements(value)
+      if (name === 'password'){
+        passwordRequirements(value)
+      }
       setnewUser({...newUser, [name]:value});
-      console.log(requirements)
     }
 
-    const passwordRequirements = (testCase) =>{
+    const passwordRequirements = (password) =>{
       const email = /edu/;
       const numbers = /[0-9]/;
       const uppercase = /[A-Z]/;
       const errors = {}
 
-      if (numbers.test(testCase)){
+      if (numbers.test(password)){
         requirements.numbers = 'green'
-        delete valid.number
+        delete errors.numbers
       } else {
-        requirements.numbers = 'black'
-        errors.number = false
+        requirements.numbers ='black'
+        errors.numbers = false
       }
 
-      if (uppercase.test(testCase)){
+      if (uppercase.test(password)){
         requirements.uppercase = 'green'
-        delete valid.uppercase
+        delete errors.uppercase
       } else {
-        requirements.uppercase = 'black'
-        errors.uppercase = false
+        requirements.uppercase ='black'
+        errors.uppercase = true
       }
-
       setValid(errors)
+    }
+
+    const confirmPassword = (user)=> { //parameter is newuser hook which is an object
+      if (user.password !== user.Confirm){
+        confirm.match = "Passwords do not match";
+      } else {
+        delete confirm.match
+      }
+      return confirm
     }
 
     //checks for any empty field and if field input is valid
@@ -83,7 +95,7 @@ export const Signup = () =>{
       if (!inputValues.password){
          Errors.password = 'Password field is empty'
       }
-      if (!confirm){
+      if (!inputValues.Confirm){
         Errors.Confirm = 'Confirm Password field is empty'
       }
       if (!inputValues.username){
@@ -92,14 +104,19 @@ export const Signup = () =>{
       if (!inputValues.email){
         Errors.email = 'Email is empty'
       }
-      if (inputValues.password !== confirm){
-        Errors.match = "Passwords do not match";
-      }
+
       setformErrors(Errors)
+
+      if ((Object.keys(Errors).length) > 0){
+        return true
+      } else {
+        return false
+      }
     }
 
     return (
       <div>
+        {passwordError && <Alert variant='filled' severity='warning' onClose={()=>setPasswordError(false)}>Your password is missing requirements</Alert>}
         {serverError && <Alert variant="filled" severity="warning" onClose = {()=> setServerError('')}>{serverError}</Alert>}
         {createdAccount && <Alert severity="success" onClose={()=>setCreatedAccount(false)}>You have successfully created your account!</Alert>}
         <h1 className='signup-title'>Sign Up</h1>
@@ -137,10 +154,11 @@ export const Signup = () =>{
                 <input 
                   name = "Confirm" 
                   type = "password" 
-                  //value = {newUser.Confirm} 
-                  onChange={(e)=> setConfirm(e.target.value)}
+                  value = {newUser.Confirm} 
+                  onChange={handleForm}
                 />
                 <p>{formErrors.Confirm}</p>
+                <p>{confirm.match}</p>
             </label>
             <label>
               Email
