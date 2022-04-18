@@ -37,6 +37,7 @@ app.get("/api", (req,res) => {
 
 app.post("/createUser", async (req,res) => {
     const data = req.body
+    console.log(data.password)
     const newUser = new UserModel(data)
 
     await newUser.save().then(response =>{

@@ -12,10 +12,12 @@ function App() {
         <Navbar/>
       </header>
       <main>
+      <div className='landing-wrapper'>
       <div className='signup-container'>
       <Signup/>
       </div>
       <SideImage/>
+      </div>
       </main>
       <Display/>
     </div>

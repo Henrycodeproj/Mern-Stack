@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, Alert } from '@mui/material/';
 import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import GoogleIcon from '@mui/icons-material/Google';
 
 
 
@@ -14,10 +15,12 @@ export const Signup = () =>{
       email:''
     })
     
-    //state errors and account hook
+    const [createdAccount, setCreatedAccount] = useState(false)
+
+    //state errors
     const [formErrors, setformErrors] = useState({})
     const [serverError, setServerError] = useState('')
-    const [createdAccount, setCreatedAccount] = useState(false)
+    const [emailError, setEmailError] = useState(false)
 
     //states for password requirements
     const [requirements, setRequirements] = useState({uppercase:'black', numbers:'black'})
@@ -28,7 +31,7 @@ export const Signup = () =>{
     const submitHandler = async (e) => {
         e.preventDefault()
 
-        if (formCheck(newUser)){
+        if (formCheck(newUser) || !emailCheck(newUser.email)){
           return
         }
         confirmPassword(newUser)
@@ -43,7 +46,7 @@ export const Signup = () =>{
         .catch(error =>{
           setServerError(error.response.data)
         }) 
-      } else {
+      } else if(Object.keys(valid).length > 0){
         setPasswordError(true)
       }
     }
@@ -56,8 +59,16 @@ export const Signup = () =>{
       setnewUser({...newUser, [name]:value});
     }
 
+    const emailCheck = (email) => {
+      const check = /.edu$/;
+      if(!check.test(email)){
+        setEmailError(true)
+        return false
+      } else {
+        return true
+      }
+    }
     const passwordRequirements = (password) =>{
-      const email = /edu/;
       const numbers = /[0-9]/;
       const uppercase = /[A-Z]/;
       const errors = {}
@@ -75,7 +86,7 @@ export const Signup = () =>{
         delete errors.uppercase
       } else {
         requirements.uppercase ='black'
-        errors.uppercase = true
+        errors.uppercase = false
       }
       setValid(errors)
     }
@@ -114,10 +125,12 @@ export const Signup = () =>{
       }
     }
 
+
     return (
       <div>
         {passwordError && <Alert variant='filled' severity='warning' onClose={()=>setPasswordError(false)}>Your password is missing requirements</Alert>}
         {serverError && <Alert variant="filled" severity="warning" onClose = {()=> setServerError('')}>{serverError}</Alert>}
+        {emailError && <Alert variant ="filled" severity= "warning" onClose={()=>setEmailError(false)}>Your email does not end with edu</Alert>}
         {createdAccount && <Alert severity="success" onClose={()=>setCreatedAccount(false)}>You have successfully created your account!</Alert>}
         <h1 className='signup-title'>Sign Up</h1>
         <form className='signup' onSubmit={submitHandler}>
@@ -170,7 +183,8 @@ export const Signup = () =>{
                 />
                 <p>{formErrors.email}</p>
             </label>
-            <a>Have an account?</a>
+            <a href='https://google.com'><GoogleIcon/></a>
+            <a className='login-signup-link'>Have an account?</a>
             <div>
             <Button variant="contained" color='warning' type='submit' className='signup-submit-button'>Sign up</Button>
             </div>
