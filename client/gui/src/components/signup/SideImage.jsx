@@ -1,6 +1,7 @@
 //import connect from '../../images/connect.jpg'
 import test from '../../images/test.png'
 import sideimage from '../../images/sideimage.png'
+
 export const SideImage = () =>{
     return (
         <div>

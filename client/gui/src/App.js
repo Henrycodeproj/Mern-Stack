@@ -13,10 +13,10 @@ function App() {
       </header>
       <main>
       <div className='landing-wrapper'>
-      <div className='signup-container'>
-      <Signup/>
-      </div>
-      <SideImage/>
+        <div className='signup-container'>
+          <Signup/>
+        </div>
+        <SideImage/>
       </div>
       </main>
       <Display/>
