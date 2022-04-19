@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv'
 import UserModel from './Models/Users.js';
+import bcrypt from 'bcrypt'
 
 
 const app = express()
@@ -34,11 +35,16 @@ app.get("/api", (req,res) => {
         }
     })
 })
+app.post("/login", (req, res)=>{
+    const data = req.body
+})
 
 app.post("/createUser", async (req,res) => {
     const data = req.body
-    console.log(data.password)
     const newUser = new UserModel(data)
+
+    const salt = bcrypt.genSaltSync(10)
+    newUser.password = bcrypt.hashSync(data.password, salt)
 
     await newUser.save().then(response =>{
         res.status(201).send(response)

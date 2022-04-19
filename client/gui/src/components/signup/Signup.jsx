@@ -4,8 +4,6 @@ import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GoogleIcon from '@mui/icons-material/Google';
 
-
-
 export const Signup = () =>{
 
     const [newUser,setnewUser] = useState({
@@ -124,7 +122,6 @@ export const Signup = () =>{
         return false
       }
     }
-
 
     return (
       <div>
