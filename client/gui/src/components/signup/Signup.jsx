@@ -132,23 +132,23 @@ export const Signup = () =>{
         <h1 className='signup-title'>Sign Up</h1>
         <form className='signup' onSubmit={submitHandler}>
             <label>
-              Username
+              <h3>Username</h3>
                 <input name = "username" 
                   value = {newUser.username} 
                   onChange={handleForm}
                 />
-                <p>{formErrors.username}</p>
+                {<p className='form-errors'>{formErrors.username}</p>}
             </label>
 
             <label>
-              Password
+              <h3>Password</h3>
                 <input 
                   name = "password" 
                   type = "password"  
                   value = {newUser.password} 
                   onChange={handleForm}
                 />
-                <p>{formErrors.password}</p>
+                <p className='form-errors'>{formErrors.password}</p>
 
                 <p className='requirement-warning' style ={{color:`${requirements.uppercase}`}}>
                   One upper case letter (A-Z)
@@ -160,30 +160,30 @@ export const Signup = () =>{
                 </p>
             </label>
             <label>
-              Confirm Password
+              <h3>Confirm Password</h3>
                 <input 
                   name = "Confirm" 
                   type = "password" 
                   value = {newUser.Confirm} 
                   onChange={handleForm}
                 />
-                <p>{formErrors.Confirm}</p>
-                <p>{confirm.match}</p>
+                <p className='form-errors'>{formErrors.Confirm}</p>
+                <p className='form-errors'>{confirm.match}</p>
             </label>
             <label>
-              Email
+              <h3>Email</h3>
                 <input
                   type = "email" 
                   name = "email" 
                   value = {newUser.email} 
                   onChange = {handleForm}
                 />
-                <p>{formErrors.email}</p>
+                <p className='form-errors'>{formErrors.email}</p>
             </label>
-            <a href='https://google.com'><GoogleIcon/></a>
-            <a className='login-signup-link'>Have an account?</a>
+              <a href='https://google.com'><GoogleIcon/></a>
+              <a className='login-signup-link'>Have an account?</a>
             <div>
-            <Button variant="contained" color='warning' type='submit' className='signup-submit-button'>Sign up</Button>
+            <Button variant="contained" color='secondary' type='submit' className='signup-submit-button'>Sign up</Button>
             </div>
         </form>
       </div>
