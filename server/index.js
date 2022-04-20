@@ -19,7 +19,7 @@ const DB_URL = `mongodb+srv://admin:${password}@cluster0.dlurz.mongodb.net/Users
 const PORT = process.env.PORT || 3001
 
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
-.then(()=> console.log('Sucessfully connected'))
+.then(()=> console.log('Sucessfully connected to database'))
 .catch((error) => console.log(error.message))
 
 app.get("/", (req,res) => {
@@ -35,8 +35,20 @@ app.get("/api", (req,res) => {
         }
     })
 })
-app.post("/login", (req, res)=>{
+
+app.post("/login", async (req, res)=>{
     const data = req.body
+    UserModel.findOne({username:data.login_username},(error, result) =>{
+        if (result) {
+            if (bcrypt.compareSync(data.login_password, result.password)){
+                res.status(200).send('Logging In.')
+            } else {
+                res.status(500).send('Incorrect password')
+            }
+        } else {
+            res.send('This account does not exist.')
+        }
+    })
 })
 
 app.post("/createUser", async (req,res) => {
