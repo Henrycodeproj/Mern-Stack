@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { Button, Alert } from '@mui/material/';
 import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GoogleIcon from '@mui/icons-material/Google';
+import { modalItems } from '../Contexts/Modal';
+import { motion, AnimatePresence } from "framer-motion"
 
 export const Signup = () =>{
+
+    const {handleOpen} = useContext(modalItems)
 
     const [newUser,setnewUser] = useState({
       username:'',
@@ -72,7 +76,7 @@ export const Signup = () =>{
       const errors = {}
 
       if (numbers.test(password)){
-        requirements.numbers = 'green'
+        requirements.numbers = '#005700'
         delete errors.numbers
       } else {
         requirements.numbers ='black'
@@ -80,7 +84,7 @@ export const Signup = () =>{
       }
 
       if (uppercase.test(password)){
-        requirements.uppercase = 'green'
+        requirements.uppercase = '#005700'
         delete errors.uppercase
       } else {
         requirements.uppercase ='black'
@@ -123,13 +127,30 @@ export const Signup = () =>{
       }
     }
 
+    const [tester, settester] = useState(false)
+
     return (
-      <div>
-        {passwordError && <Alert variant='filled' severity='warning' onClose={()=>setPasswordError(false)}>Your password is missing requirements</Alert>}
-        {serverError && <Alert variant="filled" severity="warning" onClose = {()=> setServerError('')}>{serverError}</Alert>}
-        {emailError && <Alert variant ="filled" severity= "warning" onClose={()=>setEmailError(false)}>Your email does not end with edu</Alert>}
+      <aside>
+        {tester ?
+      <AnimatePresence>
+      <motion.div
+        initial={{ x:-50, opacity:0.5 }}
+        animate={{ opacity: 1, x:0}}
+        transition={{ duration: 1 }}
+        exit={{ x:1250, opacity: .5 }}
+      >
+        {passwordError && <Alert variant='filled' severity="secondary" onClose={()=>setPasswordError(false)}>Your password is missing requirements</Alert>}
+        {serverError && <Alert variant="filled" severity="secondary" onClose = {()=> setServerError('')}>{serverError}</Alert>}
+        {emailError && <Alert variant ="filled" severity= "secondary" onClose={()=>setEmailError(false)}>Your email does not end with edu</Alert>}
         {createdAccount && <Alert severity="success" onClose={()=>setCreatedAccount(false)}>You have successfully created your account!</Alert>}
+
+        {/* testing here  */}
+        <div className='space'>
+        <div></div>
         <h1 className='signup-title'>Sign Up</h1>
+        <h1 className='signup-title' onClick={()=> settester(false)}>Login</h1>
+        </div>
+
         <form className='signup' onSubmit={submitHandler}>
             <label>
               <h3>Username</h3>
@@ -181,11 +202,26 @@ export const Signup = () =>{
                 <p className='form-errors'>{formErrors.email}</p>
             </label>
               <a href='https://google.com'><GoogleIcon/></a>
-              <a className='login-signup-link'>Have an account?</a>
+              <p className='login-signup-link' onClick={handleOpen}>Have an account?</p>
             <div>
             <Button variant="contained" color='secondary' type='submit' className='signup-submit-button'>Sign up</Button>
+            <Button variant="contained" color='secondary' type='submit' className='signup-submit-button' onClick={()=> settester(false)}>Login</Button>
             </div>
         </form>
-      </div>
+      </motion.div>
+      </AnimatePresence>
+      :
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1}}
+        transition={{ duration: 3 }}
+        exit={{ opacity: 0 }}
+      >
+      <Button variant="contained" color='secondary' type='submit' className='signup-submit-button' onClick={()=>settester(true)}>test</Button>
+      <input type= "text"></input>
+      <input type= "password"></input>
+      </motion.div>
+      }
+      </aside>
     )
 }
