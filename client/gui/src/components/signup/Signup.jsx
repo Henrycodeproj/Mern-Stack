@@ -1,14 +1,12 @@
-import { useState, useContext } from 'react'
-import { Button, Alert } from '@mui/material/';
+import { useState} from 'react'
+import { Button, Alert, CircularProgress } from '@mui/material/';
+import { motion, AnimatePresence,} from "framer-motion"
+import { Login } from './Login';
 import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GoogleIcon from '@mui/icons-material/Google';
-import { modalItems } from '../Contexts/Modal';
-import { motion, AnimatePresence } from "framer-motion"
 
 export const Signup = () =>{
-
-    const {handleOpen} = useContext(modalItems)
 
     const [newUser,setnewUser] = useState({
       username:'',
@@ -18,22 +16,25 @@ export const Signup = () =>{
     })
     
     const [createdAccount, setCreatedAccount] = useState(false)
+    const [signLoading, setSignLoading] = useState(false)
 
     //state errors
     const [formErrors, setformErrors] = useState({})
     const [serverError, setServerError] = useState('')
     const [emailError, setEmailError] = useState(false)
+    const [lengthError, setLengthError] = useState(false)
 
     //states for password requirements
     const [requirements, setRequirements] = useState({uppercase:'black', numbers:'black'})
     const [confirm, setConfirm] = useState({})
     const [valid, setValid] = useState({})
     const [passwordError, setPasswordError] = useState(false)
+    const [passwordLength, setPasswordLength] = useState(false)
 
     const submitHandler = async (e) => {
         e.preventDefault()
 
-        if (formCheck(newUser) || !emailCheck(newUser.email)){
+        if (formCheck(newUser) || !emailCheck(newUser.email) || lengthCheck(newUser.password)){
           return
         }
         confirmPassword(newUser)
@@ -68,6 +69,14 @@ export const Signup = () =>{
         return false
       } else {
         return true
+      }
+    }
+    const lengthCheck = (password) => {
+      if (password.length < 6){
+        setLengthError(true)
+        return true
+      } else{
+        return false
       }
     }
     const passwordRequirements = (password) =>{
@@ -126,30 +135,41 @@ export const Signup = () =>{
         return false
       }
     }
+    const active ={
+      borderStyle:'solid',
+      borderRadius:'8px',
+      backgroundColor:'rgb(149, 117, 205, .5)',
+      boxShadow:'.5px .5px 5px 0px',
+    }
+    const inactive = {
+      borderStyle:'none'
+    }
 
-    const [tester, settester] = useState(false)
+    const [option, setOption] = useState(true)
 
     return (
       <aside>
-        {tester ?
-      <AnimatePresence>
+      {option ?
       <motion.div
-        initial={{ x:-50, opacity:0.5 }}
-        animate={{ opacity: 1, x:0}}
+        initial={{ opacity:0.25 }}
+        animate={{ opacity: 1}}
         transition={{ duration: 1 }}
-        exit={{ x:1250, opacity: .5 }}
       >
+        <div className='space'>
+        <motion.h1
+        initial={{ opacity: 0.25, }}
+        animate={{ opacity: 1}}
+        transition = {{ duration:1 }}
+        className='signup-title' style= {option ? active: inactive} onClick={()=> setOption(true)}>
+          Sign Up
+        </motion.h1>
+        <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(false)}>Sign In</h1>
+        </div>
+
         {passwordError && <Alert variant='filled' severity="secondary" onClose={()=>setPasswordError(false)}>Your password is missing requirements</Alert>}
         {serverError && <Alert variant="filled" severity="secondary" onClose = {()=> setServerError('')}>{serverError}</Alert>}
         {emailError && <Alert variant ="filled" severity= "secondary" onClose={()=>setEmailError(false)}>Your email does not end with edu</Alert>}
-        {createdAccount && <Alert severity="success" onClose={()=>setCreatedAccount(false)}>You have successfully created your account!</Alert>}
-
-        {/* testing here  */}
-        <div className='space'>
-        <div></div>
-        <h1 className='signup-title'>Sign Up</h1>
-        <h1 className='signup-title' onClick={()=> settester(false)}>Login</h1>
-        </div>
+        {createdAccount && <Alert severity="success" onClose={()=>setCreatedAccount(false)}>You have successfully created your account, you may now login.</Alert>}
 
         <form className='signup' onSubmit={submitHandler}>
             <label>
@@ -202,25 +222,19 @@ export const Signup = () =>{
                 <p className='form-errors'>{formErrors.email}</p>
             </label>
               <a href='https://google.com'><GoogleIcon/></a>
-              <p className='login-signup-link' onClick={handleOpen}>Have an account?</p>
-            <div>
+            <div className='submit-section'>
             <Button variant="contained" color='secondary' type='submit' className='signup-submit-button'>Sign up</Button>
-            <Button variant="contained" color='secondary' type='submit' className='signup-submit-button' onClick={()=> settester(false)}>Login</Button>
+            {signLoading && <CircularProgress color="inherit" />}
             </div>
         </form>
       </motion.div>
-      </AnimatePresence>
       :
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1}}
-        transition={{ duration: 3 }}
-        exit={{ opacity: 0 }}
-      >
-      <Button variant="contained" color='secondary' type='submit' className='signup-submit-button' onClick={()=>settester(true)}>test</Button>
-      <input type= "text"></input>
-      <input type= "password"></input>
-      </motion.div>
+      <Login 
+      setOption = {setOption}
+      option = {option}
+      active = {active}
+      inactive = {inactive}
+      />
       }
       </aside>
     )

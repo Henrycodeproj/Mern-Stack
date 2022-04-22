@@ -24,6 +24,20 @@ body {
 h1{
   margin:0;
 }
+.class{
+  display:flex;
+  align-items: center;
+  flex-direction: row;
+  margin:10px 0;
+  background:none;
+  border-style: none;
+  border-bottom-style: solid;
+  border-color: rgb(129, 129, 129);
+  border-bottom-width: 1px;
+  caret-color: white;
+  height:25px;
+  width:100%;
+}
 .aaa{
   text-align: center;
 }
@@ -52,11 +66,11 @@ code {
 }
 nav{
   display:flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   height:5vh;
   background:#A61651;
-  background: #0e3e8b3b;
+  background: #351d7268;
 }
 .list-container{
   display:flex;
@@ -79,21 +93,22 @@ main{
 .signup-container{
   box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  box-sizing: border-box;
   /*background: rgb(228, 227, 227);*/
   background:#ffffff38;
+  /* max-height: fit-content; */
   width:450px;
-  max-height: fit-content;
   padding:30px;
   border-style: solid;
   border-radius: 15px;
   font-family: 'Mulish', sans-serif;
 }
+aside{
+  height:inherit;
+}
 img{
   /* background:rgba(128, 0, 128, 0.11); */
   max-width: 100%;
-}
-input{
-  height:25px;
 }
 .logo{
   color:orange;
@@ -118,10 +133,11 @@ label{
 }
 .signup-title{
   margin:5px 5px !important;
-  padding-bottom:10px;
+  padding:5px;
   color:rgb(198, 196, 196);
   color:White;
   display:inline;
+  cursor:pointer;
 }
 .requirement-warning{
   display:flex;
@@ -147,14 +163,15 @@ label{
   display:flex;
   flex-direction: column;
 }
-.login-inputs{
+.cheker{
   display:flex;
-  align-items: center;
-  background: rgba(198, 197, 197, 0.315);
-  padding:5px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  margin:10px 0; 
+  justify-content: space-between;
+  flex-direction: column;
+}
+.login-username-container, .login-password-container{
+  display:flex;
+  flex-direction: column;
+  margin:20px 0px;
 }
 input{
   background:none;
@@ -164,12 +181,29 @@ input{
   border-bottom-width: 1px;
   font-size:30px;
   caret-color: white;
+  height:25px;
+  width:100%;
 }
 input:focus{
   outline:none;
 }
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+input[data-autocompleted] {
+  background-color: transparent !important;
+}
+input, select, textarea{
+  color: white;
+}
 .space{
   display:flex;
   justify-content: center;
+  align-items: center;
+}
+.submit-section{
+  display:flex;
+  justify-content: space-between;
   align-items: center;
 }
