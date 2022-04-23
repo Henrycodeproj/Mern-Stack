@@ -1,27 +1,40 @@
 import './App.css';
-import  { Signup } from './components/signup/Signup';
+import  { Signup } from './components/homepage/Signup';
 import { Display } from './components/display';
 import { Navbar } from './components/navigation/navbar'
-import { SideImage } from './components/signup/SideImage'
+import { SideImage } from './components/homepage/SideImage'
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 function App() {
 
   return (
-    <div className="App">
-      <header>
-        <Navbar/>
-      </header>
-      <main>
-      <div className='landing-wrapper'>
-        <div className='signup-container'>
-          <Signup/>
-        </div>
-        <SideImage/>
-      </div>
-      </main>
-      {/* <Display/> */}
-    </div>
+    <Router>
+      <Navbar/>
+      <Routes>
+        <Route path="/" element ={<Signup/>}/>
+        <Route path="/display" element = {<Display/>}/>
+        {/* homepage soon to come */}
+      </Routes>
+    </Router>
   );
 }
 
 export default App;
+
+
+// return (
+//   <div className="App">
+//     <header>
+//       <Navbar/>
+//     </header>
+//       <main>
+//       <div className='landing-wrapper'>
+//         <div className='signup-container'>
+//           <Signup/>
+//         </div>
+//         <SideImage/>
+//       </div>
+//       </main>
+//       {/* <Display/> */}
+//   </div>
+// );

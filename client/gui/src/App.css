@@ -81,6 +81,7 @@ nav{
 
 li{
   padding-right: 25px;
+  color:White;
 }
 main{
   display:flex;
@@ -102,9 +103,6 @@ main{
   border-style: solid;
   border-radius: 15px;
   font-family: 'Mulish', sans-serif;
-}
-aside{
-  height:inherit;
 }
 img{
   /* background:rgba(128, 0, 128, 0.11); */
@@ -138,6 +136,7 @@ label{
   color:White;
   display:inline;
   cursor:pointer;
+  font-size:25px;
 }
 .requirement-warning{
   display:flex;
