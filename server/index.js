@@ -39,24 +39,29 @@ app.get("/api", (req,res) => {
 app.post("/login", async (req, res)=>{
     const data = req.body
     const user = await UserModel.findOne({username:data.login_username})
-        if (user) {
+        if (user && user.isVerified === true) {
             if (bcrypt.compareSync(data.login_password, user.password)) {
                 res.status(200).send('Logging In...')
             } else{
                 res.status(406).send('Incorrect Password!')
             }
         } else {
-            res.status(406).send('This username does not exists.')
+            res.status(406).send('Your account is not verified.')
         }
 
 })
     
 app.post("/createUser", async (req,res) => {
-    const data = req.body
-    const newUser = new UserModel(data)
+    const {username,password, email} = req.body
+    const newUser = new UserModel({
+        username:username,
+        password:password,
+        email:email,
+        isVerified:false
+    })
 
     const salt = bcrypt.genSaltSync(10)
-    newUser.password = bcrypt.hashSync(data.password, salt)
+    newUser.password = bcrypt.hashSync(password, salt)
 
     await newUser.save().then(response =>{
         res.status(201).send(response)
@@ -67,6 +72,8 @@ app.post("/createUser", async (req,res) => {
         } 
         else if (error.keyValue.email && error.code === 11000){
             res.status(406).send(`This email ${error.keyValue.email} has already been signed up.`);
+        } else {
+            console.log(error)
         }
     })
 })

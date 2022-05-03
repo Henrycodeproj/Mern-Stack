@@ -187,7 +187,7 @@ export const Signup = () =>{
               {passwordError && <Alert variant="filled" severity="error" color="secondary" onClose={()=>setPasswordError(false)}>Your password is missing requirements.</Alert>}
               {serverError && <Alert variant="filled" severity="error" color="secondary" onClose = {()=> setServerError('')}>{serverError}</Alert>}
               {emailError && <Alert variant ="filled" severity="error" color= "secondary" onClose={()=>setEmailError(false)}>Your email does not end with edu.</Alert>}
-              {createdAccount && <Alert variant ="filled" severity="success" onClose={()=>setCreatedAccount(false)}>You have successfully created your account, you may now login.</Alert>}
+              {createdAccount && <Alert variant ="filled" severity="success" onClose={()=>setCreatedAccount(false)}>Check your email to verify your account.</Alert>}
               {/* start of form */}
               <form className='signup' onSubmit={submitHandler}>
                 {/* username */}

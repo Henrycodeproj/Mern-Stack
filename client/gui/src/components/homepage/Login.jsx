@@ -51,7 +51,7 @@ export const Login = ({setOption, option, active, inactive}) => {
         <h1 className='signup-title' style= {option ? active: inactive} onClick = {()=> setOption(true)}>Sign Up</h1>
         <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(false)}>Sign In</h1>
         </div>
-        {serverError && <Alert variant='filled' severity="secondary" onClose={()=>setServerError('')}>{serverError}</Alert>}
+        {serverError && <Alert variant='filled' severity="error" color="secondary" onClose={()=>setServerError('')}>{serverError}</Alert>}
         <div>
             <form className="login-form" onSubmit={handleSubmit}>
                 <div className="login-username-container">

@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-    isVerified:false
+    isVerified:Boolean
 }, {timestamps:true})
 
 const UserModel = mongoose.model("Users", UserSchema)
