@@ -2,8 +2,9 @@ import './App.css';
 import  { Signup } from './components/homepage/Signup';
 import { Display } from './components/display';
 import { Navbar } from './components/navigation/navbar'
-import { Errorpage } from './components/ErrorPage';
+import { Errorpage } from './components/config/ErrorPage';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { UserAuthentication} from "./components/config/userAuth"
 
 function App() {
 
@@ -11,9 +12,11 @@ function App() {
     <Router>
       <Navbar/>
       <Routes>
-        <Route path="/" element ={<Signup/>}/>
-        <Route path="/display" element = {<Display/>}/>
-        <Route path = "*" element ={<Errorpage/> }/>
+        <Route element = {<UserAuthentication/>}>
+          <Route path="/" element ={<Signup/>}/>
+          <Route path="/display" element = {<Display/>}/>
+          <Route path = "*" element ={<Errorpage/> }/>
+        </Route>
       </Routes>
     </Router>
   );
