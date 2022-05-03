@@ -1,4 +1,4 @@
-import { useState} from 'react'
+import { useState , useEffect} from 'react'
 import { Button, Alert, CircularProgress } from '@mui/material/';
 import { motion, AnimatePresence,} from "framer-motion"
 import { Login } from './Login';
@@ -15,6 +15,8 @@ export const Signup = () =>{
       Confirm:'',
       email:''
     })
+    //login and signup toggle state
+    const [option, setOption] = useState(true)
     
     const [createdAccount, setCreatedAccount] = useState(false)
     const [signLoading, setSignLoading] = useState(false)
@@ -30,6 +32,19 @@ export const Signup = () =>{
     const [valid, setValid] = useState({})
     const [passwordError, setPasswordError] = useState(false)
 
+    //helps to clear error alerts on signup
+    useEffect(()=>{
+      const setTimer = setTimeout(()=>{
+        setPasswordError(false)
+        setEmailError(false)
+        setServerError('')
+      },3000)
+      
+      return() => {
+        clearTimeout(setTimer)
+      }
+    }, [passwordError, emailError, serverError])
+
     const submitHandler = async (e) => {
         e.preventDefault()
 
@@ -37,7 +52,9 @@ export const Signup = () =>{
           return
         }
         confirmPassword(newUser)
-        //axios to send information
+        setSignLoading(true)
+
+        //axios to send information if goes through checks
         if ((Object.keys(valid).length === 0 && Object.keys(formErrors).length === 0 && Object.keys(confirm).length === 0)){
           await axios.post('http://localhost:3001/createUser', newUser)
         .then(response => {
@@ -48,12 +65,13 @@ export const Signup = () =>{
         .catch(error =>{
           setServerError(error.response.data)
         }) 
-      } else if(Object.keys(valid).length > 0){
+      } else{
         setPasswordError(true)
       }
+      setSignLoading(false)
     }
     // adds input values into newUser object hook
-    const handleForm = (e) =>{
+    const formHandler = (e) =>{
       const {name,value} = e.target
       if (name === 'password'){
         passwordRequirements(value)
@@ -92,7 +110,7 @@ export const Signup = () =>{
         errors.uppercase = false
       }
 
-      if (password.length > 6){
+      if (password.length >= 6){
         requirements.length = '#005700'
         delete errors.length
       } else {
@@ -101,8 +119,8 @@ export const Signup = () =>{
       }
       setValid(errors)
     }
-
-    const confirmPassword = (user)=> { //parameter is newuser hook which is an object
+      
+    const confirmPassword = (user)=> { //parameter is from newuser hook which is an object
       if (user.password !== user.Confirm){
         confirm.match = "Passwords do not match";
       } else {
@@ -145,8 +163,6 @@ export const Signup = () =>{
       borderStyle:'none'
     }
 
-    const [option, setOption] = useState(true)
-
     return (
       <main>
         <div className='landing-wrapper'>
@@ -167,73 +183,77 @@ export const Signup = () =>{
               </motion.h1>
               <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(false)}     >Sign In</h1>
               </div>
-            
-              {passwordError && <Alert variant='filled' severity="secondary" onClose={()=>setPasswordError      (false)}>Your password is missing requirements</Alert>}
-              {serverError && <Alert variant="filled" severity="secondary" onClose = {()=> setServerError('')     }>{serverError}</Alert>}
-              {emailError && <Alert variant ="filled" severity= "secondary" onClose={()=>setEmailError(false)     }>Your email does not end with edu</Alert>}
-              {createdAccount && <Alert severity="success" onClose={()=>setCreatedAccount(false)}>You have      successfully created your account, you may now login.</Alert>}
-            
+              {/* Alerts */}
+              {passwordError && <Alert variant="filled" severity="error" color="secondary" onClose={()=>setPasswordError(false)}>Your password is missing requirements.</Alert>}
+              {serverError && <Alert variant="filled" severity="error" color="secondary" onClose = {()=> setServerError('')}>{serverError}</Alert>}
+              {emailError && <Alert variant ="filled" severity="error" color= "secondary" onClose={()=>setEmailError(false)}>Your email does not end with edu.</Alert>}
+              {createdAccount && <Alert variant ="filled" severity="success" onClose={()=>setCreatedAccount(false)}>You have successfully created your account, you may now login.</Alert>}
+              {/* start of form */}
               <form className='signup' onSubmit={submitHandler}>
+                {/* username */}
                   <label>
                     <h3>Username</h3>
                       <input name = "username" 
                         value = {newUser.username} 
-                        onChange={handleForm}
+                        onChange={formHandler}
                       />
                       {<p className='form-errors'>{formErrors.username}</p>}
                   </label>
-            
+                {/* Password section */}
                   <label>
                     <h3>Password</h3>
                       <input 
                         name = "password" 
                         type = "password"  
                         value = {newUser.password} 
-                        onChange={handleForm}
+                        onChange={formHandler}
                       />
                       <p className='form-errors'>{formErrors.password}</p>
                       <p className='requirement-warning' style ={{color:`${requirements.length}`}}>
                         Password length must be 6 or more
-                        {requirements.length ==='#005700' && <CheckCircleIcon className='password-checkmark'/     >}
+                        {requirements.length ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
                       </p>
                       <p className='requirement-warning' style ={{color:`${requirements.uppercase}`}}>
                         One upper case letter (A-Z)
-                        {requirements.uppercase ==='#005700' && <CheckCircleIcon      className='password-checkmark'/>}
+                        {requirements.uppercase ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
                       </p>
                       <p className='requirement-warning' style ={{color:`${requirements.numbers}`}}>
                         One number (0-9)
-                        {requirements.numbers ==='#005700' && <CheckCircleIcon      className='password-checkmark'/>}
+                        {requirements.numbers ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
                       </p>
                   </label>
+                {/* confirm pass */}
                   <label>
                     <h3>Confirm Password</h3>
                       <input 
                         name = "Confirm" 
                         type = "password" 
                         value = {newUser.Confirm} 
-                        onChange={handleForm}
+                        onChange={formHandler}
                       />
                       <p className='form-errors'>{formErrors.Confirm}</p>
                       <p className='form-errors'>{confirm.match}</p>
                   </label>
+                {/*Email  */}
                   <label>
                     <h3>Email</h3>
                       <input
                         type = "email" 
                         name = "email" 
                         value = {newUser.email} 
-                        onChange = {handleForm}
+                        onChange = {formHandler}
                       />
                       <p className='form-errors'>{formErrors.email}</p>
                   </label>
                     <a href='https://google.com'><GoogleIcon/></a>
                   <div className='submit-section'>
-                  <Button variant="contained" color='secondary' type='submit'       className='signup-submit-button'>Sign up</Button>
+                  <Button variant="contained" color='secondary' type='submit' className='signup-submit-button'>Sign up</Button>
                   {signLoading && <CircularProgress color="inherit" />}
                   </div>
               </form>
             </motion.div>
             :
+            // Login component
             <Login 
             setOption = {setOption}
             option = {option}

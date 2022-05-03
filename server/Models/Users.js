@@ -11,7 +11,8 @@ const UserSchema = new mongoose.Schema({
         type:String,
         required:true,
         unique:true
-    }
+    },
+    isVerified:false
 }, {timestamps:true})
 
 const UserModel = mongoose.model("Users", UserSchema)

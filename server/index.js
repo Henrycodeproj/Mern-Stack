@@ -35,7 +35,7 @@ app.get("/api", (req,res) => {
         }
     })
 })
-
+ 
 app.post("/login", async (req, res)=>{
     const data = req.body
     const user = await UserModel.findOne({username:data.login_username})
@@ -43,14 +43,14 @@ app.post("/login", async (req, res)=>{
             if (bcrypt.compareSync(data.login_password, user.password)) {
                 res.status(200).send('Logging In...')
             } else{
-                res.status(406).send('Incorrect Password')
+                res.status(406).send('Incorrect Password!')
             }
         } else {
-            res.status(406).send('This username does not exist')
+            res.status(406).send('This username does not exists.')
         }
 
 })
-
+    
 app.post("/createUser", async (req,res) => {
     const data = req.body
     const newUser = new UserModel(data)
