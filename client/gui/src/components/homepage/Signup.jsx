@@ -38,6 +38,7 @@ export const Signup = () =>{
         setPasswordError(false)
         setEmailError(false)
         setServerError('')
+        setCreatedAccount(false)
       },3000)
       
       return() => {
