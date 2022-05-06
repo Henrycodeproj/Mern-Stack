@@ -6,6 +6,7 @@ import UserModel from './Models/Users.js';
 import bcrypt from 'bcrypt'
 import nodemailer from "nodemailer"
 import sgMail from "@sendgrid/mail"
+import verifyToken from "./Models/Token.js"
 import crypto from "crypto"
 
 
@@ -17,8 +18,6 @@ app.use(express.json());
 dotenv.config()
 
 const password = process.env.password
-const emailusername = process.env.username
-const emailpassword = process.env.emailpassword
 
 sgMail.setApiKey(process.env.API_KEY_EMAIL)
 
@@ -29,6 +28,16 @@ const PORT = process.env.PORT || 3001
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
 .catch((error) => console.log(error.message))
+
+//mail function for sendgrid
+const sendMail = async (msg) =>{
+    try{
+        await sgMail.send(msg)
+        console.log('verification email sending...')
+    } catch(error){
+        console.log(error)
+    }
+}
 
 app.get("/", (req,res) => {
     res.send('HOMEPAGE')
@@ -57,15 +66,16 @@ app.post("/login", async (req, res)=>{
             res.status(406).send('Your account is not verified.')
         }
 
-})  
-const sendMail = async (msg) =>{
-    try{
-        await sgMail.send(msg)
-        console.log('email sending..')
-    } catch(error){
-        console.log(error)
-    }
-}
+})
+app.get("/verify/:token", (req, res)=>{
+    verifyToken.findOne({token:req.params.token}, (error, result) =>{
+        if (!result){
+            return res.redirect("http://localhost:3000/")
+        } else{
+            console.log("verified")
+        }
+    })
+})
 
 app.post("/createUser", async (req,res) => {
     const {username,password, email} = req.body
@@ -80,43 +90,26 @@ app.post("/createUser", async (req,res) => {
     newUser.password = bcrypt.hashSync(password, salt)
 
     await newUser.save() 
-    .then(response =>{     
+    .then(async response =>{
+        //Creates token
+        let emailToken = new verifyToken({
+            token:crypto.randomBytes(64).toString('hex')
+        })
+        await emailToken.save()
         res.status(201).send(response)
-        try{ 
-        sendMail({
-            to:"lihenryhl@yahoo.com",
-            from:"hennypenny456@gmail.com",
-            subject:"HELLO",
-            text:"testing"
+        try{
+            //sends the email with token 
+            sendMail({
+                to:"hennypenny456@gmail.com",
+                from:"hennypenny456@gmail.com",
+                subject:"Unplug Account Confirmation",
+                text:`${emailToken.token} testing this one too`,
+                html: `<a href ="http://${req.headers.host}/verify/${emailToken.token}">Click Here to Verify.</a>`
             })
         } catch(error) {
             console.log(error)
+            res.status(400).send('Email verification failed to send')
         }
-        //try {
-            // let transporter = nodemailer.createTransport({
-            //     service: "stmp.gmail.com",
-            //     //port: 587,
-            //     secure: false, // true for 465, false for other ports
-            //     auth: {
-            //       user: emailusername,
-            //       pass: emailpassword, 
-            //     },
-            //   });
-            
-            //   // send mail with defined transport object
-            //   let info = await transporter.sendMail({
-            //     from: '"Fred Foo 👻" <foo@example.com>', // sender address
-            //     to: "lihenryhl@yahoo.com", // list of receivers
-            //     subject: "Hello ✔", // Subject line
-            //     text: "Hello world?", // plain text body
-            //     html: "<b>Hello world?</b>", // html body
-            //   });
-            //   console.log("Message sent: %s", info.messageId);
-            //   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-            // This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
-            //    } catch (error){
-            //        console.log(error)
-            //    }
     }).catch (error => {
         if (error.keyValue.username && error.code === 11000){
             res.status(406).send(`This username ${error.keyValue.username} is already taken`)
