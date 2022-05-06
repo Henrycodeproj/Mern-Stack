@@ -12,7 +12,10 @@ const UserSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-    isVerified:Boolean
+    isVerified:Boolean,
+    expiresAt: {
+        type: Date, default: Date.now, index: { expires: 1 }
+    }
 }, {timestamps:true})
 
 const UserModel = mongoose.model("Users", UserSchema)
