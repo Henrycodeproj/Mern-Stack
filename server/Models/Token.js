@@ -1,16 +1,19 @@
 import mongoose from "mongoose";
 
 const VerifyToken = new mongoose.Schema({
-    userId:String,
+    userId:{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:"Users"
+    },
     token: {
         type:String,
         unique:true
     },
     expiresAt: {
-        type: Date, default: Date.now, index: { expires: 1 }
+        //type: Date, default: Date.now, index: { expires: 100 }
     }
 })
 
-const verifyToken = mongoose.model("AuthToken", VerifyToken)
+const verifyTokenModel = mongoose.model("AuthToken", VerifyToken)
 
-export default verifyToken
+export default verifyTokenModel

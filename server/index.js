@@ -4,9 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv'
 import UserModel from './Models/Users.js';
 import bcrypt from 'bcrypt'
-import nodemailer from "nodemailer"
 import sgMail from "@sendgrid/mail"
-import verifyToken from "./Models/Token.js"
+import verifyTokenModel from "./Models/Token.js"
 import crypto from "crypto"
 
 
@@ -63,18 +62,20 @@ app.post("/login", async (req, res)=>{
                 res.status(406).send('Incorrect Password!')
             }
         } else {
-            res.status(406).send('Your account is not verified.')
+            res.status(406).send('Your account is not verified. Please verify your account to login')
         }
 
 })
-app.get("/verify/:token", (req, res)=>{
-    verifyToken.findOne({token:req.params.token}, (error, result) =>{
-        if (!result){
-            return res.redirect("http://localhost:3000/")
-        } else{
-            console.log("verified")
-        }
-    })
+app.get("/verify/:token", async (req, res)=>{
+    const result = await verifyTokenModel.findOneAndUpdate({token:req.params.token})
+    if (!result){
+        res.status(401).send('Your key is expired.')
+    } else {
+        const account = await UserModel.findById(result.userId._id)
+        account.isVerified = true
+        account.save()
+    }
+
 })
 
 app.post("/createUser", async (req,res) => {
@@ -92,7 +93,8 @@ app.post("/createUser", async (req,res) => {
     await newUser.save() 
     .then(async response =>{
         //Creates token
-        let emailToken = new verifyToken({
+        let emailToken = new verifyTokenModel({
+            userId:newUser._id,
             token:crypto.randomBytes(64).toString('hex')
         })
         await emailToken.save()
