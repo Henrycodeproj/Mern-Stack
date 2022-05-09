@@ -1,5 +1,7 @@
-const ExpiredVerification = () =>{
+export const ExpiredVerification = () =>{
     return(
-        <h1>Your token does not exists</h1>
+        <p className="expired">
+            <h1>Your validation link has expired.</h1>
+        </p>
     )
 }

@@ -64,18 +64,21 @@ app.post("/login", async (req, res)=>{
         } else {
             res.status(406).send('Your account is not verified. Please verify your account to login')
         }
-
 })
-app.get("/verify/:token", async (req, res)=>{
-    const result = await verifyTokenModel.findOneAndUpdate({token:req.params.token})
-    if (!result){
-        res.status(401).send('Your key is expired.')
-    } else {
-        const account = await UserModel.findById(result.userId._id)
-        account.isVerified = true
-        account.save()
-    }
 
+app.get("/verify/:token", async (req, res)=>{
+    const result = await verifyTokenModel.findOne({token:req.params.token})
+    if (!result){
+        res.status(404).redirect('http://localhost:3000/invalid/expired')
+    }
+    const account = await UserModel.findById(result.userId._id) 
+    if (account.isVerified === true) {
+        res.status(500).send('You have already been verified.')
+    } else {
+        account.isVerified = true
+        await account.save()
+        res.status(200).redirect('http://localhost:3000/valid')
+    }
 })
 
 app.post("/createUser", async (req,res) => {
