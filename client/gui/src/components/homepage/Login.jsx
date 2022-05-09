@@ -32,12 +32,11 @@ export const Login = ({setOption, option, active, inactive}) => {
       await axios.post('http://localhost:3001/login', loginInfo)
       .then(res => {
         alert(res.data)
-        setLoginLoading(false)
         navigateTo("display")
       }).catch(error =>{
         setServerError(error.response.data)
-        setLoginLoading(false)
-      }) 
+      })
+      setLoginLoading(false) 
     }
 
     return (
@@ -78,11 +77,7 @@ export const Login = ({setOption, option, active, inactive}) => {
                     <LockIcon style={{fontSize:'25px', marginBottom:'5px', color:'rgb(198, 196, 196)'}}/>
                     </label>
                 </div>
-                <h4 style={{textAlign:'center'}}>or</h4>
-                <div className="login-alt">
-                  <GoogleIcon/>
-                </div>
-                <div className="submit-section">
+                <div className="submit-section-login">
                   <Button variant="contained" color="secondary" type = "submit">Login</Button>
                   <span>{loginLoading && <CircularProgress color="inherit" />}</span>
                 </div>

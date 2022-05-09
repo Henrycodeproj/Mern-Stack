@@ -13,9 +13,7 @@ const UserSchema = new mongoose.Schema({
         unique:true
     },
     isVerified:Boolean,
-    expiresAt: {
-        //type: Date, default: Date.now, index: { expires: 100 }
-    }
+    sessionToken:String
 }, {timestamps:true})
 
 const UserModel = mongoose.model("Users", UserSchema)

@@ -134,16 +134,16 @@ export const Signup = () =>{
     const formCheck = (inputValues) => {
       const Errors = {};
       if (!inputValues.password){
-         Errors.password = 'Password field is empty'
+         Errors.password = 'Password field is required'
       }
       if (!inputValues.Confirm){
-        Errors.Confirm = 'Confirm Password field is empty'
+        Errors.Confirm = 'Confirm Password field is required'
       }
       if (!inputValues.username){
         Errors.username = 'Username is required'
       }
       if (!inputValues.email){
-        Errors.email = 'Email is empty'
+        Errors.email = 'Email is required'
       }
 
       setformErrors(Errors)
@@ -188,7 +188,7 @@ export const Signup = () =>{
               {passwordError && <Alert variant="filled" severity="error" color="secondary" onClose={()=>setPasswordError(false)}>Your password is missing requirements.</Alert>}
               {serverError && <Alert variant="filled" severity="error" color="secondary" onClose = {()=> setServerError('')}>{serverError}</Alert>}
               {emailError && <Alert variant ="filled" severity="error" color= "secondary" onClose={()=>setEmailError(false)}>Your email does not end with edu.</Alert>}
-              {createdAccount && <Alert variant ="filled" severity="success" onClose={()=>setCreatedAccount(false)}>Check your email to verify your account.</Alert>}
+              {createdAccount && <Alert variant ="filled" severity="success" onClose={()=>setCreatedAccount(false)}>Check your email to verify your account.The link will expire in 30 minutes.</Alert>}
               {/* start of form */}
               <form className='signup' onSubmit={submitHandler}>
                 {/* username */}
@@ -246,7 +246,6 @@ export const Signup = () =>{
                       />
                       <p className='form-errors'>{formErrors.email}</p>
                   </label>
-                    <a href='https://google.com'><GoogleIcon/></a>
                   <div className='submit-section'>
                   <Button variant="contained" color='secondary' type='submit' className='signup-submit-button'>Sign up</Button>
                   {signLoading && <CircularProgress color="inherit" />}
