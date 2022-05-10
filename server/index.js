@@ -1,42 +1,40 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import UserModel from './Models/Users.js';
-import bcrypt from 'bcrypt'
-import sgMail from "@sendgrid/mail"
-import verifyTokenModel from "./Models/Token.js"
-import crypto from "crypto"
+import bcrypt from 'bcrypt';
+import verifyTokenModel from './Models/Token.js';
+import crypto from 'crypto';
+import session from 'express-session';
+import sendMail from './config/mail.js';
+import passport from 'passport'
 
 
 
 const app = express()
-
 app.use(cors());
 app.use(express.json());
-dotenv.config()
+app.use(session({
+    secret:process.env.SECRET_SESSION_TOKEN,
+    resave:false,
+    saveUninitialized:false
+}))
+app.use(passport.initialize())
 
-const password = process.env.password
+//configurations
+dotenv.config();
 
-sgMail.setApiKey(process.env.API_KEY_EMAIL)
 
-const DB_URL = `mongodb+srv://admin:${password}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
+const databasePassword = process.env.password
+
+const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
 
 const PORT = process.env.PORT || 3001
 
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
-.catch((error) => console.log(error.message))
-
-//mail function for sendgrid
-const sendMail = async (msg) =>{
-    try{
-        await sgMail.send(msg)
-        console.log('verification email sending...')
-    } catch(error){
-        console.log(error)
-    }
-}
+.catch((error) => console.log(error.message));
 
 app.get("/", (req,res) => {
     res.send('HOMEPAGE')
@@ -52,21 +50,23 @@ app.get("/api", (req,res) => {
     })
 })
  
-app.post("/login", async (req, res)=>{
+app.post("/login", passport.authenticate('local'), async (req, res)=>{
     const data = req.body
-    const user = await UserModel.findOne({username:data.login_username})
-        if (user && user.isVerified === true) {
-            if (bcrypt.compareSync(data.login_password, user.password)) {
-                res.status(200).send('Logging In...')
-            } else{
-                res.status(406).send('Incorrect Password!')
-            }
-        } else {
-            res.status(406).send('Your account is not verified. Please verify your account to login')
-        }
+    console.log(data)
+    // const user = await UserModel.findOne({username:data.login_username})
+    //     if (user && user.isVerified === true) {
+    //         if (bcrypt.compareSync(data.login_password, user.password)) {
+    //             res.status(200).send('Logging In...')
+    //         } else{
+    //             res.status(406).send('Incorrect Password!')
+    //         }
+    //     } else {
+    //         res.status(406).send('Your account is not verified. Please verify your account to login')
+    //     }
 })
 
 app.get("/verify/:token", async (req, res)=>{
+    try {
     const result = await verifyTokenModel.findOne({token:req.params.token})
     if (!result){
         res.status(404).redirect('http://localhost:3000/invalid/expired')
@@ -79,10 +79,13 @@ app.get("/verify/:token", async (req, res)=>{
         await account.save()
         res.status(200).redirect('http://localhost:3000/valid')
     }
+    } catch(error){
+        res.status(500)
+    } 
 })
 
 app.post("/createUser", async (req,res) => {
-    const {username,password, email} = req.body
+    const {username, password, email} = req.body
     const newUser = new UserModel({
         username:username,
         password:password,
@@ -103,7 +106,7 @@ app.post("/createUser", async (req,res) => {
         await emailToken.save()
         res.status(201).send(response)
         try{
-            //sends the email with token 
+            //sends the email with verification token 
             sendMail({
                 to:"hennypenny456@gmail.com",
                 from:"hennypenny456@gmail.com",
