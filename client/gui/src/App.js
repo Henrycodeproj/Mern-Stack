@@ -27,21 +27,3 @@ function App() {
 }
 
 export default App;
-
-
-// return (
-//   <div className="App">
-//     <header>
-//       <Navbar/>
-//     </header>
-//       <main>
-//       <div className='landing-wrapper'>
-//         <div className='signup-container'>
-//           <Signup/>
-//         </div>
-//         <SideImage/>
-//       </div>
-//       </main>
-//       {/* <Display/> */}
-//   </div>
-// );
