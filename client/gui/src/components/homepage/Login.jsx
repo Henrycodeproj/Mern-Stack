@@ -25,18 +25,19 @@ export const Login = ({setOption, option, active, inactive}) => {
       const {name, value} = e.target
       setLoginInfo({...loginInfo, [name]:value})
     }
-
     const handleSubmit = async (e) =>{
       setLoginLoading(true)
       e.preventDefault()
       await axios.post('http://localhost:3001/login', loginInfo)
       .then(res => {
+        console.log(res)
         alert(res.data)
         navigateTo("display")
       }).catch(error =>{
+        console.log(error,'test2')
         setServerError(error.response.data)
       })
-      setLoginLoading(false) 
+      setLoginLoading(false)
     }
 
     return (
