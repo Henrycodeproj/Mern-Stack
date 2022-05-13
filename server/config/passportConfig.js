@@ -19,14 +19,17 @@ function InitPassport(passport) {
             })
         }
     ))
-passport.serializeUser(function (user, done) {
-    done(null, user._id) // the user id that you have in the session
-});
 
-passport.deserializeUser(function (id, done) {
-    UserModel.findById(id, (err, user)=>{
-        done(err, user)
-    })
+passport.serializeUser(function(user,done) {
+    console.log('serialize working')
+    done(null, user.id)
+})
+
+passport.deserializeUser(function(id, done) {
+    UserModel.findById(id, function(err, user) {
+        console.log('deserializer working')
+        done(err, user);
+    });
 });
 }
 
