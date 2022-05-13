@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios";
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
-import GoogleIcon from '@mui/icons-material/Google';
 
 
 export const Login = ({setOption, option, active, inactive}) => {
@@ -14,7 +13,6 @@ export const Login = ({setOption, option, active, inactive}) => {
         login_username:"",
         login_password:""
       })
-
     const navigateTo = useNavigate()
 
     const [serverError, setServerError] = useState('')
@@ -28,7 +26,13 @@ export const Login = ({setOption, option, active, inactive}) => {
     const handleSubmit = async (e) =>{
       setLoginLoading(true)
       e.preventDefault()
-      await axios.post('http://localhost:3001/login', loginInfo)
+      //await axios.post('http://localhost:3001/login', loginInfo)
+      await axios({
+        method:"POST",
+        data:loginInfo,
+        withCredentials:true,
+        url:'http://localhost:3001/login'
+      })
       .then(res => {
         console.log(res)
         alert(res.data)

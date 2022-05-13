@@ -5,35 +5,40 @@ import dotenv from 'dotenv';
 import UserModel from './Models/Users.js';
 import bcrypt from 'bcrypt';
 import verifyTokenModel from './Models/Token.js';
-import crypto, { secureHeapUsed } from 'crypto';
-import session from 'express-session';
+import crypto from 'crypto';
+import session from "express-session"
 import sendMail from './config/mail.js';
-import passport from 'passport'
+import passport from 'passport';
 import InitPassport from './config/passportConfig.js'
 
 
 const app = express()
-app.use(cors());
 app.use(express.json());
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 //configurations
 dotenv.config();
 
 //passport js middleware
-InitPassport(passport);
 app.use(session({
-    secret:process.env.SECRET_SESSION_TOKEN,
-    resave:true,
-    saveUninitialized:true,
-}));
-app.use(passport.initialize());
-app.use(passport.session());
+    secret:process.env.SECRET_SESSION,
+    resave:false,
+    saveUninitialized:false,
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+InitPassport(passport);
+
 
 const databasePassword = process.env.password
 
 const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
 
 const PORT = process.env.PORT || 3001
-
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
 .catch((error) => console.log(error.message));
@@ -59,19 +64,21 @@ app.get('/logout', (req,res)=> {
     res.redirect("/")
 })
 
-app.get('/users', (req,res) => {
-    console.log(req.user)
+app.get('/test', (req,res) =>{
+    if (req.isAuthenticated()){
+        res.send('pass')
+    }
+        res.send('not auth')
 })
-
 app.post('/login', function(req, res, next){ 
     passport.authenticate('local', function(err, user, info) {
-    if (err) res.status(500).send(err)
-    if (!user)res.status(401).send(info.message)
+        if (err) res.status(500).send(err)
+        if (!user)res.status(401).send(info.message)
     req.logIn(user, function(err) {
-      if (err) { return next(err); }
-        return res.send(info.message)
-    });
-  })(req, res, next);
+        if (err) return next(err)
+        res.status(200).send(info.message)
+    })
+    })(req, res, next);
 });
     // const user = await UserModel.findOne({username:data.login_username})
     //     if (user && user.isVerified === true) {
@@ -83,6 +90,9 @@ app.post('/login', function(req, res, next){
     //     } else {
     //         res.status(406).send('Your account is not verified. Please verify your account to login')
     //     }
+app.get('/users', (req, res) => {
+    console.log(req.user, req.session)
+})
 
 app.get("/verify/:token", async (req, res)=>{
     try {
