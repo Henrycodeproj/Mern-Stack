@@ -48,20 +48,18 @@ app.get("/", (req,res) => {
 })
 
 app.get("/api", (req,res) => {
-    UserModel.find({}, (error, result) => {
+    UserModel.find((error, result) => {
         if (error){
             res.send(error)
         } else {
-            res.json(result)
+            res.send(result.username)
         }
     })
 })
 
 app.get('/logout', (req,res)=> {
-    console.log(req.user)
     req.logOut()
-    console.log(req.user)
-    res.redirect("/")
+    res.redirect("http://localhost:3000")
 })
 
 app.get('/test', (req,res) =>{
@@ -76,22 +74,14 @@ app.post('/login', function(req, res, next){
         if (!user)res.status(401).send(info.message)
     req.logIn(user, function(err) {
         if (err) return next(err)
-        res.status(200).send(info.message)
+        res.status(200).send({message:info.message,user:user})
     })
     })(req, res, next);
 });
-    // const user = await UserModel.findOne({username:data.login_username})
-    //     if (user && user.isVerified === true) {
-    //         if (bcrypt.compareSync(data.login_password, user.password)) {
-    //             res.status(200).send('Logging In...')
-    //         } else{
-    //             res.status(406).send('Incorrect Password!')
-    //         }
-    //     } else {
-    //         res.status(406).send('Your account is not verified. Please verify your account to login')
-    //     }
+
 app.get('/users', (req, res) => {
-    console.log(req.user, req.session)
+    if (req.isAuthenticated()) res.redirect("http://localhost:3000/valid")
+    else res.redirect("http://localhost:3000/invalid")
 })
 
 app.get("/verify/:token", async (req, res)=>{
