@@ -13,6 +13,7 @@ export const Login = ({setOption, option, active, inactive}) => {
         login_username:"",
         login_password:""
       })
+      
     const navigateTo = useNavigate()
 
     const [serverError, setServerError] = useState('')
@@ -34,9 +35,10 @@ export const Login = ({setOption, option, active, inactive}) => {
         url:'http://localhost:3001/login'
       })
       .then(res => {
-        console.log(res)
-        alert(res.data)
-        navigateTo("display")
+        if (res.data.user){
+          alert(res.data.message)
+          navigateTo("display")
+        }
       }).catch(error =>{
         console.log(error,'test2')
         setServerError(error.response.data)
