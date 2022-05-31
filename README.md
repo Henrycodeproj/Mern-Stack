@@ -13,4 +13,5 @@
 -Mongodb\
 -Mongoose\
 -React JS\
--Send Grid
+-Send Grid\
+-Passport Js (local-Strategy)
