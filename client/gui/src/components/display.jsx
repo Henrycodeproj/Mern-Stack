@@ -5,7 +5,7 @@ export const Display = () =>{
 
     const [peoples, setPeople] = useState([])
 
-    useEffect(()=>{
+    useEffect (()=>{
     const URL = 'http://localhost:3001/api'
     axios.get(`${URL}`)
     .then(res => setPeople(res.data))
