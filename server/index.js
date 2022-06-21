@@ -57,6 +57,7 @@ app.get("/api", (req,res) => {
     })
 })
 
+
 app.get('/logout', (req,res)=> {
     req.logOut()
     res.redirect("http://localhost:3000")
