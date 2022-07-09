@@ -14,4 +14,5 @@
 -Mongoose\
 -React JS\
 -Send Grid\
+-JWT tokens\
 -Passport Js (local-Strategy)
