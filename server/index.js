@@ -19,7 +19,9 @@ const corsOptions ={
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
+//needed to change original cors setup to allow certain information through
 app.use(cors(corsOptions));
+
 //configurations
 dotenv.config();
 
@@ -69,6 +71,7 @@ app.get('/test', (req,res) =>{
     }
         res.send('not auth')
 })
+
 app.post('/login', function(req, res, next){ 
     passport.authenticate('local', function(err, user, info) {
         if (err) res.status(500).send(err)
@@ -100,7 +103,7 @@ app.get("/verify/:token", async (req, res)=>{
         res.status(200).redirect('http://localhost:3000/valid')
     }
     } catch(error){
-        res.status(500)
+        res.status(500).send('Internal Error')
     } 
 })
 

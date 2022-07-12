@@ -15,7 +15,7 @@ export const Display = () =>{
 
     return (
         <div className='du'>
-            {peoples.map((people) => <h1>{people.email}</h1>)}
+            {peoples.length !== 0  ? peoples.map((people) => <h1>{people.email}</h1>):<h1>There are no accounts</h1>}
         </div>
     )
 }
