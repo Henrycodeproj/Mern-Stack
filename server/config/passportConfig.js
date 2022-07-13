@@ -20,18 +20,21 @@ function InitPassport(passport) {
             })
         }
     ))
+
 //creates a cookie for user
-passport.serializeUser(function(user,done) {
+passport.serializeUser(function(user, done) {
     console.log('serialize working')
-    done(null, user.id)
-})
+    done(null, user.id);
+});
+
 //decrypts cookie and creates a usable function to call passport user
-passport.deserializeUser(function(id, done) {
+passport.deserializeUser(function (id, done) {
     UserModel.findById(id, function(err, user) {
         console.log('deserializer working')
         done(err, user);
     });
 });
+
 }
 
 export default InitPassport

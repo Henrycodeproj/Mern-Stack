@@ -16,9 +16,7 @@ function App() {
       <Navbar/>
       <Routes>
       <Route path="/" element ={<Signup/>}/>
-        <Route element = {<UserAuthentication/>}>
-          <Route path="/display" element = {<Display/>}/>
-        </Route>
+      <Route path="/display" element = {<Display/>}/>
       <Route path = "/invalid/expired/" element = {<ExpiredVerification/>}/>
       <Route path = "/valid" element = {<Confirmation/>}/>
       <Route path = "*" element ={<Errorpage/> }/>

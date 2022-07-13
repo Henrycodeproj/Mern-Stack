@@ -13,7 +13,7 @@ export const Login = ({setOption, option, active, inactive}) => {
         login_username:"",
         login_password:""
       })
-      
+
     const navigateTo = useNavigate()
 
     const [serverError, setServerError] = useState('')
@@ -35,11 +35,12 @@ export const Login = ({setOption, option, active, inactive}) => {
       })
       .then(res => {
         if (res.data.user){
+          console.log(res.data)
           alert(res.data.message)
           navigateTo("display")
         }
       }).catch(error =>{
-        console.log(error,'test2')
+        console.log(error)
         setServerError(error.response.data)
       })
       setLoginLoading(false)

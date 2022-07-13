@@ -14,6 +14,7 @@ import InitPassport from './config/passportConfig.js'
 
 const app = express()
 app.use(express.json());
+
 const corsOptions ={
     origin:'http://localhost:3000', 
     credentials:true,            //access-control-allow-credentials:true
@@ -29,12 +30,17 @@ dotenv.config();
 app.use(session({
     secret:process.env.SECRET_SESSION,
     resave:false,
-    saveUninitialized:false,
+    saveUninitialized:false
 }))
-app.use(passport.initialize())
-app.use(passport.session())
+
+app.use(passport.initialize());
+app.use(passport.session());
 InitPassport(passport);
 
+app.use((req,res,next) =>{
+    console.log(req.user,req.session)
+    next()
+})
 
 const databasePassword = process.env.password
 
@@ -52,13 +58,27 @@ app.get("/", (req,res) => {
 app.get("/api", (req,res) => {
     UserModel.find((error, result) => {
         if (error){
+            console.log(error)
             res.send(error)
         } else {
+            console.log(result.username)
             res.send(result.username)
         }
     })
 })
 
+app.get('/users1', async (req, res) =>{
+    try{
+        if (req.isAuthenticated()){
+            const users = await UserModel.find()
+            res.status(200).send(users)
+        } else{
+            res.redirect("http://localhost:3000")
+        }
+    } catch(err){
+        res.status(500).send("Internal Server error")
+    }
+})
 
 app.get('/logout', (req,res)=> {
     req.logOut()
@@ -66,10 +86,11 @@ app.get('/logout', (req,res)=> {
 })
 
 app.get('/test', (req,res) =>{
-    if (req.isAuthenticated()){
-        res.send('pass')
+    if(req.isAuthenticated()){
+        res.send('good')
+    } else{
+        res.send('no good')
     }
-        res.send('not auth')
 })
 
 app.post('/login', function(req, res, next){ 
@@ -77,15 +98,10 @@ app.post('/login', function(req, res, next){
         if (err) res.status(500).send(err)
         if (!user)res.status(401).send(info.message)
     req.logIn(user, function(err) {
-        if (err) return next(err)
-        res.status(200).send({message:info.message,user:user})
-    })
-    })(req, res, next);
-});
-
-app.get('/users', (req, res) => {
-    if (req.isAuthenticated()) res.redirect("http://localhost:3000/valid")
-    else res.redirect("http://localhost:3000/invalid")
+            if (err) return next(err)
+            res.status(200).send({message:info.message, user:user})
+        })
+    })(req, res, next)
 })
 
 app.get("/verify/:token", async (req, res)=>{
@@ -143,10 +159,10 @@ app.post("/createUser", async (req,res) => {
         }
     }).catch (error => {
         if (error.keyValue.username && error.code === 11000){
-            res.status(406).send(`This username ${error.keyValue.username} is already taken`)
+            res.status(400).send(`This username ${error.keyValue.username} is already taken`)
         } 
         else if (error.keyValue.email && error.code === 11000){
-            res.status(406).send(`This email ${error.keyValue.email} has already been signed up.`);
+            res.status(400).send(`This email ${error.keyValue.email} has already been signed up.`);
         } else {
             console.log(error)
         }

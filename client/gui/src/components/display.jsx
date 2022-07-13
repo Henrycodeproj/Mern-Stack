@@ -3,19 +3,17 @@ import { useState, useEffect } from 'react';
 
 export const Display = () =>{
 
-    const [peoples, setPeople] = useState([])
+    const [users, setUsers] = useState([])
 
     useEffect (()=>{
-    const URL = 'http://localhost:3001/api'
-    axios.get(`${URL}`)
-    .then(res => setPeople(res.data))
+        const URL = 'http://localhost:3001/users1'
+        axios.get(`${URL}`)
+        .then(res => setUsers(res.data))
     },[])
-
-    console.log(peoples)
-
+    console.log(users)
     return (
         <div className='du'>
-            {peoples.length !== 0  ? peoples.map((people) => <h1>{people.email}</h1>):<h1>There are no accounts</h1>}
+            {users.length !== 0 ? users.map((user)=> user.username): <div>not auth</div>}
         </div>
     )
 }
