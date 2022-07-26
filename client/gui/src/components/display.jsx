@@ -10,7 +10,7 @@ export const Display = () =>{
         axios.get(`${URL}`)
         .then(res => setUsers(res.data))
     },[])
-    console.log(users)
+    
     return (
         <div className='du'>
             {users.length !== 0 ? users.map((user)=> user.username): <div>not auth</div>}
