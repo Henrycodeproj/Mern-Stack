@@ -9,36 +9,64 @@ import crypto from 'crypto';
 import session from "express-session"
 import sendMail from './config/mail.js';
 import passport from 'passport';
-import InitPassport from './config/passportConfig.js'
+import localStrategy from 'passport-local'
 
 
 const app = express()
 app.use(express.json());
 
+//configurations
+dotenv.config();
+
 const corsOptions ={
-    origin:'http://localhost:3000', 
+    origin:'http://localhost:3000',
     credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
+    optionSuccessStatus:200,
 }
 //needed to change original cors setup to allow certain information through
 app.use(cors(corsOptions));
-
-//configurations
-dotenv.config();
 
 //passport js middleware
 app.use(session({
     secret:process.env.SECRET_SESSION,
     resave:false,
-    saveUninitialized:false
+    saveUninitialized:false,
 }))
 
 app.use(passport.initialize());
 app.use(passport.session());
-InitPassport(passport);
+passport.use(new localStrategy({usernameField: 'login_username', passwordField: 'login_password'},
+function (username,password,done) {
+    UserModel.findOne({username:username}, (err, user) => {
+        if (err) throw err
+        if (!user) return done(null, false, {message:'This user does not exist'})
+        bcrypt.compare(password, user.password, (err, result) =>{
+            if (err) throw err;
+            if (!result) return done(null, false, {message:'Your password is incorrect'})
+            else if (result && !user.isVerified) return done(null, false, {message: 'Your account is not verified'})
+            else {
+                return done(null, user, {message:'Logging in...'})
+            }
+        })
+    })
+}
+))
+
+passport.serializeUser((user, done)=>{
+    console.log('working')
+    done(null, user.id)
+})
+
+passport.deserializeUser(function (id, done) {
+    UserModel.findById(id, function(err, user) {
+        console.log('deserializer working')
+        done(err, user);
+    });
+});
+
 
 app.use((req,res,next) =>{
-    console.log(req.user,req.session)
+    console.log(req.session)
     next()
 })
 
@@ -50,6 +78,8 @@ const PORT = process.env.PORT || 3001
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
 .catch((error) => console.log(error.message));
+
+
 
 app.get("/", (req,res) => {
     res.send('HOMEPAGE')
@@ -69,12 +99,7 @@ app.get("/api", (req,res) => {
 
 app.get('/users1', async (req, res) =>{
     try{
-        if (req.isAuthenticated()){
-            const users = await UserModel.find()
-            res.status(200).send(users)
-        } else{
-            res.redirect("http://localhost:3000")
-        }
+        res.status(200).send([])
     } catch(err){
         res.status(500).send("Internal Server error")
     }
@@ -93,16 +118,18 @@ app.get('/test', (req,res) =>{
     }
 })
 
-app.post('/login', function(req, res, next){ 
-    passport.authenticate('local', function(err, user, info) {
-        if (err) res.status(500).send(err)
-        if (!user)res.status(401).send(info.message)
-    req.logIn(user, function(err) {
-            if (err) return next(err)
-            res.status(200).send({message:info.message, user:user})
-        })
-    })(req, res, next)
-})
+// app.post('/login', function(req, res, next){ 
+//     passport.authenticate('local', function(err, user, info) {
+//         if (err) res.status(500).send(err)
+//         if (!user)res.status(401).send(info.message)
+//     req.logIn(user, function(err) {
+//             if (err) return next(err)
+//             res.status(200).send({message:info.message, user:user})
+//         })
+//     })(req, res, next)
+// })
+app.post('/login', 
+  passport.authenticate('local', { failureRedirect: '/login'}));
 
 app.get("/verify/:token", async (req, res)=>{
     try {
