@@ -9,7 +9,7 @@ import crypto from 'crypto';
 import session from "express-session"
 import sendMail from './config/mail.js';
 import passport from 'passport';
-import localStrategy from 'passport-local'
+import LocalStrategy from "passport-local"
 
 
 const app = express()
@@ -26,6 +26,34 @@ const corsOptions ={
 //needed to change original cors setup to allow certain information through
 app.use(cors(corsOptions));
 
+passport.serializeUser(function(user, done) {
+    console.log('Serializer Working') 
+    done(null, user.id);
+  });
+  
+passport.deserializeUser(function(id, done) {
+    console.log('deSerializer Working') 
+    UserModel.findById(id, function(err, user) {
+      done(err, user);
+      });
+  });
+  
+  passport.use(new LocalStrategy({usernameField: 'login_username', passwordField: 'login_password'},
+  function (username,password,done) {
+      UserModel.findOne({username:username}, (err, user) => {
+          if (err) throw err
+          if (!user) return done(null, false, {message:'This user does not exist'})
+          bcrypt.compare(password, user.password, (err, result) =>{
+              if (err) throw err;
+              if (!result) return done(null, false, {message:'Your password is incorrect'})
+              else if (result && !user.isVerified) return done(null, false, {message: 'Your account is not verified'})
+              else {
+                  return done(null, user, {message:'Logging in...'})
+              }
+          })
+      })
+  }
+  ))
 //passport js middleware
 app.use(session({
     secret:process.env.SECRET_SESSION,
@@ -33,42 +61,8 @@ app.use(session({
     saveUninitialized:false,
 }))
 
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new localStrategy({usernameField: 'login_username', passwordField: 'login_password'},
-function (username,password,done) {
-    UserModel.findOne({username:username}, (err, user) => {
-        if (err) throw err
-        if (!user) return done(null, false, {message:'This user does not exist'})
-        bcrypt.compare(password, user.password, (err, result) =>{
-            if (err) throw err;
-            if (!result) return done(null, false, {message:'Your password is incorrect'})
-            else if (result && !user.isVerified) return done(null, false, {message: 'Your account is not verified'})
-            else {
-                return done(null, user, {message:'Logging in...'})
-            }
-        })
-    })
-}
-))
-
-passport.serializeUser((user, done)=>{
-    console.log('working')
-    done(null, user.id)
-})
-
-passport.deserializeUser(function (id, done) {
-    UserModel.findById(id, function(err, user) {
-        console.log('deserializer working')
-        done(err, user);
-    });
-});
-
-
-app.use((req,res,next) =>{
-    console.log(req.session)
-    next()
-})
+app.use(passport.initialize())
+app.use(passport.session())
 
 const databasePassword = process.env.password
 
@@ -82,7 +76,12 @@ mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 
 
 app.get("/", (req,res) => {
-    res.send('HOMEPAGE')
+    console.log(req.session)
+})
+
+
+app.get("/fun", (req,res) => {
+    console.log(req.session)
 })
 
 app.get("/api", (req,res) => {
@@ -97,9 +96,10 @@ app.get("/api", (req,res) => {
     })
 })
 
-app.get('/users1', async (req, res) =>{
+app.get('/users', async (req, res) =>{
     try{
-        res.status(200).send([])
+        const g = await UserModel.find({})
+        return res.status(200).send(g)
     } catch(err){
         res.status(500).send("Internal Server error")
     }
@@ -128,8 +128,17 @@ app.get('/test', (req,res) =>{
 //         })
 //     })(req, res, next)
 // })
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login'}));
+
+// app.post('/login',passport.authenticate('local', {successRedirect:'/users', failureRedirect: '/login'}),
+//     function(req,res,next){
+// });
+
+app.post('/login',
+  passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
+  function(req, res) {
+    res.status(200).send({user:req.user})
+  });
+
 
 app.get("/verify/:token", async (req, res)=>{
     try {
