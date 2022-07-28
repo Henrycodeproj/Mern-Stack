@@ -37,7 +37,7 @@ export const Login = ({setOption, option, active, inactive}) => {
         if (res.data.user){
           console.log(res.data)
           alert(res.data.message)
-          //navigateTo("display")
+          navigateTo("display")
         }
       }).catch(error =>{
         console.log(error)

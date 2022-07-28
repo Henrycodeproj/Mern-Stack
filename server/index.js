@@ -8,8 +8,6 @@ import verifyTokenModel from './Models/Token.js';
 import crypto from 'crypto';
 import session from "express-session"
 import sendMail from './config/mail.js';
-import passport from 'passport';
-import LocalStrategy from "passport-local"
 
 
 const app = express()
@@ -26,43 +24,12 @@ const corsOptions ={
 //needed to change original cors setup to allow certain information through
 app.use(cors(corsOptions));
 
-passport.serializeUser(function(user, done) {
-    console.log('Serializer Working') 
-    done(null, user.id);
-  });
-  
-passport.deserializeUser(function(id, done) {
-    console.log('deSerializer Working') 
-    UserModel.findById(id, function(err, user) {
-      done(err, user);
-      });
-  });
-  
-  passport.use(new LocalStrategy({usernameField: 'login_username', passwordField: 'login_password'},
-  function (username,password,done) {
-      UserModel.findOne({username:username}, (err, user) => {
-          if (err) throw err
-          if (!user) return done(null, false, {message:'This user does not exist'})
-          bcrypt.compare(password, user.password, (err, result) =>{
-              if (err) throw err;
-              if (!result) return done(null, false, {message:'Your password is incorrect'})
-              else if (result && !user.isVerified) return done(null, false, {message: 'Your account is not verified'})
-              else {
-                  return done(null, user, {message:'Logging in...'})
-              }
-          })
-      })
-  }
-  ))
 //passport js middleware
 app.use(session({
     secret:process.env.SECRET_SESSION,
     resave:false,
     saveUninitialized:false,
 }))
-
-app.use(passport.initialize())
-app.use(passport.session())
 
 const databasePassword = process.env.password
 
@@ -118,27 +85,9 @@ app.get('/test', (req,res) =>{
     }
 })
 
-// app.post('/login', function(req, res, next){ 
-//     passport.authenticate('local', function(err, user, info) {
-//         if (err) res.status(500).send(err)
-//         if (!user)res.status(401).send(info.message)
-//     req.logIn(user, function(err) {
-//             if (err) return next(err)
-//             res.status(200).send({message:info.message, user:user})
-//         })
-//     })(req, res, next)
-// })
-
-// app.post('/login',passport.authenticate('local', {successRedirect:'/users', failureRedirect: '/login'}),
-//     function(req,res,next){
-// });
-
-app.post('/login',
-  passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
-  function(req, res) {
-    res.status(200).send({user:req.user})
-  });
-
+app.post('/login', (req,res) =>{
+    console.log(req.body)
+})
 
 app.get("/verify/:token", async (req, res)=>{
     try {
