@@ -8,6 +8,7 @@ import verifyTokenModel from './Models/Token.js';
 import crypto from 'crypto';
 import session from "express-session"
 import sendMail from './config/mail.js';
+import jwt from 'jsonwebtoken'
 
 
 const app = express()
@@ -73,7 +74,6 @@ app.get('/users', async (req, res) =>{
 })
 
 app.get('/logout', (req,res)=> {
-    req.logOut()
     res.redirect("http://localhost:3000")
 })
 
@@ -85,8 +85,22 @@ app.get('/test', (req,res) =>{
     }
 })
 
-app.post('/login', (req,res) =>{
-    console.log(req.body)
+app.post('/login', async (req,res) =>{
+    const {login_username, login_password} = req.body
+    const user = await UserModel.findOne({username:login_username})
+    if (user){
+        bcrypt.compare(login_password, user.password, (err, result) =>{
+            if(err) return res.status(500).send({message:'There was a problem with the server'})
+            if(!result) return res.status(400).send({message:'This password you have entered is incorrect. Please try again.'})
+
+            const accessToken = jwt.sign(user, process.env.SECRET_SESSION)
+            console.log(accessToken)
+            return res.status(200).send({message:'Logging In...', user:user})
+
+        })
+    } else{
+        res.status(404).send({message:"This user does not exist."})
+    }
 })
 
 app.get("/verify/:token", async (req, res)=>{
