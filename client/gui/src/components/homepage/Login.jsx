@@ -34,14 +34,14 @@ export const Login = ({setOption, option, active, inactive}) => {
         url:'http://localhost:3001/login'
       })
       .then(res => {
-        if (res.data.user){
-          console.log(res.data)
+        console.log(res)
+        if (res.data){
           alert(res.data.message)
-          navigateTo("display")
+          //navigateTo("display")
         }
       }).catch(error =>{
-        console.log(error)
-        setServerError(error.response.data)
+        console.log(error.response.data.message)
+        setServerError(error.response.data.message)
       })
       setLoginLoading(false)
     }
