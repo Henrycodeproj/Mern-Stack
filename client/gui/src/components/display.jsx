@@ -6,8 +6,12 @@ export const Display = () =>{
     const [users, setUsers] = useState([])
 
     useEffect (()=>{
-        const URL = 'http://localhost:3001/users1'
-        axios.get(`${URL}`)
+        const URL = 'http://localhost:3001/users'
+        axios.get(`${URL}`, {
+            headers:{
+                "authorization":localStorage.getItem("Token")
+            }
+        })
         .then(res => setUsers(res.data))
     },[])
     
