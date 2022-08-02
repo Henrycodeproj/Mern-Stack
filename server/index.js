@@ -41,15 +41,18 @@ mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
 .catch((error) => console.log(error.message));
 
-
+function check(req,res,next){
+    console.log(req.headers.authorization)
+    next()
+}
 
 app.get("/", (req,res) => {
-    console.log(req.session)
+    console.log(req.headers)
 })
 
 
-app.get("/fun", (req,res) => {
-    console.log(req.session)
+app.get("/fun", check, (req,res) => {
+    console.log(req.headers["authorization"], req.session.user)
 })
 
 app.get("/api", (req,res) => {
@@ -65,6 +68,9 @@ app.get("/api", (req,res) => {
 })
 
 app.get('/users', async (req, res) =>{
+    jwt.verify(req.headers.authorization, process.env.SECRET_SESSION, (err,result) =>{
+        console.log(result,err)
+    })
     try{
         const g = await UserModel.find({})
         return res.status(200).send(g)
@@ -92,10 +98,8 @@ app.post('/login', async (req,res) =>{
         bcrypt.compare(login_password, user.password, (err, result) =>{
             if(err) return res.status(500).send({message:'There was a problem with the server'})
             if(!result) return res.status(400).send({message:'This password you have entered is incorrect. Please try again.'})
-
-            const accessToken = jwt.sign(user, process.env.SECRET_SESSION)
-            console.log(accessToken)
-            return res.status(200).send({message:'Logging In...', user:user})
+            const accessToken = jwt.sign({username:user.username,id:user.id}, process.env.SECRET_SESSION,{ expiresIn: 60})
+            res.status(200).send({message:'Logging In...', accessToken:accessToken})
 
         })
     } else{

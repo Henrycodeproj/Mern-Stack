@@ -34,10 +34,10 @@ export const Login = ({setOption, option, active, inactive}) => {
         url:'http://localhost:3001/login'
       })
       .then(res => {
-        console.log(res)
-        if (res.data){
+        if (res.data.accessToken){
           alert(res.data.message)
-          //navigateTo("display")
+          localStorage.setItem("Token", res.data.accessToken)
+          navigateTo("display")
         }
       }).catch(error =>{
         console.log(error.response.data.message)
