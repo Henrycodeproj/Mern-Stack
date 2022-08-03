@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const Display = () =>{
+
+    const navigateTo = useNavigate()
 
     const [users, setUsers] = useState([])
 
@@ -12,8 +15,12 @@ export const Display = () =>{
                 "authorization":localStorage.getItem("Token")
             }
         })
-        .then(res => setUsers(res.data))
-    },[])
+        .then((res)=> {
+            setUsers(res.data)
+        }).catch(err => {
+            navigateTo("/")
+        })
+    })
     
     return (
         <div className='du'>

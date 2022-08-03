@@ -42,17 +42,14 @@ mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .catch((error) => console.log(error.message));
 
 function check(req,res,next){
-    console.log(req.headers.authorization)
-    next()
+    jwt.verify(req.headers.authorization, process.env.SECRET_SESSION, (err, result) =>{
+        err ? req.isAuth = false: req.isAuth = true
+        next()
+    })
 }
 
 app.get("/", (req,res) => {
     console.log(req.headers)
-})
-
-
-app.get("/fun", check, (req,res) => {
-    console.log(req.headers["authorization"], req.session.user)
 })
 
 app.get("/api", (req,res) => {
@@ -67,13 +64,11 @@ app.get("/api", (req,res) => {
     })
 })
 
-app.get('/users', async (req, res) =>{
-    jwt.verify(req.headers.authorization, process.env.SECRET_SESSION, (err,result) =>{
-        console.log(result,err)
-    })
+app.get('/users', check, async (req, res) =>{
+    if (!req.isAuth) return res.status(400).send({message:'Your token is expired'})
     try{
-        const g = await UserModel.find({})
-        return res.status(200).send(g)
+        const userList = await UserModel.find({})
+        return res.status(200).send(userList)
     } catch(err){
         res.status(500).send("Internal Server error")
     }
@@ -83,12 +78,9 @@ app.get('/logout', (req,res)=> {
     res.redirect("http://localhost:3000")
 })
 
-app.get('/test', (req,res) =>{
-    if(req.isAuthenticated()){
-        res.send('good')
-    } else{
-        res.send('no good')
-    }
+app.get('/test', check, (req,res) =>{
+    if (req.isAuth) console.log('good')
+    res.redirect("http://localhost:3000")
 })
 
 app.post('/login', async (req,res) =>{
