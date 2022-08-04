@@ -9,6 +9,7 @@ import crypto from 'crypto';
 import session from "express-session"
 import sendMail from './config/mail.js';
 import jwt from 'jsonwebtoken'
+import isAuthenticated from './Middleware/auth.js';
 
 
 const app = express()
@@ -41,13 +42,6 @@ mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
 .catch((error) => console.log(error.message));
 
-function check(req,res,next){
-    jwt.verify(req.headers.authorization, process.env.SECRET_SESSION, (err, result) =>{
-        err ? req.isAuth = false: req.isAuth = true
-        next()
-    })
-}
-
 app.get("/", (req,res) => {
     console.log(req.headers)
 })
@@ -64,7 +58,7 @@ app.get("/api", (req,res) => {
     })
 })
 
-app.get('/users', check, async (req, res) =>{
+app.get('/users', isAuthenticated, async (req, res) =>{
     if (!req.isAuth) return res.status(400).send({message:'Your token is expired'})
     try{
         const userList = await UserModel.find({})
@@ -78,7 +72,7 @@ app.get('/logout', (req,res)=> {
     res.redirect("http://localhost:3000")
 })
 
-app.get('/test', check, (req,res) =>{
+app.get('/test', isAuthenticated, (req,res) =>{
     if (req.isAuth) console.log('good')
     res.redirect("http://localhost:3000")
 })
