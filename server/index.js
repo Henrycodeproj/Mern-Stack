@@ -72,9 +72,10 @@ app.get('/logout', (req,res)=> {
     res.redirect("http://localhost:3000")
 })
 
-app.get('/test', isAuthenticated, (req,res) =>{
-    if (req.isAuth) console.log('good')
-    res.redirect("http://localhost:3000")
+app.get('/authtest', isAuthenticated, (req,res) =>{
+    console.log(req.isAuth)
+    if (req.isAuth) res.send(true)
+    else res.send(false)
 })
 
 app.post('/login', async (req,res) =>{

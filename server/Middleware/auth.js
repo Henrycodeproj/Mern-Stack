@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 function isAuthenticated(req,res,next){
     jwt.verify(req.headers.authorization, process.env.SECRET_SESSION, (err, result) =>{
-        err ? req.isAuth = false: req.isAuth = true
+        result ? req.isAuth = true: req.isAuth = false
         next()
     })
 }
