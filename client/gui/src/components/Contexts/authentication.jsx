@@ -1,16 +1,18 @@
-import { useContext } from "react";
-import {createContext, useState} from "react";
-import { UserAuthentication } from "../config/userAuth";
+import {createContext, useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios"
 
 export const accountContext = createContext()
 
 export const Authentication = ({children}) =>{
 
-    const [loggedUser, setLoggedUser] = useState(true)
+    //const navigateTo = useNavigate()
+
+    const [userStatus, setUserStatus] = useState(false)
 
     return(
-        <accountContext.Provider value = {{loggedUser, setLoggedUser}}>
+        <accountContext.Provider value = {{userStatus, setUserStatus}}>
             {children}
         </accountContext.Provider>    
-    )
-}
+        )
+    }

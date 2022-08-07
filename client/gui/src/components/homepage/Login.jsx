@@ -1,13 +1,17 @@
-import { motion } from "framer-motion"
-import {useState } from 'react'
-import { Button, Alert, CircularProgress } from "@mui/material"
-import { useNavigate } from "react-router-dom"
+import { motion } from "framer-motion";
+import {useState, useContext } from 'react';
+import { Button, Alert, CircularProgress, setRef } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { accountContext } from "../Contexts/authentication";
 import axios from "axios";
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 
 
+
 export const Login = ({setOption, option, active, inactive}) => {
+
+  const {userStatus, setUserStatus} = useContext(accountContext)
 
     const [loginInfo, setLoginInfo] = useState({
         login_username:"",
@@ -17,7 +21,6 @@ export const Login = ({setOption, option, active, inactive}) => {
     const navigateTo = useNavigate()
 
     const [serverError, setServerError] = useState('')
-    //const [loggedIn, setLoggedIn] = useState ('')
     const [loginLoading, setLoginLoading] = useState(false)
 
     const handleInfo = (e)=> {

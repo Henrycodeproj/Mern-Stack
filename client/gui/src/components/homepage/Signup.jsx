@@ -1,11 +1,12 @@
-import { useState , useEffect} from 'react'
+import { useState , useEffect, useContext} from 'react'
 import { Button, Alert, CircularProgress } from '@mui/material/';
 import { motion, AnimatePresence,} from "framer-motion"
 import { Login } from './Login';
+import { SideImage } from './SideImage';
+import { useNavigate } from 'react-router-dom';
+import { accountContext } from '../Contexts/authentication';
 import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import GoogleIcon from '@mui/icons-material/Google';
-import { SideImage } from './SideImage';
 
 export const Signup = () =>{
 
@@ -41,7 +42,7 @@ export const Signup = () =>{
         setCreatedAccount(false)
       },3000)
       
-      return() => {
+      return () => {
         clearTimeout(setTimer)
       }
     }, [passwordError, emailError, serverError])
@@ -163,6 +164,12 @@ export const Signup = () =>{
     const inactive = {
       borderStyle:'none'
     }
+
+    const navigateTo = useNavigate()
+
+    const {userStatus, setUserStatus} = useContext(accountContext)
+
+    if (userStatus) navigateTo("/display")
 
     return (
       <main>
