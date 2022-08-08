@@ -74,8 +74,8 @@ app.get('/logout', (req,res)=> {
 
 app.get('/authtest', isAuthenticated, (req,res) =>{
     console.log(req.isAuth)
-    if (req.isAuth) res.send(true)
-    else res.send(false)
+    if (req.isAuth) res.status(200).send(true)
+    else res.status(200).send(false)
 })
 
 app.post('/login', async (req,res) =>{

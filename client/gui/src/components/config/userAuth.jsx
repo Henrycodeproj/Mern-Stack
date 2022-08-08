@@ -1,17 +1,15 @@
-import {useContext, useState, useEffect} from "react";
+
 import { Outlet } from "react-router-dom";
-import { accountContext } from "../Contexts/authentication";
 import { Navigate } from "react-router-dom";
 import { authCheck } from "../../UserAuth/checkAuth";
+import { useState, useEffect } from "react";
 
 
 export const UserAuthentication = () =>{
 
     //const navigateTo = useNavigate()
-    const isAuth = authCheck()
-
+    const isAuth = Promise.resolve(authCheck())
     console.log(isAuth)
-
     return (
         isAuth ? <Outlet/> : <Navigate to="/" replace={true} />
     )
