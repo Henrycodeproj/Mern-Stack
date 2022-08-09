@@ -9,7 +9,18 @@ export const Navbar = () =>{
     const navigateTo = useNavigate()
 
     const {userStatus, setUserStatus} = useContext(accountContext)
+    if (userStatus){
+        return(
+            <nav>
+            {!userStatus? <img src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
+            :<img src ={logo} alt ="logo" onClick = {()=>navigateTo("/display")}/>}
 
+            <ul className="list-container">
+                <li><Button variant = "contained" color ="secondary">Logout</Button></li>
+            </ul>
+        </nav>
+        )
+    }
     return(
         <nav>
             {!userStatus? <img src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
