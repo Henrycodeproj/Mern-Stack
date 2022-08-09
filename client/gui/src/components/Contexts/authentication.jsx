@@ -8,7 +8,7 @@ export const Authentication = ({children}) =>{
 
     //const navigateTo = useNavigate()
 
-    const [userStatus, setUserStatus] = useState(false)
+    const [userStatus, setUserStatus] = useState(null)
 
     return(
         <accountContext.Provider value = {{userStatus, setUserStatus}}>
