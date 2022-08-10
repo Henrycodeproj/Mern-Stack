@@ -1,22 +1,27 @@
 
 import { Outlet } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext} from "react";
+import { accountContext } from "../Contexts/authentication";
 import { authCheck } from "../../UserAuth/checkAuth";
-import { useState, useEffect} from "react";
-import { Divider } from "@mui/material";
 
 
-export const UserAuthentication = async () =>{
-    const [isAuth, setIsAuth] = useState(null)
-    //const navigateTo = useNavigate()
+export const UserAuthentication = () =>{
+
+    const {userStatus, setUserStatus} = useContext(accountContext)
+
+    const[loading, setLoading] = useState(true)
 
     useEffect(()=>{
-        authCheck().then(res => setIsAuth(res.data))
+       authCheck().then(res=>{
+        setUserStatus(res.data)
+        setLoading(false)
+        })
     })
-
-    if (!isAuth) return <div>loading</div>
+    console.log(userStatus)
+    //if (loading) return null
 
     return (
-        isAuth ? <Outlet/> : <Navigate to="/" replace={true} />
+        userStatus ? <Outlet/> : <Navigate to="/" replace={true}/>
     )
 }

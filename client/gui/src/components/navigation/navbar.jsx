@@ -9,6 +9,7 @@ export const Navbar = () =>{
     const navigateTo = useNavigate()
 
     const {userStatus, setUserStatus} = useContext(accountContext)
+    
     if (userStatus){
         return(
             <nav>
