@@ -3,7 +3,7 @@ import { Button, Alert, CircularProgress } from '@mui/material/';
 import { motion, AnimatePresence,} from "framer-motion"
 import { Login } from './Login';
 import { SideImage } from './SideImage';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { accountContext } from '../Contexts/authentication';
 import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -165,11 +165,11 @@ export const Signup = () =>{
       borderStyle:'none'
     }
 
-    const navigateTo = useNavigate()
+    const {userStatus} = useContext(accountContext)
 
-    const {userStatus, setUserStatus} = useContext(accountContext)
-
-    if (userStatus) navigateTo("/display")
+    if (userStatus) return <Navigate to="/display"/>
+    
+    console.log(userStatus)
 
     return (
       <main>

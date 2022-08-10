@@ -8,6 +8,7 @@ import { Authentication} from './components/Contexts/authentication'
 import { ExpiredVerification } from "./components/config/ExpiredVerified"
 import { Confirmation } from "./components/config/ConfirmationPage"
 import { UserAuthentication } from './components/config/userAuth';
+import {Posts} from "./components/Posts/Posts"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           </Route>
           <Route path = "/invalid/expired/" element = {<ExpiredVerification/>}/>
           <Route path = "/valid" element = {<Confirmation/>}/>
+          <Route path="/posts" element = {<Posts/>}/>
           <Route path = "*" element ={<Errorpage/> }/>
         </Routes>
       </Authentication>

@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { accountContext } from './Contexts/authentication';
 
 export const Display = () =>{
 
@@ -21,6 +22,7 @@ export const Display = () =>{
     //         navigateTo("/")
     //     })
     // })
+    const {userStatus, setUserStatus} = useContext(accountContext)
     
     return (
         <div className='du'>
