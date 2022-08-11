@@ -22,11 +22,11 @@ export const Navbar = () =>{
         </nav>
         )
     }
+    
     return(
         <nav>
             {!userStatus? <img src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
             :<img src ={logo} alt ="logo" onClick = {()=>navigateTo("/display")}/>}
-
             <ul className="list-container">
                 <li><Button variant = "contained" color ="secondary">Contact</Button></li>
             </ul>

@@ -1,0 +1,11 @@
+.post_form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.buss{
+    border-radius: 5px;
+    color:black;
+    opacity: .5;
+}

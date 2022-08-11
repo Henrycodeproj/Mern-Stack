@@ -3,11 +3,12 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { accountContext } from './Contexts/authentication';
 
-export const Display = () =>{
+export const Display = ({test}) =>{
 
     const navigateTo = useNavigate()
 
     const [users, setUsers] = useState([])
+    console.log(test)
 
     // useEffect (()=>{
     //     const URL = 'http://localhost:3001/users'

@@ -9,7 +9,7 @@ export const Authentication = ({children}) =>{
 
     //const navigateTo = useNavigate()
 
-    const [userStatus, setUserStatus] = useState(authCheck().then(res=>res.data))
+    const [userStatus, setUserStatus] = useState(false)
 
 
     return(
