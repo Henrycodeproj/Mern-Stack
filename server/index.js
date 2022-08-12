@@ -59,7 +59,7 @@ app.get("/api", (req,res) => {
 })
 
 app.get('/users', isAuthenticated, async (req, res) =>{
-    if (!req.isAuth) return res.status(400).send({message:'Your token is expired'})
+    if (!req.isAuth) return res.status(400).send({message:'Your token is expired, login again to refresh your session.'})
     try{
         const userList = await UserModel.find({})
         return res.status(200).send(userList)
@@ -85,7 +85,11 @@ app.post('/login', async (req,res) =>{
         bcrypt.compare(login_password, user.password, (err, result) =>{
             if(err) return res.status(500).send({message:'There was a problem with the server'})
             if(!result) return res.status(400).send({message:'This password you have entered is incorrect. Please try again.'})
-            const accessToken = jwt.sign({username:user.username,id:user.id}, process.env.SECRET_SESSION,{ expiresIn: 60})
+            const accessToken = jwt.sign(
+                {username:user.username, id:user.id},
+                 process.env.SECRET_SESSION,
+                { expiresIn: '1d'}
+            )
             res.status(200).send({message:'Logging In...', accessToken:accessToken})
 
         })

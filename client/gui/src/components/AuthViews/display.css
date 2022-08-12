@@ -1,0 +1,14 @@
+.display_wrapper{
+    width:100%;
+    display: flex;
+    justify-content:center;
+    height: 100vh;
+}
+
+.newsfeed_container{
+    border-style: solid;
+    max-height:100vh;
+    width:70%;
+    background-color: white;
+    display:flex;
+}

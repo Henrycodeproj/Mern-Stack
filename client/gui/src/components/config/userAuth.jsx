@@ -9,16 +9,17 @@ import { authCheck } from "../../UserAuth/checkAuth";
 export const UserAuthentication = () =>{
 
     const {userStatus, setUserStatus} = useContext(accountContext)
+
     const[loading, setLoading] = useState(true)
 
     useEffect(()=>{
        authCheck().then(res=>{
-        setUserStatus(res.data)
-        setLoading(false)
+            setUserStatus(res.data)
+            setLoading(false)
         })
-    })
+    },[])
     
-    if (loading) return null
+    if (loading) return <> Loading... </>
 
     return (
         userStatus ? <Outlet/> : <Navigate to="/" replace={false} />
