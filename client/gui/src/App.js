@@ -1,6 +1,6 @@
 import './App.css';
 import  { Signup } from './components/homepage/Signup';
-import { Display } from './components/display';
+import { Display } from './components/AuthViews/display';
 import { Navbar } from './components/navigation/navbar'
 import { Errorpage } from './components/config/ErrorPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
@@ -8,7 +8,6 @@ import { Authentication} from './components/Contexts/authentication'
 import { ExpiredVerification } from "./components/config/ExpiredVerified"
 import { Confirmation } from "./components/config/ConfirmationPage"
 import { UserAuthentication } from './components/config/userAuth';
-import {Posts} from "./components/Posts/Posts"
 
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
           </Route>
           <Route path = "/invalid/expired/" element = {<ExpiredVerification/>}/>
           <Route path = "/valid" element = {<Confirmation/>}/>
-          <Route path="/posts" element = {<Posts/>}/>
           <Route path = "*" element ={<Errorpage/> }/>
         </Routes>
       </Authentication>

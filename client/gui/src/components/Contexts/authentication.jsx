@@ -9,7 +9,7 @@ export const Authentication = ({children}) =>{
 
     //const navigateTo = useNavigate()
 
-    const [userStatus, setUserStatus] = useState(false)
+    const [userStatus, setUserStatus] = useState(localStorage.getItem("user"))
 
 
     return(

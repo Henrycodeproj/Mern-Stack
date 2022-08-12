@@ -168,8 +168,6 @@ export const Signup = () =>{
     const {userStatus} = useContext(accountContext)
 
     if (userStatus) return <Navigate to="/display"/>
-    
-    console.log(userStatus)
 
     return (
       <main>

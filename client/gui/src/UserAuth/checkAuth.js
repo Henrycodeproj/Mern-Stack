@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const authCheck = async ()=> {
+export const authCheck = ()=> {
 
     const URL = 'http://localhost:3001/authtest'
-    return await axios.get(`${URL}`, {
+    return axios.get(`${URL}`, {
         headers: {
             "authorization": localStorage.getItem("Token")
         }

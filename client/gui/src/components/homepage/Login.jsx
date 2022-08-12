@@ -40,7 +40,8 @@ export const Login = ({setOption, option, active, inactive}) => {
         if (res.data.accessToken){
           alert(res.data.message)
           localStorage.setItem("Token", res.data.accessToken)
-          navigateTo("display")
+          localStorage.setItem("user", true)
+          navigateTo("/display")
         }
       }).catch(error =>{
         console.log(error.response.data.message)
