@@ -8,14 +8,15 @@ export const Navbar = () =>{
 
     const navigateTo = useNavigate()
 
-    const {userStatus, setUserStatus} = useContext(accountContext)
+    const {userStatus, setUserStatus, user} = useContext(accountContext)
 
     const logoutHandler = () => {
-        localStorage.removeItem("user")
+        localStorage.removeItem("userStatus")
         localStorage.removeItem("Token")
+        localStorage.removeItem("User")
         navigateTo("/")
     }
-    
+
     if (userStatus){
         return(
             <nav>
