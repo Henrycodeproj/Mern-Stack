@@ -37,10 +37,12 @@ export const Login = ({setOption, option, active, inactive}) => {
         url:'http://localhost:3001/login'
       })
       .then(res => {
+        console.log(res.data.user)
         if (res.data.accessToken){
           alert(res.data.message)
           localStorage.setItem("Token", res.data.accessToken)
-          localStorage.setItem("user", true)
+          localStorage.setItem("userStatus", true)
+          localStorage.setItem("User", JSON.stringify(res.data.user))
           navigateTo("/display")
         }
       }).catch(error =>{

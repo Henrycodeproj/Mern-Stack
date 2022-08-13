@@ -17,7 +17,7 @@ export const UserAuthentication = () =>{
             setUserStatus(res.data)
             setLoading(false)
         })
-    },[])
+    })
     
     if (loading) return <> Loading... </>
 

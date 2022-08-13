@@ -90,7 +90,11 @@ app.post('/login', async (req,res) =>{
                  process.env.SECRET_SESSION,
                 { expiresIn: '1d'}
             )
-            res.status(200).send({message:'Logging In...', accessToken:accessToken})
+            res.status(200).send(
+                {message:'Logging In...', accessToken:accessToken, 
+                user:{id:user.id, username:user.username}
+                }
+            )
 
         })
     } else{
