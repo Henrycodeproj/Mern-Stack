@@ -78,6 +78,10 @@ app.get('/authtest', isAuthenticated, (req,res) =>{
     else res.status(200).send(false)
 })
 
+app.post('/posts', (req,res) =>{
+    console.log(req.body)
+})
+
 app.post('/login', async (req,res) =>{
     const {login_username, login_password} = req.body
     const user = await UserModel.findOne({username:login_username})
@@ -91,8 +95,9 @@ app.post('/login', async (req,res) =>{
                 { expiresIn: '1d'}
             )
             res.status(200).send(
-                {message:'Logging In...', accessToken:accessToken, 
-                user:{id:user.id, username:user.username}
+                {
+                    message:'Logging In...', accessToken:accessToken, 
+                    user:{id:user.id, username:user.username}
                 }
             )
 

@@ -8,7 +8,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 
 
-
 export const Login = ({setOption, option, active, inactive}) => {
 
   const {userStatus, setUserStatus} = useContext(accountContext)
@@ -27,6 +26,7 @@ export const Login = ({setOption, option, active, inactive}) => {
       const {name, value} = e.target
       setLoginInfo({...loginInfo, [name]:value})
     }
+    
     const handleSubmit = async (e) =>{
       setLoginLoading(true)
       e.preventDefault()
@@ -60,8 +60,8 @@ export const Login = ({setOption, option, active, inactive}) => {
     transition = {{ duration:1 }}
     >
         <div className='space'>
-        <h1 className='signup-title' style= {option ? active: inactive} onClick = {()=> setOption(true)}>Sign Up</h1>
-        <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(false)}>Sign In</h1>
+        <h1 className='signup-title' style= {option ? active: inactive} onClick = {()=> setOption(!option)}>Sign Up</h1>
+        <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(!option)}>Sign In</h1>
         </div>
         {serverError && <Alert variant='filled' severity="error" color="secondary" onClose={()=>setServerError('')}>{serverError}</Alert>}
         <div>
