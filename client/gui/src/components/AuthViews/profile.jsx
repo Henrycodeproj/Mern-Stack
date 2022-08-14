@@ -2,6 +2,7 @@ import {useContext} from "react"
 import { accountContext } from "../Contexts/authentication"
 
 export const Profile = ()=> {
+    
     const {user} = useContext(accountContext)
 
     return(

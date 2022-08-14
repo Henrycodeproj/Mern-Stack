@@ -14,7 +14,6 @@ export const Authentication = ({children}) =>{
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")))
 
 
-
     return(
         <accountContext.Provider value = {{userStatus, setUserStatus, user, setUser}}>
             {children}

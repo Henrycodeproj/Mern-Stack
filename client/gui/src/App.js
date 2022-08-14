@@ -1,18 +1,23 @@
 import './App.css';
 import  { Signup } from './components/homepage/Signup';
-import { Display } from './components/AuthViews/display';
 import { Navbar } from './components/navigation/navbar'
 import { Errorpage } from './components/config/ErrorPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Authentication} from './components/Contexts/authentication'
 import { ExpiredVerification } from "./components/config/ExpiredVerified"
 import { Confirmation } from "./components/config/ConfirmationPage"
-import { UserAuthentication } from './components/config/userAuth';
+//import { UserAuthentication } from './components/config/userAuth';
 import { Profile } from "./components/AuthViews/profile"
+import React, { Suspense, lazy } from "react"
+//import { Display } from './components/AuthViews/display';
+
+const Display = lazy(()=> import('./components/AuthViews/display'))
+const UserAuthentication = lazy(()=>import('./components/config/userAuth'))
 
 function App() {
   return (
     <Router>
+      <Suspense fallback = {<>loading..</>}>
       <Authentication>
         <Navbar/>
         <Routes>
@@ -26,6 +31,7 @@ function App() {
           <Route path = "*" element ={<Errorpage/> }/>
         </Routes>
       </Authentication>
+      </Suspense>
     </Router>
   );
 }
