@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import UserModel from './Models/Users.js';
+import PostModel from './Models/Posts.js';
 import bcrypt from 'bcrypt';
 import verifyTokenModel from './Models/Token.js';
 import crypto from 'crypto';
@@ -58,16 +59,6 @@ app.get("/api", (req,res) => {
     })
 })
 
-app.get('/users', isAuthenticated, async (req, res) =>{
-    if (!req.isAuth) return res.status(400).send({message:'Your token is expired, login again to refresh your session.'})
-    try{
-        const userList = await UserModel.find({})
-        return res.status(200).send(userList)
-    } catch(err){
-        res.status(500).send("Internal Server error")
-    }
-})
-
 app.get('/logout', (req,res)=> {
     res.redirect("http://localhost:3000")
 })
@@ -78,8 +69,25 @@ app.get('/authtest', isAuthenticated, (req,res) =>{
     else res.status(200).send(false)
 })
 
-app.post('/posts', (req,res) =>{
-    console.log(req.body)
+app.post('/posts', async (req,res) =>{
+    const {user, post} = req.body
+    const newPosts = new PostModel({
+        Description:post,
+        posterId:user
+    })
+    newPosts.save()
+    if (newPosts) return res.send({message:'Posted', data:newPosts})
+    return res.status(500).send({message:'error'})
+})
+
+app.get('/posts', isAuthenticated, async (req, res) =>{
+    if (!req.isAuth) return res.send({message:'Your token is expired, login again to refresh your session.'})
+    try{
+        const posts = await PostModel.find().populate('posterId',('name', 'email'))
+        return res.status(200).send(posts)
+    } catch(err){
+        return res.status(500).send("Internal Server error")
+    }
 })
 
 app.post('/login', async (req,res) =>{

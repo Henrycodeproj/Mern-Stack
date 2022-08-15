@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
         required:true
     },
     posterId:{
-        type:mongoose.SchemaTypes.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Users"
     },
     expiresAt: {
