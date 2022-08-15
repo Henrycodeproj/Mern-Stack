@@ -10,7 +10,7 @@ import LockIcon from '@mui/icons-material/Lock';
 
 export const Login = ({setOption, option, active, inactive}) => {
 
-  const {userStatus, setUserStatus} = useContext(accountContext)
+  const {userStatus, setUserStatus, setUser} = useContext(accountContext)
 
     const [loginInfo, setLoginInfo] = useState({
         login_username:"",
@@ -20,6 +20,7 @@ export const Login = ({setOption, option, active, inactive}) => {
     const navigateTo = useNavigate()
 
     const [serverError, setServerError] = useState('')
+
     const [loginLoading, setLoginLoading] = useState(false)
 
     const handleInfo = (e)=> {
@@ -43,13 +44,14 @@ export const Login = ({setOption, option, active, inactive}) => {
           localStorage.setItem("Token", res.data.accessToken)
           localStorage.setItem("userStatus", true)
           localStorage.setItem("User", JSON.stringify(res.data.user))
+          setUser(JSON.parse(localStorage.getItem("User")))
+          setLoginLoading(false)
           navigateTo("/display")
         }
       }).catch(error =>{
         console.log(error.response.data.message)
         setServerError(error.response.data.message)
       })
-      setLoginLoading(false)
     }
 
     return (

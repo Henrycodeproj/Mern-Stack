@@ -5,39 +5,40 @@ import { accountContext } from '../Contexts/authentication';
 import { Posts } from '../Posts/Posts';
 import '../AuthViews/display.css'
 
-import {lazy, Suspense} from 'react';
-
-async function getPosts(){
-    const URL = 'http://localhost:3001/users'
-    const response = await axios.get(`${URL}`, {
-        headers:{
-            "authorization":localStorage.getItem("Token")
-        }
-    })
-    return response
-}
+import {lazy, Suspense, read} from 'react';
 
 export const Display = () =>{
-    const response = getPosts()
 
     const navigateTo = useNavigate()
 
     const [posts, setPosts] = useState([])
 
     useEffect (()=>{
-        response.then(res=> setPosts(res.data))
-    }, [])
+        const URL = 'http://localhost:3001/posts'
+        axios.get(`${URL}`, {
+            headers:{
+                "authorization":localStorage.getItem("Token")
+            }
+        })
+        .then(res => setPosts(res.data))
+        .catch(err => console.log(err))
+    },[])
 
-    //const {userStatus, setUserStatus, user} = useContext(accountContext)
+    const {userStatus, setUserStatus, user} = useContext(accountContext)
+    console.log(posts)
 
-    if (!posts) return <div>loading...</div>
+    //if (posts.length === 0) return <div>loading...</div>
     
     return (
         <div className='display_wrapper'>
             <div className='newsfeed_container'>
-                <Posts/>
+                <Posts posts ={posts} setPosts={setPosts}/>
                 <div>
-                {posts.length !== 0 ? posts.map((post)=> post.username): <div>No current posts</div>}
+                {posts && posts.map((post)=> 
+                <div>
+                    {post.Description}
+                </div>)
+                }
                 </div>
             </div>
         </div>
