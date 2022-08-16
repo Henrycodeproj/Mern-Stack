@@ -27,13 +27,6 @@ const corsOptions ={
 //needed to change original cors setup to allow certain information through
 app.use(cors(corsOptions));
 
-//passport js middleware
-app.use(session({
-    secret:process.env.SECRET_SESSION,
-    resave:false,
-    saveUninitialized:false,
-}))
-
 const databasePassword = process.env.password
 
 const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
@@ -64,26 +57,29 @@ app.get('/logout', (req,res)=> {
 })
 
 app.get('/authtest', isAuthenticated, (req,res) =>{
-    console.log(req.isAuth)
     if (req.isAuth) res.status(200).send(true)
     else res.status(200).send(false)
 })
 
 app.post('/posts', async (req,res) =>{
     const {user, post} = req.body
+    console.log(user,post)
     const newPosts = new PostModel({
         Description:post,
         posterId:user
     })
-    newPosts.save()
-    if (newPosts) return res.send({message:'Posted', data:newPosts})
+
+    await newPosts.save()
+
+    const results = await PostModel.find({}).sort({createdAt:-1})
+
+    if (newPosts) return res.status(200).send({message:'Posted', data:results})
     return res.status(500).send({message:'error'})
 })
 
 app.get('/posts', isAuthenticated, async (req, res) =>{
-    if (!req.isAuth) return res.send({message:'Your token is expired, login again to refresh your session.'})
     try{
-        const posts = await PostModel.find().populate('posterId',('name', 'email'))
+        const posts = await PostModel.find({}).sort({createdAt: -1}).populate('posterId',('name', 'email'))
         return res.status(200).send(posts)
     } catch(err){
         return res.status(500).send("Internal Server error")
@@ -95,8 +91,9 @@ app.post('/login', async (req,res) =>{
     const user = await UserModel.findOne({username:login_username})
     if (user){
         bcrypt.compare(login_password, user.password, (err, result) =>{
-            if(err) return res.status(500).send({message:'There was a problem with the server'})
+            if(err) return res.status(500).send({message:'Internal server problem'})
             if(!result) return res.status(400).send({message:'This password you have entered is incorrect. Please try again.'})
+
             const accessToken = jwt.sign(
                 {username:user.username, id:user.id},
                  process.env.SECRET_SESSION,
@@ -104,8 +101,9 @@ app.post('/login', async (req,res) =>{
             )
             res.status(200).send(
                 {
-                    message:'Logging In...', accessToken:accessToken, 
-                    user:{id:user.id, username:user.username}
+                    message:'Logging In...',
+                    accessToken: accessToken, 
+                    user: {id: user.id, username: user.username}
                 }
             )
 
@@ -153,8 +151,10 @@ app.post("/createUser", async (req,res) => {
             userId:newUser._id,
             token:crypto.randomBytes(64).toString('hex')
         })
+
         await emailToken.save()
         res.status(201).send(response)
+
         try{
             //sends the email with verification token 
             sendMail({
@@ -169,14 +169,11 @@ app.post("/createUser", async (req,res) => {
             res.status(400).send('Email verification failed to send')
         }
     }).catch (error => {
-        if (error.keyValue.username && error.code === 11000){
-            res.status(400).send(`This username ${error.keyValue.username} is already taken`)
-        } 
-        else if (error.keyValue.email && error.code === 11000){
-            res.status(400).send(`This email ${error.keyValue.email} has already been signed up.`);
-        } else {
-            console.log(error)
-        }
+        if (error.keyValue.username && error.code === 11000) res.status(400).send(`This username ${error.keyValue.username} is already taken`)
+
+        else if (error.keyValue.email && error.code === 11000) res.status(400).send(`This email ${error.keyValue.email} has already been signed up.`);
+
+        else console.log(error)
     })
 })
 

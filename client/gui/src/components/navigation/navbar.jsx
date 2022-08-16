@@ -3,12 +3,13 @@ import {Button} from "@mui/material"
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import { accountContext } from '../Contexts/authentication'
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export const Navbar = () =>{
 
     const navigateTo = useNavigate()
 
-    const {userStatus, setUserStatus, user} = useContext(accountContext)
+    const {userStatus} = useContext(accountContext)
 
     const logoutHandler = () => {
         localStorage.removeItem("userStatus")
@@ -20,17 +21,37 @@ export const Navbar = () =>{
     if (userStatus){
         return(
             <nav>
-            {!userStatus? <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=> navigateTo("/")}/>
-            :<img className ="unplug_logo" src ={logo} alt ="logo" onClick = {()=> navigateTo("/display", {replace:true})}/>}
+            {!userStatus? 
+            <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=> navigateTo("/")}/>
+            :
+            <img className ="unplug_logo" src ={logo} alt ="logo" onClick = {()=> navigateTo("/display", {replace:true})}/>}
 
             <ul className="list-container">
-                <li><Button variant = "contained" color ="secondary" >Profile</Button></li>
-                <li>
-                    <Button variant = "contained" 
-                    sx={{ color: 'white', backgroundColor: 'rgb(220, 133, 244, .8)', borderColor: '' }}
+                <NotificationsIcon/>
+                <div>
+                    <Button 
+                    className = "nav_buttons" 
+                    variant = "contained" 
+                    color ="secondary" 
+                    onClick={()=> navigateTo("/profile")}
+                    sx = {{mr:2}}
+                    >
+                    Profile
+                    </Button>
+                </div>
+                <div>
+                    <Button
+                    className = "nav_buttons" 
+                    variant = "contained" 
+                    sx={{
+                        mr:2, 
+                        color: 'white',
+                        backgroundColor: 'rgb(220, 133, 244, .8)',
+                        borderColor: '' 
+                    }}
                     onClick={logoutHandler}>Logout
                     </Button>
-                </li>
+                </div>
             </ul>
         </nav>
         )

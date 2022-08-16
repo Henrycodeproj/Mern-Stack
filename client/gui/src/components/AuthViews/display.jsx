@@ -1,15 +1,9 @@
 import axios from 'axios';
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { accountContext } from '../Contexts/authentication';
+import { useState, useEffect} from 'react';
 import { Posts } from '../Posts/Posts';
 import '../AuthViews/display.css'
 
-import {lazy, Suspense, read} from 'react';
-
 export const Display = () =>{
-
-    const navigateTo = useNavigate()
 
     const [posts, setPosts] = useState([])
 
@@ -20,25 +14,28 @@ export const Display = () =>{
                 "authorization":localStorage.getItem("Token")
             }
         })
-        .then(res => setPosts(res.data))
+        .then(res => setPosts(res.data.reverse()))
         .catch(err => console.log(err))
     },[])
 
-    const {userStatus, setUserStatus, user} = useContext(accountContext)
     console.log(posts)
-
-    //if (posts.length === 0) return <div>loading...</div>
     
     return (
         <div className='display_wrapper'>
             <div className='newsfeed_container'>
                 <Posts posts ={posts} setPosts={setPosts}/>
                 <div>
-                {posts && posts.map((post)=> 
-                <div>
-                    {post.Description}
-                </div>)
-                }
+                    <ul>
+                        {
+                        posts.length > 0 ? posts.map((post)=>
+                            <li key = {post._id} className = "posts_articles">
+                                <img src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" className='faker'></img>
+                                {post.Description}
+                            </li>
+                        ):
+                        <div>There are no current events on campus</div>
+                        }
+                    </ul>
                 </div>
             </div>
         </div>

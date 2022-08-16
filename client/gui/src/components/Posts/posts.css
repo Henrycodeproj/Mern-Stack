@@ -1,12 +1,30 @@
-.post_form{
+.post_form {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
 }
-.buss{
+.add_post_container {
+    display:flex;
+    background-color: rgba(255, 255, 255, 0.139);
+}
+
+.input_picture {
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+}
+
+.ass {
+    flex-grow: 1;
+}
+
+.buss {
     width:100%;
+    height:30px;
     border-radius: 5px;
     color:black;
     opacity: .5;
+    border: none;
+    caret-color: white;
 }

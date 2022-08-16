@@ -1,14 +1,13 @@
 import "../Posts/posts.css"
-import {useState, useContext, useEffect} from "react"
+import {useState, useContext} from "react"
 import { accountContext } from "../Contexts/authentication"
 import axios from "axios"
-import { Suspense } from "react"
 
-export const Posts = ({posts, setposts})=>{
+export const Posts = ({posts, setPosts})=>{
 
     const [status, setStatus] = useState('')
 
-    const {user, setUser} = useContext(accountContext)
+    const {user} = useContext(accountContext)
 
     const statusHandler = (e) => {
         e.preventDefault()
@@ -16,6 +15,7 @@ export const Posts = ({posts, setposts})=>{
             user:user.id,
             post:status,
         }).then(res=>{
+            setPosts(res.data.data)
             setStatus('')
         })
         .catch(err=>console.log(err))
@@ -26,11 +26,20 @@ export const Posts = ({posts, setposts})=>{
     if (user === null) return <div>loading...</div>
 
     return (
-        <div>
-            <form className="post_form" onSubmit={(e) =>statusHandler(e)}>
-                <input className="buss" placeholder={`Hi ${user.username.charAt(0).toUpperCase() + user.username.slice(1)}, what are you doing on campus today?`} onChange={(e)=>setStatus(e.target.value)} value ={status}></input>
-            </form>
-            {status}
+        <div className="add_post_container">
+            <img src = "https://booleanstrings.com/wp-content/uploads/2021/10/profile-picture-circle-hd.png" className ="input_picture">
+            </img>
+            <div className = "ass">
+                <form className="post_form" onSubmit={(e) =>statusHandler(e)}>
+                    <input 
+                    className= "buss" 
+                    placeholder={`Hi ${user.username.charAt(0).toUpperCase() + user.username.slice(1)}, what are you doing on campus today?`} onChange={(e)=>setStatus(e.target.value)}
+                    value = {status}
+                    type = "text"
+                    >
+                    </input>
+                </form>
+            </div>
         </div>
     )
 }

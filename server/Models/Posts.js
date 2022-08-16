@@ -10,7 +10,7 @@ const postSchema = new mongoose.Schema({
         ref:"Users"
     },
     expiresAt: {
-        type: Date, default: Date.now, index: { expires: 1800 }
+        type: Date, default: Date.now, index: { expiresAfterSeconds: 1000 * 60 * 60 * 24 }
     }
 },{timestamps:true})
 
