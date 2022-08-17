@@ -1,15 +1,21 @@
 import logo from '../../images/logo.png'
 import {Button} from "@mui/material"
 import { useNavigate } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { accountContext } from '../Contexts/authentication'
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import LogoutIcon from '@mui/icons-material/Logout';
+import "../navigation/navbar.css"
 
 export const Navbar = () =>{
 
     const navigateTo = useNavigate()
-
     const {userStatus} = useContext(accountContext)
+
+    const [profile, setProfile] = useState(null)
 
     const logoutHandler = () => {
         localStorage.removeItem("userStatus")
@@ -18,41 +24,47 @@ export const Navbar = () =>{
         navigateTo("/")
     }
 
+    const open = Boolean(profile)
+
+    const openProfile = (e) =>{
+        setProfile(e.currentTarget)
+    }
+    const closeProfile = () =>{
+        setProfile(null)
+    }
+
+    console.log(profile)
+
     if (userStatus){
         return(
             <nav>
-            {!userStatus? 
-            <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=> navigateTo("/")}/>
-            :
-            <img className ="unplug_logo" src ={logo} alt ="logo" onClick = {()=> navigateTo("/display", {replace:true})}/>}
+            <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=> !userStatus ? navigateTo("/"): navigateTo("/display")}/>
 
-            <ul className="list-container">
+            <div className="profile_section">
                 <NotificationsIcon/>
                 <div>
-                    <Button 
-                    className = "nav_buttons" 
-                    variant = "contained" 
-                    color ="secondary" 
-                    onClick={()=> navigateTo("/profile")}
-                    sx = {{mr:2}}
+                    <Avatar 
+                    src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" 
+                    className='faker1' 
+                    onClick = {openProfile}>
+                    </Avatar>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={profile}
+                        open={open}
+                        onClose={closeProfile}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
                     >
-                    Profile
-                    </Button>
+                        <MenuItem onClick={closeProfile} sx={{ justifyContent: 'space-between' }}>Profile</MenuItem>
+                        <MenuItem sx={{ justifyContent: 'space-between' }} onClick={()=>logoutHandler()}>
+                            <LogoutIcon/>
+                                Logout
+                        </MenuItem>
+                    </Menu>
                 </div>
-                <div>
-                    <Button
-                    className = "nav_buttons" 
-                    variant = "contained" 
-                    sx={{
-                        mr:2, 
-                        color: 'white',
-                        backgroundColor: 'rgb(220, 133, 244, .8)',
-                        borderColor: '' 
-                    }}
-                    onClick={logoutHandler}>Logout
-                    </Button>
-                </div>
-            </ul>
+            </div>
         </nav>
         )
     }
@@ -61,9 +73,9 @@ export const Navbar = () =>{
         <nav>
             {!userStatus? <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
             :<img className ="unplug_logo" src ={logo} alt ="logo" onClick = {()=>navigateTo("/display")}/>}
-            <ul className="list-container">
-                <li><Button variant = "contained" color ="secondary">Contact</Button></li>
-            </ul>
+            <div className="profile_section">
+                <div><Button variant = "contained" color ="secondary">Contact</Button></div>
+            </div>
         </nav>
     )
 }
