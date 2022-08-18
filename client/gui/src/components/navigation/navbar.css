@@ -21,7 +21,8 @@ nav{
     gap: 30px;
     align-items: center;
 }
-
-.profile_menu {
-    justify-content: space-between !important;
+.profile_menu_icon{
+    padding:5px;
+    background-color: rgba(128, 128, 128, 0.32);
+    border-radius: 50%;
 }
