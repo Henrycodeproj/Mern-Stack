@@ -24,6 +24,7 @@ const corsOptions ={
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200,
 }
+
 //needed to change original cors setup to allow certain information through
 app.use(cors(corsOptions));
 

@@ -8,6 +8,9 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SettingsIcon from '@mui/icons-material/Settings';
+import IconButton from '@mui/material/IconButton';
 import "../navigation/navbar.css"
 
 export const Navbar = () =>{
@@ -21,10 +24,12 @@ export const Navbar = () =>{
         localStorage.removeItem("userStatus")
         localStorage.removeItem("Token")
         localStorage.removeItem("User")
+        setProfile(false)
         navigateTo("/")
     }
 
     const open = Boolean(profile)
+    console.log(open)
 
     const openProfile = (e) =>{
         setProfile(e.currentTarget)
@@ -33,21 +38,29 @@ export const Navbar = () =>{
         setProfile(null)
     }
 
-    console.log(profile)
-
     if (userStatus){
         return(
             <nav>
+
             <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=> !userStatus ? navigateTo("/"): navigateTo("/display")}/>
 
             <div className="profile_section">
                 <NotificationsIcon/>
                 <div>
-                    <Avatar 
-                    src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" 
-                    className='faker1' 
-                    onClick = {openProfile}>
-                    </Avatar>
+                    <IconButton
+                        onClick={openProfile}
+                        size="small"
+                        sx={{ ml: 2 }}
+                        aria-controls={open ? 'account-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                    >
+                        <Avatar 
+                        src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"   sx={{ width: 35, height: 35 }}
+                        className='faker1'
+                        >
+                        </Avatar>
+                    </IconButton>
                     <Menu
                         id="basic-menu"
                         anchorEl={profile}
@@ -56,11 +69,21 @@ export const Navbar = () =>{
                         MenuListProps={{
                           'aria-labelledby': 'basic-button',
                         }}
+                        sx = {{width:'400px'}}
                     >
-                        <MenuItem onClick={closeProfile} sx={{ justifyContent: 'space-between' }}>Profile</MenuItem>
-                        <MenuItem sx={{ justifyContent: 'space-between' }} onClick={()=>logoutHandler()}>
-                            <LogoutIcon/>
-                                Logout
+                        <MenuItem sx={{ minWidth:"180px" }} 
+                        onClick={()=> {closeProfile(); navigateTo("/profile")}}>
+                            <AccountCircleIcon className='profile_menu_icon' sx={{mr:2}}/>
+                                <div>Profile</div>
+                        </MenuItem>
+                        <MenuItem sx={{ minWidth:"180px" }} 
+                        onClick={closeProfile}>
+                            <SettingsIcon className='profile_menu_icon' sx={{mr:2}}/>
+                                <div>Settings</div>
+                        </MenuItem>
+                        <MenuItem sx={{ minWidth:"180px" }} onClick={()=>logoutHandler()}>
+                            <LogoutIcon className = "profile_menu_icon" sx={{mr:2}}/>
+                                <div>Logout</div>
                         </MenuItem>
                     </Menu>
                 </div>

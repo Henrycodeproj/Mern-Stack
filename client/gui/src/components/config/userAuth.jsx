@@ -1,7 +1,7 @@
 
 import { Outlet } from "react-router-dom";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useState, useEffect, useContext, Suspense} from "react";
+import { Navigate} from "react-router-dom";
+import { useState, useEffect, useContext} from "react";
 import { accountContext } from "../Contexts/authentication";
 import { authCheck } from "../../UserAuth/checkAuth";
 
@@ -15,16 +15,14 @@ const UserAuthentication = () =>{
     useEffect(()=>{
        authCheck().then(res=>{
             setUserStatus(res.data)
-            //setLoading(false)
+            setLoading(false)
         })
-    },[])
+    })
     
-    //if (loading) return <> Loading... </>
+    if (loading) return <> Loading... </>
 
     return (
-        <Suspense>
-        {userStatus ? <Outlet/> : <Navigate to="/" replace={false} />}
-        </Suspense>
+        userStatus ? <Outlet/> : <Navigate to="/" replace={false} />
     )
 }
 
