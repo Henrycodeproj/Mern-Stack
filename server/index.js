@@ -78,9 +78,14 @@ app.post('/posts', async (req,res) =>{
     return res.status(500).send({message:'error'})
 })
 
-app.get('/posts', isAuthenticated, async (req, res) =>{
+app.get('/posts/:postAmount', isAuthenticated, async (req, res) =>{
+    console.log(req.params.postAmount)
     try{
-        const posts = await PostModel.find({}).sort({createdAt: -1}).populate('posterId',('name', 'email'))
+        const posts = await PostModel.find({})
+        .sort({createdAt: -1})
+        .limit(req.params.postAmount)
+        .populate('posterId',('name', 'email'))
+        
         return res.status(200).send(posts)
     } catch(err){
         return res.status(500).send("Internal Server error")

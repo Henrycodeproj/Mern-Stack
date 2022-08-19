@@ -5,17 +5,26 @@ import { authCheck } from "../../UserAuth/checkAuth";
 
 export const accountContext = createContext()
 
-export const Authentication = ({children}) =>{
+export const AppContext = ({children}) =>{
 
-    //const navigateTo = useNavigate()
 
     const [userStatus, setUserStatus] = useState(localStorage.getItem("userStatus"))
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")))
 
+    const [posts, setPosts] = useState([])
+
 
     return(
-        <accountContext.Provider value = {{userStatus, setUserStatus, user, setUser}}>
+        <accountContext.Provider 
+        value = {{
+            userStatus,
+            setUserStatus,
+             user,
+            setUser,
+            posts,
+            setPosts,
+        }}>
             {children}
         </accountContext.Provider>    
         )

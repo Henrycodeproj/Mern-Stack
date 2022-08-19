@@ -2,11 +2,11 @@
 import { Outlet } from "react-router-dom";
 import { Navigate} from "react-router-dom";
 import { useState, useEffect, useContext} from "react";
-import { accountContext } from "../Contexts/authentication";
+import { accountContext } from "../Contexts/appContext";
 import { authCheck } from "../../UserAuth/checkAuth";
 
 
-const UserAuthentication = () =>{
+export const UserAuthentication = () =>{
 
     const {userStatus, setUserStatus} = useContext(accountContext)
 
@@ -25,5 +25,3 @@ const UserAuthentication = () =>{
         userStatus ? <Outlet/> : <Navigate to="/" replace={false} />
     )
 }
-
-export default UserAuthentication

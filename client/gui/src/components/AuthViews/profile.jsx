@@ -1,5 +1,5 @@
 import {useContext} from "react"
-import { accountContext } from "../Contexts/authentication"
+import { accountContext } from "../Contexts/appContext"
 
 export const Profile = ()=> {
     

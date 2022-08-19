@@ -2,7 +2,7 @@ import logo from '../../images/logo.png'
 import {Button} from "@mui/material"
 import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
-import { accountContext } from '../Contexts/authentication'
+import { accountContext } from '../Contexts/appContext'
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
