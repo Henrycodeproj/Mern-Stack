@@ -1,13 +1,15 @@
 import "../Posts/posts.css"
 import {useState, useContext} from "react"
-import { accountContext } from "../Contexts/authentication"
+import { accountContext } from "../Contexts/appContext"
 import axios from "axios"
 
-export const Posts = ({posts, setPosts})=>{
+
+export const Posts = ()=>{
 
     const [status, setStatus] = useState('')
 
-    const {user} = useContext(accountContext)
+    const {user, posts, setPosts} = useContext(accountContext)
+
 
     const statusHandler = (e) => {
         e.preventDefault()
@@ -20,8 +22,6 @@ export const Posts = ({posts, setPosts})=>{
         })
         .catch(err=>console.log(err))
     }
-
-    console.log(posts,'1231231')
 
     if (user === null) return <div>loading...</div>
 

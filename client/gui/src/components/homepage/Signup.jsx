@@ -4,7 +4,7 @@ import { motion, AnimatePresence,} from "framer-motion"
 import { Login } from './Login';
 import { SideImage } from './SideImage';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { accountContext } from '../Contexts/authentication';
+import { accountContext } from '../Contexts/appContext';
 import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 

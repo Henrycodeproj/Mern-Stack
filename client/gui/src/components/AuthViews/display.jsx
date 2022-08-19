@@ -1,18 +1,33 @@
 import axios from 'axios';
-import { useState, useEffect, useRef} from 'react';
+import { useState, useEffect, useRef, useContext} from 'react';
 import { Posts } from '../Posts/Posts';
 import '../AuthViews/display.css'
+import { accountContext } from '../Contexts/appContext';
 
 export const Display = () =>{
+    const {posts, setPosts} = useContext(accountContext)
+    const ref = useRef()
 
-    const [posts, setPosts] = useState([])
-
+    let lastPostIndex = 15
 
     const handleScroll = (e) => {
-        if (e.target.clientHeight + e.target.scrollTop + 1 >= e.target.scrollHeight ) console.log('bottom')
-    }
 
-    const ref = useRef()
+        if (e.target.clientHeight + e.target.scrollTop + 1 >= e.target.scrollHeight) {
+
+            const URL = `http://localhost:3001/posts/${lastPostIndex + 5}`
+            axios.get(URL, {
+                headers:{
+                    "authorization":localStorage.getItem("Token")
+                }
+            })
+            .then(res=>{
+                const fetchedPosts = []
+                res.data.forEach((post) => fetchedPosts.push(post))
+                setPosts(fetchedPosts)
+                lastPostIndex += 5
+            })
+        }
+    }
 
     useEffect(()=>{
         const element = ref.current
@@ -23,8 +38,8 @@ export const Display = () =>{
     },[])
 
     useEffect (()=>{
-        const URL = 'http://localhost:3001/posts'
-        axios.get(`${URL}`, {
+        const URL = `http://localhost:3001/posts/${lastPostIndex}`
+        axios.get(URL, {
             headers:{
                 "authorization":localStorage.getItem("Token")
             }
@@ -32,8 +47,6 @@ export const Display = () =>{
         .then(res => setPosts(res.data))
         .catch(err => console.log(err))
     },[])
-
-    console.log(posts, 'disply call')
 
     return (
         <div className='display_container' >
@@ -45,7 +58,7 @@ export const Display = () =>{
                 </div>
 
                 <div className='newsfeed_container' ref = {ref}>
-                    <Posts posts ={posts} setPosts={setPosts}/>
+                    <Posts/>
                     <div>
                         <ul>
                             {
@@ -55,7 +68,7 @@ export const Display = () =>{
                                     {post.Description}
                                 </li>
                             ):
-                            <div>There are no current events on campus</div>
+                            <h2>There are no current listed events on campus.</h2>
                             }
                         </ul>
                     </div>
@@ -70,5 +83,3 @@ export const Display = () =>{
         </div>
     )
 }
-
-export default Display
