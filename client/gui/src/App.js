@@ -8,7 +8,7 @@ import { ExpiredVerification } from "./components/config/ExpiredVerified";
 import { Confirmation } from "./components/config/ConfirmationPage";
 import { UserAuthentication } from './components/config/userAuth';
 import { Profile } from "./components/AuthViews/profile";
-import { Display } from './components/AuthViews/display';
+import { Display } from './components/AuthViews/DisplayPage/display';
 
 function App() {
   return (

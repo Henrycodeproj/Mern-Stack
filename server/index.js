@@ -84,7 +84,7 @@ app.get('/posts/:postAmount', isAuthenticated, async (req, res) =>{
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
         .limit(req.params.postAmount)
-        .populate('posterId',('name', 'email'))
+        .populate('posterId', ['username','email'])
         
         return res.status(200).send(posts)
     } catch(err){
