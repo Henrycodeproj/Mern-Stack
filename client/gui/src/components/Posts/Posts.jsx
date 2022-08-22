@@ -36,6 +36,8 @@ export const Posts = ()=>{
                     placeholder={`Hi ${user.username.charAt(0).toUpperCase() + user.username.slice(1)}, what are you doing on campus today?`} onChange={(e)=>setStatus(e.targetvalue)}
                     value = {status}
                     type = "text"
+                    rows={5}
+                    cols={5}
                     >
                     </textArea>
                 </form>
