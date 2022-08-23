@@ -17,11 +17,11 @@ export const UserAuthentication = () =>{
             setUserStatus(res.data)
             setLoading(false)
         })
-    })
+    },[])
     
     if (loading) return <> Loading... </>
 
     return (
-        userStatus ? <Outlet/> : <Navigate to="/" replace={false} />
+        userStatus ? <Outlet/> : <Navigate to="/" replace={true} />
     )
 }

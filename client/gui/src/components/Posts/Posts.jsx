@@ -2,6 +2,7 @@ import "../Posts/posts.css"
 import {useState, useContext} from "react"
 import { accountContext } from "../Contexts/appContext"
 import axios from "axios"
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 
 export const Posts = ()=>{
@@ -31,15 +32,12 @@ export const Posts = ()=>{
             </img>
             <div className = "post_form_container">
                 <form className="post_form" onSubmit={(e) =>statusHandler(e)}>
-                    <textArea
-                    className= "buss" 
-                    placeholder={`Hi ${user.username.charAt(0).toUpperCase() + user.username.slice(1)}, what are you doing on campus today?`} onChange={(e)=>setStatus(e.targetvalue)}
+                    <TextareaAutosize
+                    placeholder={`Hi ${user.username.charAt(0).toUpperCase() + user.username.slice(1)}, what are you doing on campus today?`}
+                    onChange = { (e) => setStatus(e.target.value)}
                     value = {status}
-                    type = "text"
-                    rows={5}
-                    cols={5}
-                    >
-                    </textArea>
+                    style ={{width:'100%'}}
+                    />
                 </form>
                 <div>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab ad officiis aperiam maxime ducimus porro, autem vel beatae voluptas adipisci.

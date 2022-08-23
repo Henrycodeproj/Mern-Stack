@@ -10,6 +10,7 @@
     width:50%;
     display:flex;
     gap:10px;
+    height:auto;
 }
 
 .newsfeed_container {
