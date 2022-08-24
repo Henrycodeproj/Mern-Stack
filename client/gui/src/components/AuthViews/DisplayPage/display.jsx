@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useContext} from 'react';
 import { Posts } from '../../Posts/Posts';
 import { accountContext } from '../../Contexts/appContext';
 import { LeftColumn } from './leftSideCol';
+import { capitalize } from '@mui/material';
 
 export const Display = () =>{
 
@@ -80,8 +81,14 @@ export const Display = () =>{
                             posts.length > 0 ? posts.map((post)=>
                                 <li key = {post._id} className = "posts_articles">
                                     <img src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" className='faker'></img>
-                                    <div>{post.posterId.username}{post.posterId.email}</div>
-                                    {post.Description}
+                                    <div className='inner_post_container'>
+                                        <h4 style={{textTransform:"capitalize"}}>
+                                        {post.posterId.username}
+                                        </h4>
+                                        <p style={{whiteSpace:"pre-line"}}>
+                                        {post.Description}
+                                        </p>
+                                    </div>
                                 </li>
                             ):
                             <h2>There are no current listed events on campus.</h2>

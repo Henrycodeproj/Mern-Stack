@@ -72,7 +72,9 @@ app.post('/posts', async (req,res) =>{
 
     await newPosts.save()
 
-    const results = await PostModel.find({}).sort({createdAt:-1})
+    const results = await PostModel.find({})
+    .sort({createdAt:-1})
+    .populate('posterId', ['username','email'])
 
     if (newPosts) return res.status(200).send({message:'Posted', data:results})
     return res.status(500).send({message:'error'})
