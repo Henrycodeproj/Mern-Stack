@@ -72,6 +72,7 @@ export const Login = ({setOption, option, active, inactive}) => {
                     <h3>Username</h3>
                     <label className="class">
                             <input
+                            className="login_input" 
                             type="text" 
                             name="login_username" 
                             onChange={handleInfo} 
@@ -83,7 +84,8 @@ export const Login = ({setOption, option, active, inactive}) => {
                 <div className='login-password-container'>
                     <h3>Password</h3>
                     <label className="class">
-                            <input 
+                            <input
+                            className="login_input" 
                             type="password" 
                             name="login_password" 
                             onChange={handleInfo} 

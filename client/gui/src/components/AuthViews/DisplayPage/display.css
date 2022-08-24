@@ -7,7 +7,7 @@
 }
 .display_newsfeed_wrapper {
     margin:10px;
-    width:50%;
+    width:60%;
     display:flex;
     gap:10px;
     height:auto;
@@ -27,21 +27,18 @@
 }
 .posts_articles {
     display:flex;
-    align-items: center;
+    /* align-items: center; */
     font-size: 1.5rem;
     border-radius: 5px;
     background-color: rgb(232, 231, 231);
     margin:20px;
     padding:20px;
 }
-ul {
-    list-style: none;
-}
 .faker{
-    width:25px;
-    height:25px;
+    width:30px;
+    height:30px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin: 0px 10px;
 }
 .left_sidebar {
     display:flex;
@@ -69,4 +66,8 @@ ul {
 .outer_posts_container{
     padding:10px;
     background-color: gray;
+}
+.inner_post_container{
+    word-wrap: break-word;
+    min-width: 0;
 }
