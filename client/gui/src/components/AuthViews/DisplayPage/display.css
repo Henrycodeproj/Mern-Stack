@@ -63,11 +63,25 @@
     align-items: center;
     flex-direction: column;
 }
-.outer_posts_container{
+.outer_posts_container {
     padding:10px;
     background-color: gray;
 }
-.inner_post_container{
+.inner_post_container {
+    display:flex;
+    flex-grow: 1;
+    flex-direction: column;
     word-wrap: break-word;
     min-width: 0;
+    gap:20px;
+}
+/* .posts_icon_wrapper{
+    margin-top: 20px;
+} */
+
+.posts_icon_bar {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    width:50%;
 }

@@ -20,7 +20,6 @@ export const Posts = ()=>{
 
 
     const formHandler = (e) => {
-        console.log(e.target.value)
         e.preventDefault()
         axios.post("http://localhost:3001/posts",{
             user:user.id,
@@ -55,7 +54,7 @@ export const Posts = ()=>{
 
     return (
         <div className="add_post_container">
-            <img src = "https://booleanstrings.com/wp-content/uploads/2021/10/profile-picture-circle-hd.png" className ="input_picture">
+            <img src = "https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" className ="input_picture">
             </img>
             <div className = "post_form_container">
                 <div className="post_form">
@@ -88,7 +87,7 @@ export const Posts = ()=>{
                     <Button 
                     variant="contained"
                     color = "secondary"
-                    onClick={(e) => formHandler(e)}>
+                    onClick={status ? (e) => formHandler(e): null}>
                     Submit
                     </Button>
                 </div>

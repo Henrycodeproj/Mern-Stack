@@ -74,10 +74,22 @@ app.post('/posts', async (req,res) =>{
 
     const results = await PostModel.find({})
     .sort({createdAt:-1})
-    .populate('posterId', ['username','email'])
+    .populate('posterId', ['username','email', 'createdAt'])
 
     if (newPosts) return res.status(200).send({message:'Posted', data:results})
     return res.status(500).send({message:'error'})
+})
+
+app.get('/posts/all', isAuthenticated, async (req, res) =>{
+    try {
+        const posts = await PostModel.find({})
+        .sort({createdAt: -1})
+        .populate('posterId', ['username','email', 'createdAt'])
+        .populate('attending', 'username')
+        return res.status(200).send(posts)
+    } catch(err){
+        return res.status(500).send("Internal Server error")
+    }
 })
 
 app.get('/posts/:postAmount', isAuthenticated, async (req, res) =>{
@@ -86,7 +98,8 @@ app.get('/posts/:postAmount', isAuthenticated, async (req, res) =>{
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
         .limit(req.params.postAmount)
-        .populate('posterId', ['username','email'])
+        .populate('posterId', ['username','email', 'createdAt'])
+        .populate('attending', 'username')
         
         return res.status(200).send(posts)
     } catch(err){
