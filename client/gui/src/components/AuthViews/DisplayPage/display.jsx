@@ -14,9 +14,7 @@ export const Display = () =>{
     const {posts, setPosts, user} = useContext(accountContext)
     const ref = useRef()
 
-    const [clicked, setClicked] = useState(false)
-
-    const [lastPostIndex, setLastPostIndex] = useState(0)
+    let lastPostIndex = 15
 
     const handleScroll = (e) => {
 
@@ -33,10 +31,24 @@ export const Display = () =>{
                 res.data.forEach((post) => fetchedPosts.push(post))
                 if (fetchedPosts.length > posts) {
                     setPosts(fetchedPosts)
-                    setLastPostIndex(lastPostIndex + 5)
+                    lastPostIndex += 5
                 }
             })
         }
+    }
+
+    const likeHandler = (postID) => {
+        const URL = `http://localhost:3001/posts/${postID}`
+        axios.patch(URL, {
+            headers:{
+                "authorization":localStorage.getItem("Token")
+            },
+            userID:user.id
+        })
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(error => console.log(error))
     }
 
     useEffect(()=>{
@@ -47,10 +59,8 @@ export const Display = () =>{
         return () => element.removeEventListener("scroll", handleScroll);
     },[])
 
-    const t = []
-
     useEffect (()=>{
-        const URL = `http://localhost:3001/posts/all`
+        const URL = `http://localhost:3001/posts/${lastPostIndex}`
         axios.get(URL, {
             headers:{
                 "authorization":localStorage.getItem("Token")
@@ -58,7 +68,6 @@ export const Display = () =>{
         })
         .then(res => {
             setPosts(res.data)
-            setLastPostIndex(res.data.length)
         })
         .catch(err => console.log(err))
     },[])
@@ -102,7 +111,19 @@ export const Display = () =>{
                                         </p>
                                         <div className='posts_icon_wrapper'>
                                             <div className='posts_icon_bar'>
-                                                {post.attending.includes(user.id) ? <FavoriteBorderIcon/> : <FavoriteIcon sx = {{color:"red"}} />}
+                                                {
+                                                post.attending.some(users => users._id === user.id) ?
+                                                <FavoriteIcon 
+                                                sx = {{color:"red"}}
+                                                onClick = {()=>likeHandler(post._id)}
+                                                style = {{cursor:"pointer"}}
+                                                />
+                                                :
+                                                <FavoriteBorderIcon 
+                                                onClick = {() => likeHandler(post._id)}
+                                                style = {{cursor:"pointer"}}
+                                                />
+                                                }
                                                 <CalendarMonthIcon/>
                                                 <AddToHomeScreenIcon/>
                                                 {console.log(posts)}

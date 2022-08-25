@@ -33,7 +33,7 @@
     color:black;
     opacity: .5;
     border: none;
-    caret-color: white;
+    caret-color: black;
 }
 textarea {
     font-size: 1.6rem;
