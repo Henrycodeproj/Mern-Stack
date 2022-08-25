@@ -75,9 +75,8 @@ export const Signup = () =>{
     // adds input values into newUser object hook
     const formHandler = (e) =>{
       const {name,value} = e.target
-      if (name === 'password'){
-        passwordRequirements(value)
-      }
+      if (name === 'password') passwordRequirements(value)
+      
       setnewUser({...newUser, [name]:value});
     }
 

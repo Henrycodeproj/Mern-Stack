@@ -4,14 +4,19 @@ import { useState, useEffect, useRef, useContext} from 'react';
 import { Posts } from '../../Posts/Posts';
 import { accountContext } from '../../Contexts/appContext';
 import { LeftColumn } from './leftSideCol';
-import { capitalize } from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';
 
 export const Display = () =>{
 
-    const {posts, setPosts} = useContext(accountContext)
+    const {posts, setPosts, user} = useContext(accountContext)
     const ref = useRef()
 
-    let lastPostIndex = 15
+    const [clicked, setClicked] = useState(false)
+
+    const [lastPostIndex, setLastPostIndex] = useState(0)
 
     const handleScroll = (e) => {
 
@@ -28,7 +33,7 @@ export const Display = () =>{
                 res.data.forEach((post) => fetchedPosts.push(post))
                 if (fetchedPosts.length > posts) {
                     setPosts(fetchedPosts)
-                    lastPostIndex += 5
+                    setLastPostIndex(lastPostIndex + 5)
                 }
             })
         }
@@ -42,14 +47,19 @@ export const Display = () =>{
         return () => element.removeEventListener("scroll", handleScroll);
     },[])
 
+    const t = []
+
     useEffect (()=>{
-        const URL = `http://localhost:3001/posts/${lastPostIndex}`
+        const URL = `http://localhost:3001/posts/all`
         axios.get(URL, {
             headers:{
                 "authorization":localStorage.getItem("Token")
             }
         })
-        .then(res => setPosts(res.data))
+        .then(res => {
+            setPosts(res.data)
+            setLastPostIndex(res.data.length)
+        })
         .catch(err => console.log(err))
     },[])
 
@@ -85,9 +95,19 @@ export const Display = () =>{
                                         <h4 style={{textTransform:"capitalize"}}>
                                         {post.posterId.username}
                                         </h4>
+                                        
+                                        {/* {post.posterId.createdAt.slice(0,10)} */}
                                         <p style={{whiteSpace:"pre-line"}}>
                                         {post.Description}
                                         </p>
+                                        <div className='posts_icon_wrapper'>
+                                            <div className='posts_icon_bar'>
+                                                {post.attending.includes(user.id) ? <FavoriteBorderIcon/> : <FavoriteIcon sx = {{color:"red"}} />}
+                                                <CalendarMonthIcon/>
+                                                <AddToHomeScreenIcon/>
+                                                {console.log(posts)}
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                             ):
