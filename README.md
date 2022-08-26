@@ -8,6 +8,7 @@
 
 **Libararies:**\
 -Express\
+-Framer Motion\
 -NodeJS\
 -Material UI\
 -Mongodb\
