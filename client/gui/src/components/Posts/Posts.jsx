@@ -6,6 +6,8 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Picker from 'emoji-picker-react';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import {Button} from "@mui/material";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import * as React from 'react';
 import Popover from '@mui/material/Popover';
@@ -16,7 +18,7 @@ export const Posts = ()=>{
     const [status, setStatus] = useState('')
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const {user, posts, setPosts} = useContext(accountContext)
+    const {user, setPosts} = useContext(accountContext)
 
 
     const formHandler = (e) => {
@@ -47,14 +49,13 @@ export const Posts = ()=>{
     };
   
     const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
 
 
     if (user === null) return <div>loading...</div>
 
     return (
         <div className="add_post_container">
-            <img src = "https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" className ="input_picture">
+            <img className ="input_picture" src = "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=1600" >
             </img>
             <div className = "post_form_container">
                 <div className="post_form">
@@ -66,11 +67,11 @@ export const Posts = ()=>{
                     />
                 </div>
                 <div className="bottom_posts_container">
-                            <div>
+                        <div className="bottom_icon_bar_wrapper">
+                            <div className="input_icons_bar">
                                 <SentimentSatisfiedAltIcon className="emoji_select" title = "Emojis" variant="contained" onClick={handleClick}>
                                 </SentimentSatisfiedAltIcon>
                                 <Popover
-                                //   id={id}
                                   open={open}
                                   anchorEl={anchorEl}
                                   onClose={handleClose}
@@ -83,7 +84,10 @@ export const Posts = ()=>{
                                 onEmojiClick={onEmojiClick}
                                 />
                                 </Popover>
+                                <AddPhotoAlternateIcon/>
+                                <LocationOnIcon/>
                             </div>
+                        </div>
                     <Button 
                     variant="contained"
                     color = "secondary"

@@ -49,15 +49,21 @@ router.get('/:postAmount', isAuthenticated, async (req, res) =>{
     }
 })
 
-router.patch('/:postID', isAuthenticated, async (req,res) =>{
+router.patch('/:postID/likes/:postIndex', isAuthenticated, async (req,res) =>{
     const postID = req.params.postID
     const userID = req.body.userID
     const post = await PostModel.findById(postID)
 
-    if (post.attending.includes(userID)) post.attending = post.attending.filter((users)=> users.toString()!== userID.toString() )
+    if (post.attending.includes(userID)) post.attending = post.attending.filter((users)=> users.toString()!== userID.toString())
     else post.attending.push(userID)
 
     await post.save()
 
-    res.status(200).send("Success")
+    const updatedPosts = await PostModel.find({})
+    .sort({createdAt: -1})
+    .limit(req.params.postIndex)
+    .populate('posterId', ['username','email', 'createdAt'])
+    .populate('attending', 'username')
+
+    res.status(200).send(updatedPosts)
 })

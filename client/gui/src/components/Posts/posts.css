@@ -11,6 +11,7 @@
     background-color: rgba(255, 255, 255, 0.139);
     background-color: rgb(232, 231, 231);;
     height:auto;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .input_picture {
@@ -46,13 +47,26 @@ textarea {
     align-items: center;
     justify-content: space-between;
     border-top-style: solid;
+    border-top-width: 1.5px;
     padding-top: 10px;
-    border-color: gray;
+    border-color: rgba(128, 128, 128, 0.228);
 }
 .emoji_select {
     color:black;
     cursor: pointer;
 }
+.emoji_select:hover{
+    color:rgb(220, 195, 4);
+}
 .emoji_search {
     caret-color: black !important;
+}
+.bottom_icon_bar_wrapper {
+    width: 100%;
+}
+.input_icons_bar {
+    width:70%;
+    display:flex; 
+    justify-content: space-between;
+    align-items: center;
 }
