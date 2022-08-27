@@ -92,3 +92,20 @@
 .dss {
     border-color: gray !important;
 }
+.attending_avatars{
+    cursor: pointer;
+    position: relative;
+    margin-left: -8px;
+    border-style: solid;
+    border-color: white;
+    width:35px !important;
+    height:35px !important;
+}
+.remaining_users_avatar{
+    position: relative;
+    margin-left:-8px;
+    border-style: solid;
+    border-color: white;
+    width:35px !important;
+    height:35px !important;
+}
