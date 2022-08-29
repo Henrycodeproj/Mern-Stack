@@ -15,6 +15,10 @@ const postSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
+const totalAttend = () =>{
+    
+}
+
 const PostModel = mongoose.model("Posts", postSchema)
 
 export default PostModel

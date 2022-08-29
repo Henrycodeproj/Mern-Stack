@@ -1,5 +1,5 @@
 import axios from 'axios';
-import '../DisplayPage/display.css'
+import './display.css'
 import { useState, useEffect, useRef, useContext} from 'react';
 import { Posts } from '../../Posts/Posts';
 import { accountContext } from '../../Contexts/appContext';
@@ -21,19 +21,20 @@ export const Display = () =>{
     let lastPostIndex = 15
 
     const handleScroll = (e) => {
-
+        console.log(e.target)
         if (e.target.clientHeight + e.target.scrollTop + 1 >= e.target.scrollHeight) {
 
-            const URL = `http://localhost:3001/posts/${lastPostIndex + 5}`
+            const URL = `http://localhost:3001/posts/amount/${lastPostIndex + 5}`
             axios.get(URL, {
                 headers:{
                     "authorization":localStorage.getItem("Token")
                 }
             })
             .then(res =>{
+                console.log(res,posts)
                 const fetchedPosts = []
                 res.data.forEach((post) => fetchedPosts.push(post))
-                if (fetchedPosts.length > posts) {
+                if (fetchedPosts.length > lastPostIndex) {
                     setPosts(fetchedPosts)
                     lastPostIndex += 5
                 }
@@ -42,7 +43,7 @@ export const Display = () =>{
     }
     
     const likeHandler = (postID) => {
-        const URL = `http://localhost:3001/posts/${postID}/likes/${lastPostIndex}`
+        const URL = `http://localhost:3001/posts/likes/${postID}/${lastPostIndex}`
         axios.patch(URL, {
             headers:{
                 "authorization":localStorage.getItem("Token")
@@ -56,7 +57,6 @@ export const Display = () =>{
     }
 
     useEffect(()=>{
-        console.log('te')
         const element = ref.current
 
         element.addEventListener("scroll", handleScroll)
@@ -65,8 +65,8 @@ export const Display = () =>{
     },[])
 
     useEffect (()=>{
-        console.log('aaassssssssssss')
-        const URL = `http://localhost:3001/posts/${lastPostIndex}`
+
+        const URL = `http://localhost:3001/posts/amount/${lastPostIndex}`
         axios.get(URL, {
             headers:{
                 "authorization":localStorage.getItem("Token")
@@ -103,18 +103,18 @@ export const Display = () =>{
                     <div>
                         <ul>
                             {
-                            posts.length > 0 ? posts.map((post)=>
+                            posts.length > 0 ? posts.map((post, index)=>
                                 <li key = {post._id} className = "posts_articles">
                                     <img src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" className='faker'></img>
                                     <div className='inner_post_container'>
                                         <h4 style={{textTransform:"capitalize"}}>
                                         {post.posterId.username}
                                         </h4>
-                                        
-                                        {/* {post.posterId.createdAt.slice(0,10)} */}
+    
                                         <p style={{whiteSpace:"pre-line"}}>
                                         {post.Description}
                                         </p>
+
                                         <div className='posts_icon_wrapper'>
                                             <div className='posts_icon_bar'>
                                                 {
@@ -149,7 +149,6 @@ export const Display = () =>{
                                                 }
                                                 <CalendarMonthIcon/>
                                                 <AddToHomeScreenIcon/>
-                                                {console.log(posts)}
                                             </div>
 
                                             <motion.div 
@@ -159,7 +158,7 @@ export const Display = () =>{
                                             transition = {{ duration:1 }}
                                             >
                                                 <Attending 
-                                                users = {post.attending}
+                                                posting = { post }
                                                 />
                                             </motion.div>
                                         </div>

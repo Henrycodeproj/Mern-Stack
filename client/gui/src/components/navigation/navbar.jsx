@@ -72,7 +72,7 @@ export const Navbar = () =>{
                         sx = {{width:'400px'}}
                     >
                         <MenuItem sx={{ minWidth:"180px" }} 
-                        onClick={()=> {closeProfile(); navigateTo("/profile")}}>
+                        onClick={()=> {closeProfile(); navigateTo("/profile", {replace:false})}}>
                             <AccountCircleIcon className='profile_menu_icon' sx={{mr:2}}/>
                                 <div>Profile</div>
                         </MenuItem>

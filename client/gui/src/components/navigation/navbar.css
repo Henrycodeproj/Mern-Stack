@@ -4,6 +4,7 @@
     border-radius: 50%;
 }
 nav{
+    width:100%;
     display:flex;
     justify-content: space-around;
     align-items: center;
@@ -11,7 +12,7 @@ nav{
     background:#A61651;
     background: #351d7268;
     background: #ff2df426;
-    background: #a821a142
+    background: #a821a142;
 }
 
 .profile_section {
