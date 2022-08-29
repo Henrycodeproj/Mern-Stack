@@ -34,7 +34,7 @@ router.get('/all', isAuthenticated, async (req, res) =>{
     }
 })
 
-router.get('/:postAmount', isAuthenticated, async (req, res) =>{
+router.get('/amount/:postAmount', isAuthenticated, async (req, res) =>{
     console.log(req.params.postAmount)
     try{
         const posts = await PostModel.find({})
@@ -42,14 +42,27 @@ router.get('/:postAmount', isAuthenticated, async (req, res) =>{
         .limit(req.params.postAmount)
         .populate('posterId', ['username','email', 'createdAt'])
         .populate('attending', 'username')
-        
+
         return res.status(200).send(posts)
     } catch(err){
         return res.status(500).send("Internal Server error")
     }
 })
 
-router.patch('/:postID/likes/:postIndex', isAuthenticated, async (req,res) =>{
+router.get('/:postID/attend/:currentShown', isAuthenticated, async (req, res) =>{
+    try{
+        const posts = await PostModel.findById(req.params.postID)
+        .sort({createdAt: -1})
+        .limit(req.params.currentShown)
+        .populate('attending', 'username')
+
+        return res.status(200).send(posts.attending.slice(3))
+    } catch(err){
+        return res.status(500).send("Internal Server error")
+    }
+})
+
+router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     const postID = req.params.postID
     const userID = req.body.userID
     const post = await PostModel.findById(postID)
