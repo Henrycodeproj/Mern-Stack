@@ -18,10 +18,9 @@ export const Display = () =>{
     const {posts, setPosts, user} = useContext(accountContext)
     const ref = useRef()
 
-    let lastPostIndex = 15
+    const [lastPostIndex, setLastPostIndex] = useState(15)
 
     const handleScroll = (e) => {
-        console.log(e.target)
         if (e.target.clientHeight + e.target.scrollTop + 1 >= e.target.scrollHeight) {
 
             const URL = `http://localhost:3001/posts/amount/${lastPostIndex + 5}`
@@ -31,18 +30,18 @@ export const Display = () =>{
                 }
             })
             .then(res =>{
-                console.log(res,posts)
                 const fetchedPosts = []
                 res.data.forEach((post) => fetchedPosts.push(post))
-                if (fetchedPosts.length > lastPostIndex) {
+                if (fetchedPosts.length >= lastPostIndex) {
                     setPosts(fetchedPosts)
-                    lastPostIndex += 5
+                    setLastPostIndex(lastPostIndex + 5)
                 }
-            })
+            }).catch(error => console.log(error))
         }
     }
     
     const likeHandler = (postID) => {
+        console.log(lastPostIndex,'lastpostingdfdfdf')
         const URL = `http://localhost:3001/posts/likes/${postID}/${lastPostIndex}`
         axios.patch(URL, {
             headers:{
@@ -51,6 +50,7 @@ export const Display = () =>{
             userID:user.id
         })
         .then(res => {
+            console.log(res.data)
             setPosts(res.data)
         })
         .catch(error => console.log(error))

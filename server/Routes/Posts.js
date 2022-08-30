@@ -35,7 +35,6 @@ router.get('/all', isAuthenticated, async (req, res) =>{
 })
 
 router.get('/amount/:postAmount', isAuthenticated, async (req, res) =>{
-    console.log(req.params.postAmount)
     try{
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
@@ -55,7 +54,7 @@ router.get('/:postID/attend/:currentShown', isAuthenticated, async (req, res) =>
         .sort({createdAt: -1})
         .limit(req.params.currentShown)
         .populate('attending', 'username')
-
+        
         return res.status(200).send(posts.attending.slice(3))
     } catch(err){
         return res.status(500).send("Internal Server error")
