@@ -80,6 +80,7 @@
     justify-content: space-between;
     align-items: center;
     min-height:39px;
+    flex-wrap: wrap-reverse;
 } 
 
 .heart_button_outline:hover{
@@ -92,4 +93,21 @@
 }
 .dss {
     border-color: gray !important;
+}
+@media (max-width:350px){
+    .left_sidebar{
+        display:none;
+    }
+    .right_sidebar{
+        display: none;
+    }
+    .display_container{
+        width:100%;
+    }
+    .display_newsfeed_wrapper{
+        width:100%;
+    }
+    .posts_articles{
+        margin:10px 0px 10px 0px;
+    }
 }
