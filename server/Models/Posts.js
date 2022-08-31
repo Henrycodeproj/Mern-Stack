@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const postSchema = new mongoose.Schema({
+const PostSchema = new mongoose.Schema({
     Description:{
         type:String,
         required:true
@@ -15,10 +15,6 @@ const postSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
-const totalAttend = () =>{
-    
-}
-
-const PostModel = mongoose.model("Posts", postSchema)
+const PostModel = mongoose.model("Posts", PostSchema)
 
 export default PostModel

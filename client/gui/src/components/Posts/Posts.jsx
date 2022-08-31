@@ -69,8 +69,10 @@ export const Posts = ()=>{
                 <div className="bottom_posts_container">
                         <div className="bottom_icon_bar_wrapper">
                             <div className="input_icons_bar">
-                                <SentimentSatisfiedAltIcon className="emoji_select" title = "Emojis" variant="contained" onClick={handleClick}>
-                                </SentimentSatisfiedAltIcon>
+                                <div style = {{display:"flex", alignItems:"center"}}>
+                                <SentimentSatisfiedAltIcon className="emoji_select" title = "Emojis" variant="contained" onClick={handleClick}/>
+                                <span style={{marginLeft:5}}>Emojis</span>
+                                </div>
                                 <Popover
                                   open={open}
                                   anchorEl={anchorEl}

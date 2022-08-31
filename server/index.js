@@ -3,15 +3,14 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import UserModel from './Models/Users.js';
-import PostModel from './Models/Posts.js';
 import bcrypt from 'bcrypt';
 import verifyTokenModel from './Models/Token.js';
 import crypto from 'crypto';
-import session from "express-session"
 import sendMail from './config/mail.js';
 import jwt from 'jsonwebtoken'
 import isAuthenticated from './Middleware/auth.js';
 import { router as PostsRouter} from './Routes/posts.js';
+import { Server } from 'socket.io';
 
 
 const app = express()
@@ -35,6 +34,7 @@ const databasePassword = process.env.password
 const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
 
 const PORT = process.env.PORT || 3001
+
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
 .catch((error) => console.log(error.message));

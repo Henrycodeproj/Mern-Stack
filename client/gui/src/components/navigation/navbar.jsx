@@ -11,6 +11,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
 import "../navigation/navbar.css"
 
 export const Navbar = () =>{
@@ -45,7 +46,9 @@ export const Navbar = () =>{
             <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=> !userStatus ? navigateTo("/"): navigateTo("/display")}/>
 
             <div className="profile_section">
-                <NotificationsIcon/>
+                <Badge badgeContent={4} color="error">
+                    <NotificationsIcon sx = {{fontSize:"2em", cursor:"pointer", background:"rgba(128, 128, 128, 0.393)", borderRadius:"50%", color:"#bbb5b5"}} onClick = {() => console.log('notifications')}/>
+                </Badge>
                 <div>
                     <IconButton
                         onClick={openProfile}
@@ -56,7 +59,7 @@ export const Navbar = () =>{
                         aria-expanded={open ? 'true' : undefined}
                     >
                         <Avatar 
-                        src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"   sx={{ width: 35, height: 35 }}
+                        src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" sx={{ width: 35, height: 35 }}
                         className='faker1'
                         >
                         </Avatar>
