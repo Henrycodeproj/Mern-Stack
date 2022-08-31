@@ -1,9 +1,8 @@
 .display_container {
     display: flex;
-    width:100%;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     justify-content: center;
-    /* background: gray; */
 }
 .display_newsfeed_wrapper {
     margin:10px;
@@ -13,7 +12,7 @@
 }
 
 .newsfeed_container {
-    max-height:100vh;
+    max-height:95vmin;
     overflow:scroll;
     width:100%;
     /* background-color: rgba(255, 255, 255, 0.26); */
@@ -52,6 +51,7 @@
     background-color: aquamarine;
     display:flex;
     justify-content: center;
+    position: sticky;
 }
 .right_sidebar {
     max-width: 30%;
