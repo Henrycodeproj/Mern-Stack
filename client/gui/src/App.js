@@ -9,6 +9,7 @@ import { Confirmation } from "./components/config/ConfirmationPage";
 import { UserAuthentication } from './components/config/userAuth';
 import { Profile } from "./components/AuthViews/ProfileViews/profile";
 import { Display } from './components/AuthViews/DisplayPage/display';
+import { Message } from "./components/AuthViews/socket"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <AppContext>
         <Navbar/>
         <Routes>
+          <Route path="/message" element ={<Message/>}/>
           <Route path="/" element ={<Signup/>}/>
           <Route element = {<UserAuthentication/>}>
               <Route path="/display" element = {<Display/>}/>

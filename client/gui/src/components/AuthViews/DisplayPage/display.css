@@ -94,7 +94,7 @@
 .dss {
     border-color: gray !important;
 }
-@media (max-width:350px){
+@media (max-width:400px){
     .left_sidebar{
         display:none;
     }
@@ -109,5 +109,8 @@
     }
     .posts_articles{
         margin:10px 0px 10px 0px;
+    }
+    .newsfeed_container{
+        max-height: none;
     }
 }
