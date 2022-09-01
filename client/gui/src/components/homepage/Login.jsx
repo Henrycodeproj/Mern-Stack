@@ -40,7 +40,6 @@ export const Login = ({setOption, option, active, inactive}) => {
       .then(res => {
         console.log(res.data.user)
         if (res.data.accessToken){
-          alert(res.data.message)
           localStorage.setItem("Token", res.data.accessToken)
           localStorage.setItem("userStatus", true)
           localStorage.setItem("User", JSON.stringify(res.data.user))
@@ -62,10 +61,12 @@ export const Login = ({setOption, option, active, inactive}) => {
     transition = {{ duration:1 }}
     >
         <div className='space'>
-        <h1 className='signup-title' style= {option ? active: inactive} onClick = {()=> setOption(!option)}>Sign Up</h1>
-        <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(!option)}>Sign In</h1>
+          <h1 className='signup-title' style= {option ? active: inactive} onClick = {()=> setOption(!option)}>Sign Up</ h1>
+          <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(!option)}>Sign In</h1>
         </div>
-        {serverError && <Alert variant='filled' severity="error" color="secondary" onClose={()=>setServerError('')}>{serverError}</Alert>}
+        {serverError && 
+        <Alert variant='filled' severity="error" color="secondary" onClose={()=>setServerError('')}>{serverError}</Alert>
+        }
         <div>
             <form className="login-form" onSubmit={handleSubmit}>
                 <div className="login-username-container">

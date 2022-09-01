@@ -9,8 +9,9 @@ import crypto from 'crypto';
 import sendMail from './config/mail.js';
 import jwt from 'jsonwebtoken'
 import isAuthenticated from './Middleware/auth.js';
-import { router as PostsRouter} from './Routes/posts.js';
+import { router as PostsRouter } from './Routes/posts.js';
 import { Server } from 'socket.io';
+import { createServer } from "http"; 
 
 
 const app = express()
@@ -24,16 +25,22 @@ const corsOptions ={
     optionSuccessStatus:200,
 }
 
+const httpServer = createServer(app);
+const databasePassword = process.env.password
+const PORT = process.env.PORT || 3001
+
+const io = new Server(httpServer, {
+    cors:{
+        origin:'http://localhost:3000',
+        methods:["GET", "POST", "PATCH"]
+    }
+});
 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/posts', PostsRouter);
 
-const databasePassword = process.env.password
-
 const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
-
-const PORT = process.env.PORT || 3001
 
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
@@ -151,6 +158,13 @@ app.post("/createUser", async (req,res) => {
     })
 })
 
-app.listen(PORT, () => {
-    console.log('Server is hosted on port 3001')
+io.on("connection", (socket) => {
+    // console.log(`User Connected ${socket.id}`);
+    socket.on("message", (data)=>{
+        socket.broadcast.emit("62cd136c416bc62d3bf30a29", [{message:data.message}])
+    })
 })
+
+httpServer.listen(PORT, () => {
+    console.log('Server is hosted on port 3001');
+});

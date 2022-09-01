@@ -115,7 +115,7 @@ const Attending = (posting) => {
                       horizontal: 'left',
                     }}
                     >
-                    <div style={{ padding: 10, width:150, height:150, overflow:"scroll"}} onScroll={(event)=>handleScroll(event, post._id)} >
+                    <div style={{ padding: 10, maxWidth:170, maxHeight:170, overflow:"scroll"}} onScroll={(event)=>handleScroll(event, post._id)} >
 
                         <div className='remaining_users_search_bar_container' style = {{ display:"flex"}}>
                             <PersonSearchIcon/>
@@ -125,7 +125,6 @@ const Attending = (posting) => {
                             onChange={(e) => {handleSearch(e)}}
                             value = {search}
                             />
-                        {search}
                         </div>
 
                         { remainingUsers && search ? 
