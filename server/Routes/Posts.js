@@ -5,7 +5,6 @@ import PostModel from '../Models/Posts.js';
 export const router = express.Router();
 
 router.post('/', isAuthenticated, async (req,res) =>{
-    if (!req.isAuth) return res.redirect("http://localhost:3000")
     const {user, post} = req.body
     console.log(user,post)
     const newPosts = new PostModel({
@@ -24,7 +23,7 @@ router.post('/', isAuthenticated, async (req,res) =>{
 })
 
 router.get('/all', isAuthenticated, async (req, res) =>{
-    if (!req.isAuth) return res.redirect("http://localhost:3000")
+    
     try {
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
@@ -37,7 +36,6 @@ router.get('/all', isAuthenticated, async (req, res) =>{
 })
 
 router.get('/amount/:postAmount', isAuthenticated, async (req, res) =>{
-    if (!req.isAuth) return res.redirect("http://localhost:3000")
     try{
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
@@ -52,7 +50,6 @@ router.get('/amount/:postAmount', isAuthenticated, async (req, res) =>{
 })
 
 router.get('/:postID/attend/:currentShown', isAuthenticated, async (req, res) =>{
-    if (!req.isAuth) return res.redirect("http://localhost:3000")
     try{
         const posts = await PostModel.findById(req.params.postID)
         .sort({createdAt: -1})
@@ -66,13 +63,12 @@ router.get('/:postID/attend/:currentShown', isAuthenticated, async (req, res) =>
 })
 
 router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
-    if (!req.isAuth) return res.redirect("http://localhost:3000")
 
     const postID = req.params.postID
-    const userID = req.body.userID
+    const userID = req.body.user
     const post = await PostModel.findById(postID)
 
-    if (post.attending.includes(userID)) post.attending = post.attending.filter((users)=> users.toString()!== userID.toString())
+    if (post.attending.includes(userID)) post.attending = post.attending.filter((users)=> users.toString() !== userID.toString())
     else post.attending.push(userID)
 
     await post.save()

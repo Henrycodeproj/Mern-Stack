@@ -41,13 +41,12 @@ export const Display = () =>{
     }
     
     const likeHandler = (postID) => {
-        console.log(lastPostIndex,'lastpostingdfdfdf')
+        const data = {user:user.id}
         const URL = `http://localhost:3001/posts/likes/${postID}/${lastPostIndex}`
-        axios.patch(URL, {
-            headers:{
+        axios.patch(URL, data, {
+            headers: {
                 "authorization":localStorage.getItem("Token")
             },
-            userID:user.id
         })
         .then(res => {
             console.log(res.data)
@@ -70,7 +69,7 @@ export const Display = () =>{
         axios.get(URL, {
             headers:{
                 "authorization":localStorage.getItem("Token")
-            }
+            },
         })
         .then(res => {
             setPosts(res.data)

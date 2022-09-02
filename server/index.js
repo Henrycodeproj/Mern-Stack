@@ -32,7 +32,8 @@ const PORT = process.env.PORT || 3001
 const io = new Server(httpServer, {
     cors:{
         origin:'http://localhost:3000',
-        methods:["GET", "POST", "PATCH"]
+        methods:["GET", "POST", "PATCH"],
+        credentials:true
     }
 });
 
@@ -159,9 +160,8 @@ app.post("/createUser", async (req,res) => {
 })
 
 io.on("connection", (socket) => {
-    // console.log(`User Connected ${socket.id}`);
     socket.on("message", (data)=>{
-        socket.broadcast.emit("62cd136c416bc62d3bf30a29", [{message:data.message}])
+        socket.broadcast.emit("62cd136c416bc62d3bf30a29", {message:data.message})
     })
 })
 
