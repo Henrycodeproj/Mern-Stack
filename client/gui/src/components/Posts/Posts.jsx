@@ -8,6 +8,7 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import {Button} from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { motion } from "framer-motion";
 
 import * as React from 'react';
 import Popover from '@mui/material/Popover';
@@ -71,7 +72,9 @@ export const Posts = ()=>{
                             <div className="input_icons_bar">
                                 <div style = {{display:"flex", alignItems:"center"}}>
                                 <SentimentSatisfiedAltIcon className="emoji_select" title = "Emojis" variant="contained" onClick={handleClick}/>
-                                <span style={{marginLeft:5}}>Emojis</span>
+                                    <span style={{marginLeft:5}}>
+                                        <h3 style = {{color:"black"}}>Emojis</h3>
+                                    </span>
                                 </div>
                                 <Popover
                                   open={open}

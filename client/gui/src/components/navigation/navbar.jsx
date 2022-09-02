@@ -12,6 +12,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
+import Popover from '@mui/material/Popover';
+
 import "../navigation/navbar.css"
 
 export const Navbar = () =>{
@@ -20,6 +22,9 @@ export const Navbar = () =>{
     const {userStatus} = useContext(accountContext)
 
     const [profile, setProfile] = useState(null)
+    const [notification, setNotification] = useState(null)
+
+    const test = [1,2]
 
     const logoutHandler = () => {
         localStorage.removeItem("userStatus")
@@ -30,7 +35,6 @@ export const Navbar = () =>{
     }
 
     const open = Boolean(profile)
-    console.log(open)
 
     const openProfile = (e) =>{
         setProfile(e.currentTarget)
@@ -38,6 +42,17 @@ export const Navbar = () =>{
     const closeProfile = () =>{
         setProfile(null)
     }
+
+    const notificationOpen = Boolean(notification)
+
+    const handleClick = (event) => {
+        setNotification(event.currentTarget);
+      };
+    
+    const handleClose = () => {
+        setNotification(null);
+    };
+    
 
     if (userStatus){
         return(
@@ -47,7 +62,21 @@ export const Navbar = () =>{
 
             <div className="profile_section">
                 <Badge badgeContent={4} color="error">
-                    <NotificationsIcon sx = {{fontSize:"2em", cursor:"pointer", background:"rgba(128, 128, 128, 0.393)", borderRadius:"50%", color:"#bbb5b5"}} onClick = {() => console.log('notifications')}/>
+                    <NotificationsIcon className = "notification_bell" onClick = {(e) => handleClick(e)}/>
+                    <Popover
+                    open={notificationOpen}
+                    anchorEl={notification}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    >
+                    <div>
+                    <MenuItem sx={{ minWidth:"180px" }}><h2>Notifications</h2></MenuItem>
+                    {test.map((item)=><MenuItem sx={{ minWidth:"180px" }}>{item}</MenuItem>)}
+                    </div>
+                    </Popover>
                 </Badge>
                 <div>
                     <IconButton

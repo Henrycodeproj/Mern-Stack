@@ -8,7 +8,7 @@ nav{
     display:flex;
     justify-content: space-around;
     align-items: center;
-    height:100%;
+    /* height:100%; */
     background:#A61651;
     background: #351d7268;
     background: #ff2df426;
@@ -28,3 +28,29 @@ nav{
     background-color: rgba(128, 128, 128, 0.32);
     border-radius: 50%;
 }
+.notification_bell {
+    font-size: 2em !important;
+    cursor:pointer;
+    border-radius:50%;
+    color:#bbb5b5;
+    background: rgba(128, 128, 128, 0.393);
+}
+.notification_bell:hover{
+    animation: emoji-pulse 2s infinite;
+}
+@keyframes emoji-pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(128, 128, 128, 0.393);
+    }
+    
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(128, 128, 128, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(128, 128, 128, 0);
+    }
+  }
