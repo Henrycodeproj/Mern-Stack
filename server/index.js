@@ -10,6 +10,9 @@ import sendMail from './config/mail.js';
 import jwt from 'jsonwebtoken'
 import isAuthenticated from './Middleware/auth.js';
 import { router as PostsRouter } from './Routes/posts.js';
+import { router as UserRouter } from './Routes/Users.js'
+import { router as MessageRouter } from './Routes/Messages.js'
+import { router as ConversationRouter } from "./Routes/Conversations.js"
 import { Server } from 'socket.io';
 import { createServer } from "http"; 
 
@@ -40,28 +43,15 @@ const io = new Server(httpServer, {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/posts', PostsRouter);
+app.use('/user', UserRouter);
+app.use('/message', MessageRouter);
+app.use('/conversation', ConversationRouter);
 
 const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
 
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
 .catch((error) => console.log(error.message));
-
-app.get("/", (req,res) => {
-    console.log(req.headers)
-})
-
-app.get("/api", (req,res) => {
-    UserModel.find((error, result) => {
-        if (error){
-            console.log(error)
-            res.send(error)
-        } else {
-            console.log(result.username)
-            res.send(result.username)
-        }
-    })
-})
 
 app.get('/authtest', isAuthenticated, (req,res) =>{
     if (req.isAuth) res.status(200).send(true)
@@ -135,6 +125,7 @@ app.post("/createUser", async (req,res) => {
         })
 
         await emailToken.save()
+
         res.status(201).send(response)
 
         try{
@@ -160,9 +151,9 @@ app.post("/createUser", async (req,res) => {
 })
 
 io.on("connection", (socket) => {
-    socket.on("message", (data)=>{
+    socket.on("62cd136c416bc62d3bf30a29", (data)=>{
         socket.broadcast.emit("62cd136c416bc62d3bf30a29", {message:data.message})
-    })
+    });
 })
 
 httpServer.listen(PORT, () => {

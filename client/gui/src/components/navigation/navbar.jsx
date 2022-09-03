@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { accountContext } from '../Contexts/appContext'
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -13,13 +15,14 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Popover from '@mui/material/Popover';
+import Divider from '@mui/material/Divider';
 
 import "../navigation/navbar.css"
 
 export const Navbar = () =>{
 
     const navigateTo = useNavigate()
-    const {userStatus} = useContext(accountContext)
+    const {userStatus, user} = useContext(accountContext)
 
     const [profile, setProfile] = useState(null)
     const [notification, setNotification] = useState(null)
@@ -73,8 +76,16 @@ export const Navbar = () =>{
                     }}
                     >
                     <div>
-                    <MenuItem sx={{ minWidth:"180px" }}><h2>Notifications</h2></MenuItem>
-                    {test.map((item)=><MenuItem sx={{ minWidth:"180px" }}>{item}</MenuItem>)}
+                    <MenuItem sx={{ minWidth:"180px", display:"flex", alignItems:"center", gap:3}}>
+                        <h2>Notifications</h2>
+                        <span><RecordVoiceOverIcon/></span>
+                    </MenuItem>
+                    <Divider/>
+                    {test.map((item)=>
+                    <div>
+                    <MenuItem sx={{ minWidth:"180px" }}>{item}dsdsds</MenuItem>
+                    <Divider/>
+                    </div>)}
                     </div>
                     </Popover>
                 </Badge>
@@ -88,7 +99,8 @@ export const Navbar = () =>{
                         aria-expanded={open ? 'true' : undefined}
                     >
                         <Avatar 
-                        src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" sx={{ width: 35, height: 35 }}
+                        src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" 
+                        sx={{ width: 35, height: 35 }}
                         className='faker1'
                         >
                         </Avatar>
@@ -104,7 +116,7 @@ export const Navbar = () =>{
                         sx = {{width:'400px'}}
                     >
                         <MenuItem sx={{ minWidth:"180px" }} 
-                        onClick={()=> {closeProfile(); navigateTo("/profile", {replace:false})}}>
+                        onClick={()=> {closeProfile(); navigateTo(`/profile/${user.id}`, {replace:false})}}>
                             <AccountCircleIcon className='profile_menu_icon' sx={{mr:2}}/>
                                 <div>Profile</div>
                         </MenuItem>

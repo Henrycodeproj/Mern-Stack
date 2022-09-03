@@ -57,22 +57,19 @@ textarea {
 }
 .emoji_select:hover{
     color:rgb(212, 189, 9);
-    animation: emoji-pulse 1s infinite;
+    animation: emoji-pulse 2s infinite;
     border-radius: 50%;
 }
 @keyframes emoji-pulse {
     0% {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 0 rgb(212, 189, 9, .7);
+      box-shadow: 0 0 0 0 rgb(212, 189, 9, .5);
     }
     
     70% {
-      transform: scale(1);
-      box-shadow: 0 0 0 10px rgb(212, 189, 9, 0);
+      box-shadow: 0 0 5px 7px rgb(212, 189, 9, 0);
     }
     
     100% {
-      transform: scale(0.95);
       box-shadow: 0 0 0 0 rgb(212, 189, 9, 0);
     }
   }

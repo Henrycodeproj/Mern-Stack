@@ -36,9 +36,9 @@ nav{
     background: rgba(128, 128, 128, 0.393);
 }
 .notification_bell:hover{
-    animation: emoji-pulse 2s infinite;
+    animation: notification-pulse 2s infinite;
 }
-@keyframes emoji-pulse {
+@keyframes notification-pulse {
     0% {
       transform: scale(0.95);
       box-shadow: 0 0 0 0 rgba(128, 128, 128, 0.393);
