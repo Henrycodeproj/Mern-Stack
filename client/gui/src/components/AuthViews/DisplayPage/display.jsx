@@ -6,6 +6,7 @@ import { accountContext } from '../../Contexts/appContext';
 import { LeftColumn } from './leftSideCol';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';
 import { motion } from 'framer-motion';
@@ -134,11 +135,14 @@ export const Display = () =>{
                                                 :
                                                 <motion.button
                                                 whileHover={{ scale: 1.1}}
-                                                whileTap={{ scale: 0.9 }}
+                                                whileTap={{ 
+                                                    scale: 1.5,
+                                                    rotate:-10,
+                                                }}
                                                 style={{ borderStyle:"none", background:"transparent", width:23, height:23, padding:0 }}
                                                 >
                                                     <Tooltip title = "Attend" TransitionComponent={Zoom}>   
-                                                    <FavoriteBorderIcon
+                                                    <VolunteerActivismIcon
                                                     className='heart_button_outline' 
                                                     onClick = {() => likeHandler(post._id)}
                                                     style = {{cursor:"pointer"}}

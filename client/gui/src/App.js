@@ -21,7 +21,7 @@ function App() {
           <Route path="/" element ={<Signup/>}/>
           <Route element = {<UserAuthentication/>}>
               <Route path="/display" element = {<Display/>}/>
-              <Route path="/profile" element = {<Profile/>}/>
+              <Route path="/profile/:userId" element = {<Profile/>}/>
           </Route>
           <Route path = "/invalid/expired/" element = {<ExpiredVerification/>}/>
           <Route path = "/valid" element = {<Confirmation/>}/>

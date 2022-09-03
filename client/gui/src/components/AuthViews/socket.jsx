@@ -1,3 +1,4 @@
+import axios from "axios"
 import { useState, useEffect } from "react"
 import io from "socket.io-client"
 
@@ -9,14 +10,20 @@ export const Message = () => {
     
     const sendMessage = (e) => {
         e.preventDefault()
-        socket.emit("message", {message:message})
-        console.log(133)
-        //setConvo(userMessage => [...userMessage, {message:message}])
+        const URL = 'http://localhost:3001/message/'
+        axios.get(URL,{
+            headers:{
+                "authorization": localStorage.getItem("Token")
+            }
+        })
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+
+        socket.emit("62cd136c416bc62d3bf30a29", {message:message})
     }
 
     useEffect(()=>{
         socket.on("62cd136c416bc62d3bf30a29", (data) => {
-            console.log('1?')
             setConvo(newMessage => [...newMessage, data])
         })
     },[])
