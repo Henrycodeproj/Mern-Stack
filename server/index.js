@@ -151,8 +151,10 @@ app.post("/createUser", async (req,res) => {
 })
 
 io.on("connection", (socket) => {
-    socket.on("62cd136c416bc62d3bf30a29", (data)=>{
-        socket.broadcast.emit("62cd136c416bc62d3bf30a29", {message:data.message})
+    console.log("user connected")
+    socket.on("sendChatId", (data)=>{
+        console.log(data)
+        socket.emit(`${data.charId}`, {message:data.message})
     });
 })
 

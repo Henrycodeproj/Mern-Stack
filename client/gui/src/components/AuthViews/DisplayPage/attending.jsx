@@ -81,7 +81,7 @@ const Attending = (posting) => {
             <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            whileHover = {{ y: -10, scale: 1.3 }}
+            whileHover = {{ y: -10, scale: 1.3}}
             >
                 <Tooltip title = {currentUser.id !== user._id && user._id ? `${user.username.charAt(0).toUpperCase() + user.username.slice(1)} is attending`:'You are attending this event'}>
                     <Avatar 

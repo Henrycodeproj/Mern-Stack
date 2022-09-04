@@ -1,6 +1,7 @@
 import express from "express"
 import isAuthenticated from "../Middleware/auth.js"
 import ConversationModel from "../Models/Conversations.js"
+import MessageModel from "../Models/messages.js"
 
 export const router = express.Router()
 
@@ -23,5 +24,12 @@ router.post('/create', isAuthenticated, async (req, res) => {
 })
 
 router.get('/:conversationId', isAuthenticated, async (req, res) => {
-    
+    console.log("called")
+
+    const results = await MessageModel.find({id:req.params.conversationId})
+    .limit(50)
+    .populate('senderId')
+
+    if (results) res.status(200).send(results)
+
 })
