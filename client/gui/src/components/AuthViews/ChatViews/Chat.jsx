@@ -13,6 +13,7 @@ export const Chat = () => {
     const [convo, setConvo] = useState([])
     
     const sendMessage = (e) => {
+        console.log("message")
         e.preventDefault()
         const sendMessageUrl = 'http://localhost:3001/message/send'
         const data = {
@@ -21,15 +22,17 @@ export const Chat = () => {
             senderId:user.id
         }
 
+        setMessage("")
+
         axios.post(sendMessageUrl, data, {
             headers:{
                 "authorization": localStorage.getItem("Token")
             }
         })
-        .then(res => console.log(res,'111'))
+        .then(res => console.log(res))
         .catch(err => console.log(err))
 
-        socket.emit("sendChatId", {chatId:chatId, message:message})
+        socket.emit("sendUserId", {chatId:chatId, message:message})
     }
 
     useEffect(()=>{
@@ -40,7 +43,9 @@ export const Chat = () => {
             }
         })
         .then(res => setConvo(res.data))
-        
+    },[])
+
+    useEffect(()=>{
         socket.on(`${chatId}`, (data) => {
             setConvo(newMessage => [...newMessage, data])
         })
