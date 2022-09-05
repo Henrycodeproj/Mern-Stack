@@ -151,10 +151,12 @@ app.post("/createUser", async (req,res) => {
 })
 
 io.on("connection", (socket) => {
-    console.log("user connected")
-    socket.on("sendChatId", (data)=>{
+    socket.on("sendUserId", (data)=>{
         console.log(data)
-        socket.emit(`${data.charId}`, {message:data.message})
+        socket.broadcast.emit(`${data.chatId}`, {message:data.message})
+    });
+    socket.on("disconnect", () => {
+        console.log("User Disconnected")
     });
 })
 
