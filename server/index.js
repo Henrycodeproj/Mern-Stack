@@ -150,11 +150,14 @@ app.post("/createUser", async (req,res) => {
     })
 })
 
+const activeUsers = []
+
 io.on("connection", (socket) => {
     socket.on("sendUserId", (data)=>{
         console.log(data)
         socket.broadcast.emit(`${data.chatId}`, {message:data.message})
     });
+
     socket.on("disconnect", () => {
         console.log("User Disconnected")
     });

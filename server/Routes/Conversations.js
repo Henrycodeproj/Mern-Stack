@@ -24,12 +24,13 @@ router.post('/create', isAuthenticated, async (req, res) => {
 })
 
 router.get('/:conversationId', isAuthenticated, async (req, res) => {
-    console.log("called")
+    try{
+        const results = await ConversationModel.findById(req.params.conversationId)
+    } catch(err) {
+        console.log('error')
+    }
 
-    const results = await MessageModel.find({id:req.params.conversationId})
-    .limit(50)
-    .populate('senderId')
 
-    if (results) res.status(200).send(results)
+    //if (results) res.status(200).send(results)
 
 })

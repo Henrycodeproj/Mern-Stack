@@ -3,6 +3,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { useState, useEffect, useContext, useRef } from 'react';
 import { accountContext } from '../../Contexts/appContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
@@ -15,6 +16,7 @@ const Attending = (posting) => {
 
     const {user} = useContext(accountContext)
     const currentUser = user
+    const navigateTo = useNavigate()
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [remainingUsers, setRemainingUsers] = useState([])
@@ -84,10 +86,11 @@ const Attending = (posting) => {
             whileHover = {{ y: -10, scale: 1.3}}
             >
                 <Tooltip title = {currentUser.id !== user._id && user._id ? `${user.username.charAt(0).toUpperCase() + user.username.slice(1)} is attending`:'You are attending this event'}>
-                    <Avatar 
+                    <Avatar
+                    onClick = {()=> navigateTo(`/profile/${user._id}`)} 
                     className = "attending_avatars" 
                     alt="Trevor Henderson" 
-                    src="https://faces-img.xcdn.link/image-lorem-face-6511.jpg" 
+                    src="https://faces-img.xcdn.link/image-lorem-face-6511.jpg"
                     />
                 </Tooltip>
             </motion.div>
