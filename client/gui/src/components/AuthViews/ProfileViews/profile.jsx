@@ -1,12 +1,13 @@
 
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useEffect, useState, useContext } from "react"
 import axios from "axios"
 import { accountContext } from "../../Contexts/appContext"
 
 export const Profile = ()=> {
     const { user } = useContext(accountContext) 
-    let { userId } = useParams()
+    const { userId } = useParams()
+    const navigateTo = useNavigate()
 
     const[viewedUser, setViewedUser] = useState(null)
 
@@ -32,7 +33,8 @@ export const Profile = ()=> {
                 "authorization" : localStorage.getItem("Token")
             }
         })
-        .then(res=>console.log(res))
+        .then(res => navigateTo(`/conversation/${res.data[0]._id}`))
+        .catch(err => console.log(err))
     }
 
     return(
