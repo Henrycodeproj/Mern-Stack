@@ -5,7 +5,7 @@ function isAuthenticated(req, res, next){
     //     return res.send({message:"Unauthorized"})
     // }
     jwt.verify(req.headers.authorization, process.env.SECRET_SESSION, (error, result) =>{
-        result ? req.isAuth = true : req.isAuth = false
+        result ? (req.isAuth = true, req.results = result) : req.isAuth = false
         next()
     })
 }

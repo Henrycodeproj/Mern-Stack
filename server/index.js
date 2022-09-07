@@ -150,16 +150,23 @@ app.post("/createUser", async (req,res) => {
     })
 })
 
-const activeUsers = []
+let activeUsers = []
 
 io.on("connection", (socket) => {
-    socket.on("sendUserId", (data)=>{
-        console.log(data)
-        socket.broadcast.emit(`${data.chatId}`, {message:data.message})
-    });
+    socket.on("status", (userInfo) => {
+        if (userInfo.userId && !activeUsers.some(user => user.userId === userInfo.userId)) activeUsers.push({userId:userInfo.userId, socketId:socket.id})
+        socket.emit("activeUsers", activeUsers)
+        console.log(activeUsers)
+    })
 
-    socket.on("disconnect", () => {
-        console.log("User Disconnected")
+
+    // socket.on("sendUserId", (data)=>{
+    //     console.log(data)
+    //     socket.broadcast.emit(`${data.chatId}`, {message:data.message})
+    // });
+    socket.on("disconnect", (data) => {
+        activeUsers = activeUsers.filter(ids => ids.socketId !== socket.id)
+        console.log(activeUsers)
     });
 })
 

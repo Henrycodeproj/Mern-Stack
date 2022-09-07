@@ -10,6 +10,7 @@ export const router = express.Router()
 //     else res.status(404).send("nothing")
 // })
 
+router.get
 router.post('/send', isAuthenticated, async (req, res) =>{
     const {chatId, message, senderId} = req.body
 

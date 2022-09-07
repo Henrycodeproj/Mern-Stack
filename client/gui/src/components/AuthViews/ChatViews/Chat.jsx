@@ -1,16 +1,17 @@
 import axios from "axios"
 import { useState, useEffect, useContext } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import io from "socket.io-client"
 import { accountContext } from "../../Contexts/appContext"
 
 
 export const Chat = () => {
-    const socket = io.connect("http://localhost:3001")
+    const socket = io.connect("http://localhost:3001", {autoConnect:false})
     const { user } = useContext(accountContext)
     const { chatId } = useParams()
     const [message, setMessage] = useState('')
     const [convo, setConvo] = useState([])
+    const navigateTo = useNavigate()
     
     const sendMessage = (e) => {
         console.log("message")
@@ -36,13 +37,20 @@ export const Chat = () => {
     }
 
     useEffect(()=>{
-        const previousMessageUrl = `http://localhost:3001/conversation/${chatId}`
-        axios.get(previousMessageUrl, {
+        const getPreviousMessageUrl = `http://localhost:3001/conversation/${chatId}`
+        axios.get(getPreviousMessageUrl, {
             headers:{
                 "authorization": localStorage.getItem("Token")
             }
         })
-        .then(res => setConvo(res.data))
+        .then(res => {
+            setConvo(res.data)
+        })
+        .catch(err => {
+            console.log(err)
+            if (err.response.status === 404 || 401) navigateTo("/error", {replace:true})
+            else console.log(err)
+        })
     },[])
 
     useEffect(()=>{

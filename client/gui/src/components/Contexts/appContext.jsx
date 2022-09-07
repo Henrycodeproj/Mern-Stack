@@ -13,6 +13,8 @@ export const AppContext = ({children}) =>{
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")))
 
     const [posts, setPosts] = useState([])
+    
+    const [activeUsers, setActiveUsers] = useState([])
 
 
     return(
@@ -24,6 +26,8 @@ export const AppContext = ({children}) =>{
             setUser,
             posts,
             setPosts,
+            activeUsers,
+            setActiveUsers
         }}>
             {children}
         </accountContext.Provider>    

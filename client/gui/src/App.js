@@ -10,6 +10,7 @@ import { UserAuthentication } from './components/config/userAuth';
 import { Profile } from "./components/AuthViews/ProfileViews/profile";
 import { Display } from './components/AuthViews/DisplayPage/display';
 import { Chat } from "./components/AuthViews/ChatViews/Chat"
+import { NotFound } from "./components/config/NotFound";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           </Route>
           <Route path = "/invalid/expired/" element = {<ExpiredVerification/>}/>
           <Route path = "/valid" element = {<Confirmation/>}/>
+          <Route path = "/error" element ={<NotFound/> }/>
           <Route path = "*" element ={<Errorpage/> }/>
         </Routes>
       </AppContext>
