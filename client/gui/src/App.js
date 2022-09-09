@@ -16,7 +16,7 @@ function App() {
   return (
     <Router>
       <AppContext>
-        <Navbar/>
+       <Navbar/>
         <Routes>
           <Route path="/" element ={<Signup/>}/>
           <Route path="/conversation/:chatId" element ={<Chat/>}/>

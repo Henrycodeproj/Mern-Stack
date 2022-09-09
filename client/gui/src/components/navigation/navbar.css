@@ -8,10 +8,6 @@ nav{
     display:flex;
     justify-content: space-around;
     align-items: center;
-    /* height:100%; */
-    background:#A61651;
-    background: #351d7268;
-    background: #ff2df426;
     background: #a821a142;
 }
 

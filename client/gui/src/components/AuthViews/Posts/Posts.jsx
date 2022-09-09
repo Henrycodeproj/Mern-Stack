@@ -1,6 +1,6 @@
 import "../Posts/posts.css"
 import {useState, useContext} from "react"
-import { accountContext } from "../Contexts/appContext"
+import { accountContext } from "../../Contexts/appContext";
 import axios from "axios"
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Picker from 'emoji-picker-react';
@@ -73,7 +73,7 @@ export const Posts = ()=>{
                                 <div style = {{display:"flex", alignItems:"center"}}>
                                 <SentimentSatisfiedAltIcon className="emoji_select" title = "Emojis" variant="contained" onClick={handleClick}/>
                                     <span style={{marginLeft:5}}>
-                                        <h3 style = {{color:"black"}}>Emojis</h3>
+                                        <h3 style = {{color:"black"}} className="emoji_title">Emojis</h3>
                                     </span>
                                 </div>
                                 <Popover
