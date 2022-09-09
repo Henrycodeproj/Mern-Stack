@@ -156,17 +156,19 @@ io.on("connection", (socket) => {
     socket.on("status", (userInfo) => {
         if (userInfo.userId && !activeUsers.some(user => user.userId === userInfo.userId)) activeUsers.push({userId:userInfo.userId, socketId:socket.id})
         socket.emit("activeUsers", activeUsers)
-        console.log(activeUsers)
+        console.log(activeUsers,'11111')
+    })
+    socket.on("logout", (data) =>{
+        activeUsers = activeUsers.filter(ids => ids.userId !== data.userId)
     })
 
+    socket.on("sendUserId", (data)=>{
+        console.log(data)
+        socket.broadcast.emit(`${data.chatId}`, {message:data.message})
+    });
 
-    // socket.on("sendUserId", (data)=>{
-    //     console.log(data)
-    //     socket.broadcast.emit(`${data.chatId}`, {message:data.message})
-    // });
-    socket.on("disconnect", (data) => {
+    socket.on("disconnect", () => {
         activeUsers = activeUsers.filter(ids => ids.socketId !== socket.id)
-        console.log(activeUsers)
     });
 })
 

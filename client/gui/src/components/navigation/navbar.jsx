@@ -3,6 +3,7 @@ import {Button} from "@mui/material"
 import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { accountContext } from '../Contexts/appContext'
+import io from "socket.io-client"
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
@@ -28,12 +29,15 @@ export const Navbar = () =>{
     const [notification, setNotification] = useState(null)
 
     const test = [1,2]
+    const socket = io.connect("http://localhost:3001")
 
     const logoutHandler = () => {
         localStorage.removeItem("userStatus")
         localStorage.removeItem("Token")
         localStorage.removeItem("User")
         setProfile(false)
+        socket.emit("logout", {userId:user.id})
+        socket.disconnect()
         navigateTo("/")
     }
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import './display.css'
 import { useState, useEffect, useRef, useContext} from 'react';
-import { Posts } from '../../Posts/Posts';
+import { Posts } from '../Posts/Posts.jsx';
 import { accountContext } from '../../Contexts/appContext';
 import { LeftColumn } from './leftSideCol';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -12,6 +12,7 @@ import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';
 import { motion } from 'framer-motion';
 import Zoom from '@mui/material/Zoom';
 import Tooltip from '@mui/material/Tooltip';
+import Avatar from '@mui/material/Avatar';
 import Attending from './attending';
 import io from "socket.io-client"
 
@@ -90,21 +91,9 @@ export const Display = () =>{
 
     return (
         <div className='display_container' >
-            {activeUsers && activeUsers.map((user)=> <div>{user.userId}</div>)}
             <div className='display_newsfeed_wrapper'>
                 <div className='left_sidebar'>
                     <LeftColumn/>
-                    <ul>
-                        <div className='tester'>
-                        <li>a</li>
-                        <li>a</li>
-                        <li>a</li>
-                        <li>a</li>
-                        <li>a</li>
-                        <li>a</li>
-                        <li>a</li>
-                        </div>
-                    </ul>
                 </div>
 
                 <div className='newsfeed_container' ref = {ref}>
@@ -117,10 +106,10 @@ export const Display = () =>{
                             posts.length > 0 ? posts.map((post)=>
                                 <li key = {post._id} className = "posts_articles">
                                     <>
-                                    {/* <img src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" className='faker'>
+                                    {/*<img src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" className='faker'>
                                     </img> */}
-                                    <img src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80" className='faker'>
-                                    </img>
+                                    <Avatar src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80" className='faker'>
+                                    </Avatar>
                                     {activeUsers.some(activeUser => activeUser.userId === post.posterId._id) &&
                                     <Tooltip title="Online">
                                         <span className='online'/>
