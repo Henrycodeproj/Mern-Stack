@@ -81,3 +81,25 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
 
     res.status(200).send(updatedPosts)
 })
+
+router.get('/popular', async (req, res) => {
+    const results = await PostModel.aggregate([
+        {
+            $addFields: {
+              subscribedGroupsLength: {
+                $size: "$attending"
+              }
+            }
+        },
+        {
+            $sort: {
+              subscribedGroupsLength: -1
+            }
+        },
+        {
+            $limit:3
+        }
+    ])
+    
+    return res.status(200).send(results)
+})

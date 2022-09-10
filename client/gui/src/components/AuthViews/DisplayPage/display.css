@@ -40,6 +40,11 @@
     margin: 0px 10px !important;
     cursor: pointer;
 }
+.title_wrapper {
+    width:100%;
+    display:flex;
+    justify-content: space-between;
+}
 .outer_posts_container {
     background-color: rgba(128, 128, 128, 0.205);
     background-color: transparent;
@@ -109,6 +114,7 @@
 }
 .right_sidebar{
     background-color: rgb(232, 231, 231);
+    min-width: 30%;
 }
 @media (max-width:1500px) {
     .display_newsfeed_wrapper{
@@ -124,7 +130,6 @@
     }
     .display_newsfeed_wrapper{
         width:100%;
-        margin:0;
     }
     .posts_articles{
         margin:10px 0px 10px 0px;
