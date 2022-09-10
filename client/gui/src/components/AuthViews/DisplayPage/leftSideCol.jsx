@@ -13,6 +13,12 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import Divider from '@mui/material/Divider';
 import "./LeftSideCol.css"
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 
 
 import MenuList from '@mui/material/MenuList';
@@ -22,30 +28,15 @@ import Typography from '@mui/material/Typography';
 export const LeftColumn = ()=>{
     const {user} = useContext(accountContext)
 
-    const ref = useRef()
-
-
-    useEffect(() => {
-        const element = ref.current
-
-        function handleResize(element) {
-            console.log('resized to: ', element.offsetWidth, 'x', element.offsetHeight)
-        }
-    
-        element.addEventListener('resize', handleResize(element))
-
-        return () => element.removeEventListener("resize", handleResize);
-    })
-
     return(
-        <div className='side_header' ref={ref}>
+        <div className='side_header'>
             <div className="leftside_profile_card" style={{background:"rgba(139, 137, 137, 0.404)",borderTopLeftRadius:'5px', borderTopRightRadius:'5px'}}>
                 <Avatar sx = {{ width:50, height:50 }} src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80" >
                 </Avatar>
                 <span className='leftsidebar_online'/>
                 <div className = "leftside_profile_card_name">
                     <h2 style={{textTransform:"capitalize"}}>{user.username}</h2>
-                    <h4>Henry@email.com</h4>
+                    <h5 style={{wordWrap:"break-word"}}>@Stevenson</h5>
                 </div>
             </div>
         <MenuList sx ={{borderTop:"solid", borderTopColor:"rgb(255, 255, 255, .6)", borderTopWidth:"1.5px", padding:'10px'}}>
@@ -73,16 +64,24 @@ export const LeftColumn = ()=>{
               <Typography variant="body2" sx ={{color:"white"}}>
               </Typography>
             </MenuItem>
-            <MenuItem sx = {{margin:"10px 0px"}} className = "leftsidebar_menuItems">
-              <ListItemIcon sx ={{color:"white"}}>
-                <SettingsIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText sx ={{color:"white"}} className= "list_item_text">Settings</ListItemText>
-              <Typography variant="body2" sx ={{color:"white"}}>
-              </Typography>
-            </MenuItem>
+            <Accordion sx = {{background:"none", boxShadow:"0 0 0 0", borderRadius:"5px"}} className ="left_accordian">
+              <AccordionSummary
+                className = "accordian_summary"
+                expandIcon={<ExpandMoreIcon className = "expand_icon" sx = {{color:"white"}}/>}
+              >
+                <div style = {{minWidth:36}}>
+                <SettingsIcon fontSize="small" sx ={{color:"white"}}/>
+                </div>
+                <Typography sx = {{color:"white"}} className= "list_item_text">Settings</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                  malesuada lacus ex, sit amet blandit leo lobortis eget.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
         </MenuList>
-
         </div>
     )
 }

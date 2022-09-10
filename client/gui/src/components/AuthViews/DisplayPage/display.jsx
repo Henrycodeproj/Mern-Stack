@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useContext} from 'react';
 import { Posts } from '../Posts/Posts.jsx';
 import { accountContext } from '../../Contexts/appContext';
 import { LeftColumn } from './leftSideCol';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -15,6 +14,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import Attending from './attending';
 import io from "socket.io-client"
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { RightSideCol } from './RightSideCol';
 
 export const Display = () =>{
 
@@ -73,7 +75,7 @@ export const Display = () =>{
         axios.get(URL, {
             headers:{
                 "authorization":localStorage.getItem("Token")
-            },
+            }
         })
         .then(res => {
             setPosts(res.data)
@@ -94,6 +96,9 @@ export const Display = () =>{
             <div className='display_newsfeed_wrapper'>
                 <div className='left_sidebar'>
                     <LeftColumn/>
+                    <div sx = {{height:"150px"}}>
+                    <LogoutIcon sx ={{color:"white", padding:"5px", fontSize:"25px", backgroundColor:"rgba(128, 128, 128, 0.299)", borderRadius:"50%"}}/>
+                    </div>
                 </div>
 
                 <div className='newsfeed_container' ref = {ref}>
@@ -117,9 +122,12 @@ export const Display = () =>{
                                     }
                                     </>
                                     <div className='inner_post_container'>
-                                        <h4 style={{textTransform:"capitalize"}}>
-                                        {post.posterId.username}
-                                        </h4>
+                                        <div className ="title_wrapper">
+                                            <h4 style={{textTransform:"capitalize"}}>
+                                            {post.posterId.username}
+                                            </h4>
+                                            <MoreHorizIcon sx ={{cursor:"pointer"}}/>
+                                        </div>
     
                                         <p style={{whiteSpace:"pre-line"}}>
                                         {post.Description}
@@ -185,9 +193,7 @@ export const Display = () =>{
                 </div>
 
                 <div className='right_sidebar'>
-                    <div className='side_header'>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque voluptas et doloribus ipsa officia deserunt cum est odit consequuntur asperiores.
-                    </div>
+                    <RightSideCol/>
                 </div>
             </div>
         </div>

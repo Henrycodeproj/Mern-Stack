@@ -28,7 +28,6 @@ export const Navbar = () =>{
     const [profile, setProfile] = useState(null)
     const [notification, setNotification] = useState(null)
 
-    const test = [1,2]
     const socket = io.connect("http://localhost:3001")
 
     const logoutHandler = () => {
@@ -40,7 +39,7 @@ export const Navbar = () =>{
         socket.disconnect()
         navigateTo("/")
     }
-
+    const test = [1,2]
     const open = Boolean(profile)
 
     const openProfile = (e) =>{
@@ -79,15 +78,18 @@ export const Navbar = () =>{
                       horizontal: 'left',
                     }}
                     >
-                    <div>
-                    <MenuItem sx={{ minWidth:"180px", display:"flex", alignItems:"center", gap:3}}>
+                    <div className = "Notifications_container">
+                    <MenuItem sx={{ minWidth:"200px", display:"flex", alignItems:"center", gap:3, justifyContent:"space-evenly"}}>
                         <h2>Notifications</h2>
                         <span><RecordVoiceOverIcon/></span>
                     </MenuItem>
                     <Divider/>
                     {test.map((item)=>
                     <div>
-                    <MenuItem sx={{ minWidth:"180px" }}>{item}dsdsds</MenuItem>
+                    <MenuItem sx={{ minWidth:"200px", justifyContent:"space-around" }}>
+                        <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh4moBSRCeyvWaJI8pPsFRCczpc9rB-f53ew&usqp=CAU"/>
+                        <p>Hello liked your post</p>
+                    </MenuItem>
                     <Divider/>
                     </div>)}
                     </div>
@@ -120,7 +122,7 @@ export const Navbar = () =>{
                         sx = {{width:'400px'}}
                     >
                         <MenuItem sx={{ minWidth:"180px" }} 
-                        onClick={()=> {closeProfile(); navigateTo(`/profile/${user.id}`, {replace:false})}}>
+                        onClick={()=> {closeProfile(); navigateTo(`/profile/${user.id}`, {replace:true})}}>
                             <AccountCircleIcon className='profile_menu_icon' sx={{mr:2}}/>
                                 <div>Profile</div>
                         </MenuItem>
