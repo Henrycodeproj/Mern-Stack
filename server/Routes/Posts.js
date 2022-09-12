@@ -86,18 +86,34 @@ router.get('/popular', async (req, res) => {
     const results = await PostModel.aggregate([
         {
             $addFields: {
-              subscribedGroupsLength: {
+              attendingLength: {
                 $size: "$attending"
               }
             }
         },
         {
             $sort: {
-              subscribedGroupsLength: -1
+                attendingLength: -1
             }
         },
         {
             $limit:3
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "posterId",
+                foreignField: "_id",
+                as: "original_poster"
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "attending",
+                foreignField: "_id",
+                as: "attending_info"
+            }
         }
     ])
     

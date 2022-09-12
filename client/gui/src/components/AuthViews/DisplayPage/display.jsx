@@ -14,9 +14,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import Attending from './attending';
 import io from "socket.io-client"
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { RightSideCol } from './RightSideCol';
+import { MoreOptions } from './MoreOptions';
 
 export const Display = () =>{
 
@@ -96,9 +95,6 @@ export const Display = () =>{
             <div className='display_newsfeed_wrapper'>
                 <div className='left_sidebar'>
                     <LeftColumn/>
-                    <div sx = {{height:"150px"}}>
-                    <LogoutIcon sx ={{color:"white", padding:"5px", fontSize:"25px", backgroundColor:"rgba(128, 128, 128, 0.299)", borderRadius:"50%"}}/>
-                    </div>
                 </div>
 
                 <div className='newsfeed_container' ref = {ref}>
@@ -111,8 +107,6 @@ export const Display = () =>{
                             posts.length > 0 ? posts.map((post)=>
                                 <li key = {post._id} className = "posts_articles">
                                     <>
-                                    {/*<img src ="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" className='faker'>
-                                    </img> */}
                                     <Avatar src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80" className='faker'>
                                     </Avatar>
                                     {activeUsers.some(activeUser => activeUser.userId === post.posterId._id) &&
@@ -126,7 +120,7 @@ export const Display = () =>{
                                             <h4 style={{textTransform:"capitalize"}}>
                                             {post.posterId.username}
                                             </h4>
-                                            <MoreHorizIcon sx ={{cursor:"pointer"}}/>
+                                            <MoreOptions post = {post}/>
                                         </div>
     
                                         <p style={{whiteSpace:"pre-line"}}>

@@ -14,6 +14,7 @@ import Divider from '@mui/material/Divider';
 import "./LeftSideCol.css"
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 import Accordion from '@mui/material/Accordion';
@@ -26,7 +27,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
 export const LeftColumn = ()=>{
-    const {user} = useContext(accountContext)
+    const {user, logoutHandler} = useContext(accountContext)
 
     return(
         <div className='side_header'>
@@ -81,6 +82,14 @@ export const LeftColumn = ()=>{
                 </Typography>
               </AccordionDetails>
             </Accordion>
+            <MenuItem onClick={()=> logoutHandler()} sx = {{margin:"10px 0px"}} className = "leftsidebar_menuItems">
+              <ListItemIcon sx ={{color:"white"}}>
+                <LogoutIcon fontSize="small"/>
+              </ListItemIcon>
+              <ListItemText sx ={{color:"white"}} className= "list_item_text">Logout</ListItemText>
+              <Typography variant="body2" sx ={{color:"white"}}>
+              </Typography>
+            </MenuItem>
         </MenuList>
         </div>
     )

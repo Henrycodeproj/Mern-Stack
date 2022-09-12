@@ -1,12 +1,18 @@
-import {createContext, useState, useEffect} from "react";
+import {createContext, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"
-import { authCheck } from "../../UserAuth/checkAuth";
 
 export const accountContext = createContext()
 
 export const AppContext = ({children}) =>{
 
+    const navigateTo = useNavigate()
+
+    const logoutHandler = () => {
+        localStorage.removeItem("userStatus")
+        localStorage.removeItem("Token")
+        localStorage.removeItem("User")
+        navigateTo("/")
+    }
 
     const [userStatus, setUserStatus] = useState(localStorage.getItem("userStatus"))
 
@@ -27,7 +33,8 @@ export const AppContext = ({children}) =>{
             posts,
             setPosts,
             activeUsers,
-            setActiveUsers
+            setActiveUsers,
+            logoutHandler
         }}>
             {children}
         </accountContext.Provider>    

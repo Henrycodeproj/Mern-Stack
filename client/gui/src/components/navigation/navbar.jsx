@@ -3,9 +3,7 @@ import {Button} from "@mui/material"
 import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { accountContext } from '../Contexts/appContext'
-import io from "socket.io-client"
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -17,28 +15,27 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Popover from '@mui/material/Popover';
 import Divider from '@mui/material/Divider';
+import io from "socket.io-client"
 
 import "../navigation/navbar.css"
 
 export const Navbar = () =>{
 
     const navigateTo = useNavigate()
-    const {userStatus, user} = useContext(accountContext)
-
-    const [profile, setProfile] = useState(null)
-    const [notification, setNotification] = useState(null)
+    const {userStatus, user, logoutHandler} = useContext(accountContext)
 
     const socket = io.connect("http://localhost:3001")
 
-    const logoutHandler = () => {
-        localStorage.removeItem("userStatus")
-        localStorage.removeItem("Token")
-        localStorage.removeItem("User")
-        setProfile(false)
+    const [profile, setProfile] = useState(null)
+    const [notification, setNotification] = useState(null)
+    
+    const navlogoutHandler = () => {
         socket.emit("logout", {userId:user.id})
+        logoutHandler()
+        setProfile(false)
         socket.disconnect()
-        navigateTo("/")
     }
+
     const test = [1,2]
     const open = Boolean(profile)
 
@@ -131,7 +128,7 @@ export const Navbar = () =>{
                             <SettingsIcon className='profile_menu_icon' sx={{mr:2}}/>
                                 <div>Settings</div>
                         </MenuItem>
-                        <MenuItem sx={{ minWidth:"180px" }} onClick={()=>logoutHandler()}>
+                        <MenuItem sx={{ minWidth:"180px" }} onClick={()=>navlogoutHandler()}>
                             <LogoutIcon className = "profile_menu_icon" sx={{mr:2}}/>
                                 <div>Logout</div>
                         </MenuItem>

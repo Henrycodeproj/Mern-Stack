@@ -40,13 +40,16 @@ const Attending = (posting) => {
             })
             .then(res =>{
                 const fetchedUsers = []
+
                 res.data.forEach((user) => fetchedUsers.push(user))
+
                 if (fetchedUsers.length > currentShownUsers) {
                     setRemainingUsers(fetchedUsers)
                     console.log(remainingUsers)
                     currentShownUsers += 5
                 }
-            }).catch(err => console.log(err))
+            })
+            .catch(err => console.log(err))
         }
     }
 
