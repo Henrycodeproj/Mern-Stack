@@ -12,17 +12,21 @@
 }
 .recent_message_avatars {
     display:flex;
-    gap:10px;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
 }
 .recent_message_container {
     margin-top: 10px;
     padding:1rem;
     border-top-style: solid;
-    border-top-width: 1.5px;
+    border-top-width: 1px;
 }
-.popular_container {
-    padding:1rem;
+.recent_message_title{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 17px;
 }
 .recent_message_online {
     position: relative;
@@ -39,10 +43,30 @@
     border-style: solid;
     border-color: rgb(232, 231, 231);
     margin:0;
+    animation: online-pulse 2s infinite;
 }
 .recent_message_names {
     color:black;
     font-weight: 500;
+    margin:0
+}
+.popular_post_container{
+    margin: 20px 0;
+    display:flex;
+    justify-content: space-between;
+}
+@keyframes online-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(2, 171, 2, 0.516);
+    }
+    
+    70% {
+      box-shadow: 0 0 0 7px rgba(0, 128, 0, 0);
+    }
+    
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 128, 0, 0);
+    }
 }
 @media (max-width:786px){
     .right_sidebar{

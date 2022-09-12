@@ -6,7 +6,7 @@ import { accountContext } from "../../Contexts/appContext"
 
 
 export const Chat = () => {
-    const socket = io.connect("http://localhost:3001", {autoConnect:false})
+    const socket = io.connect("http://localhost:3001")
     const { user } = useContext(accountContext)
     const { chatId } = useParams()
     const [message, setMessage] = useState('')
