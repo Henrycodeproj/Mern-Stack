@@ -8,7 +8,6 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import {Button} from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { motion } from "framer-motion";
 
 import * as React from 'react';
 import Popover from '@mui/material/Popover';
@@ -27,12 +26,13 @@ export const Posts = ()=>{
         axios.post("http://localhost:3001/posts",{
             user:user.id,
             post:status,
-        }).then(res=>{
-            setPosts(res.data.data)
+        })
+        .then(res => {
+            setPosts(prevPosts => [res.data.newestPost, ...prevPosts])
             setStatus('')
         })
         .catch(err=>console.log(err))
-    };
+    }
 
     const onEmojiClick = (event, emojiObject) => {
         setStatus(status + emojiObject.emoji)

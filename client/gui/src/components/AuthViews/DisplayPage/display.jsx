@@ -16,6 +16,7 @@ import Attending from './attending';
 import io from "socket.io-client"
 import { RightSideCol } from './RightSideCol';
 import { MoreOptions } from './MoreOptions';
+import { Truncating } from './Truncating.jsx';
 
 export const Display = () =>{
 
@@ -76,9 +77,7 @@ export const Display = () =>{
                 "authorization":localStorage.getItem("Token")
             }
         })
-        .then(res => {
-            setPosts(res.data)
-        })
+        .then(res => setPosts(res.data))
         .catch(err => console.log(err))
     },[])
 
@@ -123,19 +122,15 @@ export const Display = () =>{
                                             <MoreOptions post = {post}/>
                                         </div>
     
-                                        <p style={{whiteSpace:"pre-line"}}>
-                                        {post.Description}
-                                        </p>
-
+                                        <Truncating 
+                                            postDescription = {post.Description}
+                                            truncateNumber = {150}
+                                        />
+                                        
                                         <div className='posts_icon_wrapper'>
                                             <div className='posts_icon_bar'>
-                                                {
-                                                post.attending.some(users => users._id === user.id) ?
-                                                <motion.button
-                                                whileHover={{ scale: 1.3 }}
-                                                whileTap={{ scale: 0.9 }}
-                                                style={{ borderStyle:"none", background:"transparent", width:23, height:23, padding:0 }}
-                                                >
+                                                {post.attending.some(users => users._id === user.id) ?
+                                                <motion.button whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.9 }} style={{ borderStyle:"none", background:"transparent", width:23, height:23, padding:0 }}>
                                                     <Tooltip title = "Unattend" TransitionComponent={Zoom}>    
                                                     <FavoriteIcon
                                                     sx = {{color:"red"}}

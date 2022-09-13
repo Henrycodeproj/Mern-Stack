@@ -51,14 +51,14 @@ export const RightSideCol = () => {
                         <Avatar sx = {{marginRight:"10px"}}src = "https://dvyvvujm9h0uq.cloudfront.net/com/articles/1525891879-379720-warren-wong-242286-unsplashjpg.jpg"/>
                             <div>
                                 <h3 style = {{textTransform:"capitalize", color:"black", margin:0}}>{post.original_poster[0].username}</h3>
-                                {post.Description.substring(0,50).length >= 50 ?
-                                    <div>
-                                    {post.Description.substring(0, 50)}
-                                    <span style = {{cursor:"pointer", fontWeight:900}} onClick={handleClick}>...</span>
-                                    </div>
-                                    :
-                                    post.Description.substring(0, 50)
-                                }
+                                    {post.Description.length >= 50 ?
+                                        <div>
+                                        {post.Description.substring(0, 50)}
+                                        <span style = {{cursor:"pointer"}} onClick={handleClick}>...</span>
+                                        </div>
+                                        :
+                                        post.Description.substring(0, 50)
+                                    }
                             </div>
                         </div>
                         <Avatar onClick={handleClick} sx = {{background:'rgba(80, 80, 80, 0.4)', cursor:"pointer", borderStyle:"solid"}}>+{post.attendingLength}</Avatar>
