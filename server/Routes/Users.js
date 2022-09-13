@@ -1,6 +1,7 @@
 import express from 'express';
 import isAuthenticated from '../Middleware/auth.js';
 import UserModel from '../Models/Users.js';
+import ConversationModel from '../Models/Conversations.js';
 
 export const router = express.Router()
 
@@ -11,5 +12,14 @@ router.get("/information/:id", isAuthenticated, async (req, res)=>{
         else res.status(404).send({message:"User not found"})
     }catch(err) {
         res.status(500).send(err)
+    }
+})
+
+router.get("/recent/conversation/:id", async (req,res)=>{
+    try {
+        const results = await ConversationModel.find({participants:req.params.id})
+        console.log(results)
+    } catch(error) {
+        console.log(err)
     }
 })

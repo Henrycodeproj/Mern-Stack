@@ -1,4 +1,3 @@
-import e from "express"
 import express from "express"
 import isAuthenticated from "../Middleware/auth.js"
 import ConversationModel from "../Models/Conversations.js"

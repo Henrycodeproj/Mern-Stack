@@ -1,6 +1,7 @@
 import express from 'express';
 import isAuthenticated from '../Middleware/auth.js';
 import PostModel from '../Models/Posts.js';
+import UserModel from '../Models/Users.js';
 
 export const router = express.Router();
 
@@ -14,11 +15,10 @@ router.post('/', isAuthenticated, async (req,res) =>{
 
     await newPosts.save()
 
-    const results = await PostModel.find({})
-    .sort({createdAt:-1})
+    const newestPost = await PostModel.findOne({Description:post})
     .populate('posterId', ['username','email', 'createdAt'])
-
-    if (newPosts) return res.status(200).send({message:'Posted', data:results})
+    
+    if (newPosts) return res.status(200).send({message:'Posted', newestPost:newestPost})
     return res.status(500).send({message:'error'})
 })
 
@@ -81,6 +81,23 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
 
     res.status(200).send(updatedPosts)
 })
+
+router.delete('/delete/:postId', isAuthenticated, async (req, res) =>{
+    const postId = req.params.postId
+    const {userId} = req.body.data
+    const jwtResults = req.results.id 
+    if (jwtResults !== userId) res.status(401).send({message:"You are not authorized."})
+    try{
+        const post = await PostModel.findById(postId)
+        if (post.posterId.toString() !== userId) throw {status:200, message:"Not your post"}
+        await PostModel.findByIdAndDelete({_id:postId})
+        res.status(200).send(postId)
+    } catch(error) {
+        console.log(error)
+    }
+})
+
+
 
 router.get('/popular', async (req, res) => {
     const results = await PostModel.aggregate([
