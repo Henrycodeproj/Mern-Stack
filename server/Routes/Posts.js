@@ -2,6 +2,7 @@ import express from 'express';
 import isAuthenticated from '../Middleware/auth.js';
 import PostModel from '../Models/Posts.js';
 import UserModel from '../Models/Users.js';
+import ReportModel from '../Models/Report.js';
 
 export const router = express.Router();
 
@@ -15,7 +16,8 @@ router.post('/', isAuthenticated, async (req,res) =>{
 
     await newPosts.save()
 
-    const newestPost = await PostModel.findOne({Description:post})
+    const newestPost = await PostModel.findOne({posterId:user, Description:post})
+    .sort({createdAt:-1})
     .populate('posterId', ['username','email', 'createdAt'])
     
     if (newPosts) return res.status(200).send({message:'Posted', newestPost:newestPost})
@@ -35,7 +37,7 @@ router.get('/all', isAuthenticated, async (req, res) =>{
     }
 })
 
-router.get('/amount/:postAmount', isAuthenticated, async (req, res) =>{
+router.get('/amount/:postAmount/', isAuthenticated, async (req, res) =>{
     try{
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
@@ -44,6 +46,22 @@ router.get('/amount/:postAmount', isAuthenticated, async (req, res) =>{
         .populate('attending', 'username')
 
         return res.status(200).send(posts)
+    } catch(err){
+        return res.status(500).send("Internal Server error")
+    }
+})
+
+router.get('/getamount/:skip', isAuthenticated, async (req, res) =>{
+    console.log(req.params.skip)
+    try{
+        const posts = await PostModel.find({})
+        .sort({createdAt: -1})
+        .skip(req.params.skip)
+        .limit(5)
+        .populate('posterId', ['username','email', 'createdAt'])
+        .populate('attending', 'username')
+
+        return res.send(posts)
     } catch(err){
         return res.status(500).send("Internal Server error")
     }
@@ -68,7 +86,9 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     const userID = req.body.user
     const post = await PostModel.findById(postID)
 
-    if (post.attending.includes(userID)) post.attending = post.attending.filter((users)=> users.toString() !== userID.toString())
+    if (post.attending.includes(userID)) post.attending = post.attending.filter(
+        (users)=> users.toString() !== userID.toString()
+    )
     else post.attending.push(userID)
 
     await post.save()
@@ -95,6 +115,10 @@ router.delete('/delete/:postId', isAuthenticated, async (req, res) =>{
     } catch(error) {
         console.log(error)
     }
+})
+
+router.post('/report/:postid', isAuthenticated, async (req, res)=> {
+    
 })
 
 

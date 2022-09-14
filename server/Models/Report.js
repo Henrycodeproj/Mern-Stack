@@ -12,8 +12,7 @@ const ReportSchema = new mongoose.Schema({
     reportUserId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Users"
-    },
-
+    }
 }, {timestamps:true})
 
 const ReportModel = mongoose.model("Reports", ReportSchema)
