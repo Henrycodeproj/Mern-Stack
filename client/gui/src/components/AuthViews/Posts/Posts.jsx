@@ -13,7 +13,7 @@ import * as React from 'react';
 import Popover from '@mui/material/Popover';
 
 
-export const Posts = ()=>{
+export const Posts = ({lastPostIndex, setLastPostIndex})=>{
 
     const [status, setStatus] = useState('')
     const [anchorEl, setAnchorEl] = useState(null);
@@ -29,12 +29,13 @@ export const Posts = ()=>{
         })
         .then(res => {
             setPosts(prevPosts => [res.data.newestPost, ...prevPosts])
+            setLastPostIndex(lastPostIndex + 1)
             setStatus('')
         })
         .catch(err=>console.log(err))
     }
 
-    const onEmojiClick = (event, emojiObject) => {
+    const onEmojiClick = (emojiObject) => {
         setStatus(status + emojiObject.emoji)
     };
 

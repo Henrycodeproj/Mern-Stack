@@ -1,6 +1,6 @@
 import axios from 'axios';
 import './display.css'
-import { useState, useEffect, useRef, useContext} from 'react';
+import { useState, useEffect, useContext} from 'react';
 import { Posts } from '../Posts/Posts.jsx';
 import { accountContext } from '../../Contexts/appContext';
 import { LeftColumn } from './leftSideCol';
@@ -21,28 +21,24 @@ import { Truncating } from './Truncating.jsx';
 export const Display = () =>{
 
     const {posts, setPosts, user, activeUsers, setActiveUsers} = useContext(accountContext)
-    const ref = useRef()
     const socket = io.connect("http://localhost:3001")
 
     const [lastPostIndex, setLastPostIndex] = useState(15)
 
-    const handleScroll = (e) => {
+    const handleScroll = async (e) => {
+
         if (e.target.clientHeight + e.target.scrollTop + 1 >= e.target.scrollHeight) {
 
-            const URL = `http://localhost:3001/posts/amount/${lastPostIndex + 5}`
-            axios.get(URL, {
+            const URL = `http://localhost:3001/posts/getamount/${lastPostIndex}`
+            const newResults = await axios.get(URL, {
                 headers:{
                     "authorization":localStorage.getItem("Token")
                 }
             })
-            .then(res =>{
-                const fetchedPosts = []
-                res.data.forEach((post) => fetchedPosts.push(post))
-                if (fetchedPosts.length >= lastPostIndex) {
-                    setPosts(fetchedPosts)
-                    setLastPostIndex(lastPostIndex + 5)
-                }
-            }).catch(error => console.log(error))
+            console.log(posts.includes(newResults.data[0].posterId._id))
+            const filteredPosts = newResults.data.filter(newPosts => !posts.includes(newPosts.posterId._id))
+            setPosts(posts.concat(filteredPosts))
+            setLastPostIndex(lastPostIndex + 5)
         }
     }
     
@@ -55,23 +51,14 @@ export const Display = () =>{
             },
         })
         .then(res => {
-            console.log(res.data)
             setPosts(res.data)
         })
         .catch(error => console.log(error))
     }
 
-    useEffect(()=>{
-        const element = ref.current
-
-        element.addEventListener("scroll", handleScroll)
-        
-        return () => element.removeEventListener("scroll", handleScroll);
-    },[])
-
     //get current posts
     useEffect (()=>{
-        const URL = `http://localhost:3001/posts/amount/${lastPostIndex}`
+        const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`
         axios.get(URL, {
             headers:{
                 "authorization":localStorage.getItem("Token")
@@ -91,14 +78,18 @@ export const Display = () =>{
 
     return (
         <div className='display_container' >
+            {console.log(posts)}
             <div className='display_newsfeed_wrapper'>
                 <div className='left_sidebar'>
                     <LeftColumn/>
                 </div>
 
-                <div className='newsfeed_container' ref = {ref}>
+                <div className='newsfeed_container' onScroll={(e) => handleScroll(e)}>
                     <div className='outer_posts_container'>
-                        <Posts/>
+                        <Posts
+                            lastPostIndex = {lastPostIndex}
+                            setLastPostIndex = {setLastPostIndex}
+                        />
                     </div>
                     <div>
                         <ul>

@@ -2,6 +2,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Popover from '@mui/material/Popover';
 import {useState, useContext} from 'react';
 import { accountContext } from '../../Contexts/appContext';
+import { EditOption } from './EditOption';
 import axios from "axios";
 
 
@@ -10,24 +11,28 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import InboxIcon from '@mui/icons-material/Inbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 
 export const MoreOptions = ({post}) => {
-
-const [anchorEl, setAnchorEl] = useState(null);
 const {user, posts, setPosts} = useContext(accountContext)
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+const [optionsAnchor, setOptionsAnchor] = useState(null);
+
+const [editOpen, setEditOpen] = useState(false);
+
+  const handleOptionsClick = (event) => {
+    setOptionsAnchor(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const MoreOptionsClose = () => {
+    setOptionsAnchor(null);
+  };
+
+  const openEditOption = () => {
+    MoreOptionsClose()
+    setEditOpen(true);
   };
 
   const postDeleteHandler = (postId) => {
@@ -48,14 +53,15 @@ const {user, posts, setPosts} = useContext(accountContext)
     .catch(err => console.log(err))
   }
 
-  const open = Boolean(anchorEl);
+  const openOptions = Boolean(optionsAnchor);
+
   return (
     <div>
-        <MoreHorizIcon onClick={handleClick} sx = {{cursor:"pointer"}}/>
+        <MoreHorizIcon onClick={handleOptionsClick} sx = {{cursor:"pointer"}}/>
         <Popover
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
+        open={openOptions}
+        anchorEl={optionsAnchor}
+        onClose={MoreOptionsClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -70,24 +76,33 @@ const {user, posts, setPosts} = useContext(accountContext)
               <ListItemText primary="Report" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <EditIcon />
-              </ListItemIcon>
-              <ListItemText primary="Edit" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton onClick={()=> postDeleteHandler(post._id)}>
-              <ListItemIcon>
-                <DeleteIcon />
-              </ListItemIcon>
-              <ListItemText primary="Delete"/>
-            </ListItemButton>
-          </ListItem>
+          {post.posterId._id === user.id &&
+          <>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <EditIcon />
+                </ListItemIcon>
+                <ListItemText onClick = {openEditOption} primary="Edit"/>
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={()=> postDeleteHandler(post._id)}>
+                <ListItemIcon>
+                  <DeleteIcon />
+                </ListItemIcon>
+                <ListItemText primary="Delete"/>
+              </ListItemButton>
+            </ListItem>
+          </>
+          }
         </List>
-      </Popover> 
+      </Popover>
+      <EditOption 
+      post = {post}
+      editOpen = {editOpen}
+      setEditOpen = {setEditOpen}
+      />
     </div>
   )
 }
