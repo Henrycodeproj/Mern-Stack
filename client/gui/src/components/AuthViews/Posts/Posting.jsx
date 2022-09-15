@@ -1,17 +1,12 @@
-import "../Posts/posts.css"
+import "../Posts/Posting.css"
 import {useState, useContext} from "react"
 import { accountContext } from "../../Contexts/appContext";
+import { Emojis } from "../../ReusablesComponents/Emojis";
 import axios from "axios"
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-import Picker from 'emoji-picker-react';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import {Button} from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-
-import * as React from 'react';
-import Popover from '@mui/material/Popover';
-
 
 export const Posts = ({lastPostIndex, setLastPostIndex})=>{
 
@@ -35,24 +30,6 @@ export const Posts = ({lastPostIndex, setLastPostIndex})=>{
         .catch(err=>console.log(err))
     }
 
-    const onEmojiClick = (emojiObject) => {
-        setStatus(status + emojiObject.emoji)
-    };
-
-
-    //testing
-
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
-  
-    const open = Boolean(anchorEl);
-
-
     if (user === null) return <div>loading...</div>
 
     return (
@@ -71,25 +48,13 @@ export const Posts = ({lastPostIndex, setLastPostIndex})=>{
                 <div className="bottom_posts_container">
                         <div className="bottom_icon_bar_wrapper">
                             <div className="input_icons_bar">
-                                <div style = {{display:"flex", alignItems:"center"}}>
-                                <SentimentSatisfiedAltIcon className="emoji_select" title = "Emojis" variant="contained" onClick={handleClick}/>
-                                    <span style={{marginLeft:5}}>
-                                        <h3 style = {{color:"black"}} className="emoji_title">Emojis</h3>
-                                    </span>
-                                </div>
-                                <Popover
-                                  open={open}
-                                  anchorEl={anchorEl}
-                                  onClose={handleClose}
-                                  anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                  }}
-                                >
-                                <Picker 
-                                onEmojiClick={onEmojiClick}
+                                <Emojis
+                                input = {status}
+                                setInput = {setStatus}
+                                anchor = {anchorEl}
+                                setAnchor = {setAnchorEl}
+                                title = {true}
                                 />
-                                </Popover>
                                 <AddPhotoAlternateIcon/>
                                 <LocationOnIcon/>
                             </div>

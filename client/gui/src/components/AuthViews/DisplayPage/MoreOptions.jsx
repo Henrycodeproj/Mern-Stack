@@ -79,11 +79,11 @@ const [editOpen, setEditOpen] = useState(false);
           {post.posterId._id === user.id &&
           <>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick = {()=> openEditOption()}>
                 <ListItemIcon>
                   <EditIcon />
                 </ListItemIcon>
-                <ListItemText onClick = {openEditOption} primary="Edit"/>
+                <ListItemText primary="Edit"/>
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>

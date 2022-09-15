@@ -1,7 +1,7 @@
 import axios from 'axios';
 import './display.css'
 import { useState, useEffect, useContext} from 'react';
-import { Posts } from '../Posts/Posts.jsx';
+import { Posts } from '../Posts/Posting.jsx';
 import { accountContext } from '../../Contexts/appContext';
 import { LeftColumn } from './leftSideCol';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -14,9 +14,10 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import Attending from './attending';
 import io from "socket.io-client"
+import SendIcon from '@mui/icons-material/Send';
 import { RightSideCol } from './RightSideCol';
 import { MoreOptions } from './MoreOptions';
-import { Truncating } from './Truncating.jsx';
+import { Truncating } from '../../ReusablesComponents/Truncating.jsx';
 
 export const Display = () =>{
 
@@ -48,7 +49,7 @@ export const Display = () =>{
         axios.patch(URL, data, {
             headers: {
                 "authorization":localStorage.getItem("Token")
-            },
+            }
         })
         .then(res => {
             setPosts(res.data)
@@ -78,7 +79,6 @@ export const Display = () =>{
 
     return (
         <div className='display_container' >
-            {console.log(posts)}
             <div className='display_newsfeed_wrapper'>
                 <div className='left_sidebar'>
                     <LeftColumn/>
@@ -93,24 +93,53 @@ export const Display = () =>{
                     </div>
                     <div>
                         <ul>
-                            {
+                            { 
                             posts.length > 0 ? posts.map((post)=>
+
                                 <li key = {post._id} className = "posts_articles">
                                     <>
-                                    <Avatar src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80" className='faker'>
-                                    </Avatar>
-                                    {activeUsers.some(activeUser => activeUser.userId === post.posterId._id) &&
-                                    <Tooltip title="Online">
-                                        <span className='online'/>
-                                    </Tooltip>
-                                    }
+                                        <Avatar src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330? ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80" className='faker'>
+                                        </Avatar>
+
+                                        {
+                                            activeUsers.some(activeUser => 
+                                                activeUser.userId === post.posterId._id
+                                            ) &&
+                                            <Tooltip title="Online">
+                                                <span className='online'/>
+                                            </Tooltip>
+                                        }
                                     </>
+
                                     <div className='inner_post_container'>
                                         <div className ="title_wrapper">
                                             <h4 style={{textTransform:"capitalize"}}>
-                                            {post.posterId.username}
+                                                {post.posterId.username}
                                             </h4>
+                                            <div
+                                                style ={{
+                                                    display:"flex",
+                                                }}
+                                            >
+                                            {
+                                                post.posterId._id !== user.id ?
+                                                    <Tooltip title ={`Send ${post.posterId.username.charAt(0).toUpperCase() + post.posterId.username.slice(1)} a Message`}>
+                                                        <SendIcon 
+                                                        className = "send_message_icon" 
+                                                        sx = {{
+                                                            fontSize:"20px",
+                                                            color:"rgb(68, 68, 68)",
+                                                            cursor:"pointer",
+                                                            transform:"rotate(-20deg)",
+                                                            marginRight:"5px"
+                                                        }}
+                                                        />
+                                                    </Tooltip>
+                                                    : 
+                                                    null
+                                            }
                                             <MoreOptions post = {post}/>
+                                            </div>
                                         </div>
     
                                         <Truncating 
@@ -120,53 +149,72 @@ export const Display = () =>{
                                         
                                         <div className='posts_icon_wrapper'>
                                             <div className='posts_icon_bar'>
-                                                {post.attending.some(users => users._id === user.id) ?
-                                                <motion.button whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.9 }} style={{ borderStyle:"none", background:"transparent", width:23, height:23, padding:0 }}>
-                                                    <Tooltip title = "Unattend" TransitionComponent={Zoom}>    
-                                                    <FavoriteIcon
-                                                    sx = {{color:"red"}}
-                                                    onClick = {()=>likeHandler(post._id)}
-                                                    style = {{cursor:"pointer"}}
-                                                    />
-                                                    </Tooltip>
-                                                </motion.button>
-                                                :
-                                                <motion.button
-                                                whileHover={{ scale: 1.1}}
-                                                whileTap={{ 
-                                                    scale: 1.5,
-                                                    rotate:-10,
-                                                }}
-                                                style={{ borderStyle:"none", background:"transparent", width:23, height:23, padding:0 }}
-                                                >
-                                                    <Tooltip title = "Attend" TransitionComponent={Zoom}>   
-                                                    <VolunteerActivismIcon
-                                                    className='heart_button_outline' 
-                                                    onClick = {() => likeHandler(post._id)}
-                                                    style = {{cursor:"pointer"}}
-                                                    />
-                                                    </Tooltip>
-                                                </motion.button>
+                                                {
+                                                post.attending.some(users => users._id === user.id) ?
+                                                    <motion.button 
+                                                        whileHover={{ scale: 1.3 }}
+                                                        whileTap={{ scale: 0.9 }}
+                                                        style={{ 
+                                                            borderStyle:"none",
+                                                            background:"transparent",
+                                                            width:23,
+                                                            height:23,
+                                                            padding:0
+                                                        }}
+                                                    >
+                                                        <Tooltip title = "Unattend" TransitionComponent={Zoom}>    
+                                                            <FavoriteIcon
+                                                            sx = {{color:"red"}}
+                                                            onClick = {()=>likeHandler(post._id)}
+                                                            style = {{cursor:"pointer"}}
+                                                            />
+                                                        </Tooltip>
+                                                    </motion.button>
+                                                    :
+                                                    <motion.button
+                                                        whileHover={{ scale: 1.1}}
+                                                        whileTap={{ 
+                                                            scale: 1.5,
+                                                            rotate:-10,
+                                                        }}
+                                                        style={{ 
+                                                            borderStyle:"none",
+                                                            background:"transparent",
+                                                            width:23, height:23,
+                                                            padding:0
+                                                        }}
+                                                    >
+                                                        <Tooltip 
+                                                        title = "Attend"
+                                                        TransitionComponent={Zoom}
+                                                        >   
+                                                        <VolunteerActivismIcon
+                                                        className='heart_button_outline' 
+                                                        onClick = {() => likeHandler(post._id)}
+                                                        style = {{cursor:"pointer"}}
+                                                        />
+                                                        </Tooltip>
+                                                    </motion.button>
                                                 }
-                                                <CalendarMonthIcon/>
-                                                <AddToHomeScreenIcon/>
+                                                    <CalendarMonthIcon/>
+                                                    <AddToHomeScreenIcon/>
                                             </div>
 
                                             <motion.div 
-                                            style={{display:"flex", alignItems:"center !important"}}
-                                            initial = {{opacity:.10, x:-10}}
-                                            animate = {{opacity:1, x:0}}
-                                            transition = {{ duration:1 }}
+                                                style={{ display:"flex", alignItems:"center !important"}}
+                                                initial = {{ opacity:.10, x:-10 }}
+                                                animate = {{ opacity:1, x:0 }}
+                                                transition = {{ duration:1 }}
                                             >
                                                 <Attending 
-                                                posting = { post }
+                                                    posting = { post }
                                                 />
                                             </motion.div>
                                         </div>
                                     </div>
                                 </li>
                             ):
-                            <h2>There are no current listed events on campus.</h2>
+                                <h2>There are no current listed events on campus.</h2>
                             }
                         </ul>
                     </div>
