@@ -102,6 +102,21 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     res.status(200).send(updatedPosts)
 })
 
+router.patch('/edit/:postId', isAuthenticated, async (req, res) => {
+    const postID = req.params.postId
+    const updatedDescription = req.body.updatedDescription
+
+    const filter = {_id: postID}
+    const update = {Description:updatedDescription}
+
+    await PostModel.findOneAndUpdate(filter, update)
+
+    const changedPosts = await PostModel.findOne({_id:postID})
+    .populate('posterId', ['username','email', 'createdAt'])
+    
+    res.status(200).send(changedPosts)
+})
+
 router.delete('/delete/:postId', isAuthenticated, async (req, res) =>{
     const postId = req.params.postId
     const {userId} = req.body.data
@@ -117,10 +132,9 @@ router.delete('/delete/:postId', isAuthenticated, async (req, res) =>{
     }
 })
 
-router.post('/report/:postid', isAuthenticated, async (req, res)=> {
+// router.post('/report/:postId', isAuthenticated, async (req, res) => {
     
-})
-
+// })
 
 
 router.get('/popular', async (req, res) => {

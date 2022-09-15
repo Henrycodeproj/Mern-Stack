@@ -12,12 +12,14 @@ export const Truncating = ({postDescription, truncateNumber}) => {
     <>
     {!truncate ?
         <p style={{whiteSpace:"pre-line"}}>
-            {postDescription.substring(0,truncateNumber)}
-            {postDescription.length > truncateNumber ? <span style = {{cursor:"pointer"}} onClick={showTruncate}>...</span> : null}
+            {postDescription.substring(0, truncateNumber)}
+            {postDescription.length > truncateNumber ? 
+            <span style = {{cursor:"pointer"}} onClick={showTruncate}>...</span> 
+            : null
+            }
         </p>
         :
         <p style={{whiteSpace:"pre-line"}}>
-            {console.log("showing rest")}
             {postDescription}
         </p>
     }

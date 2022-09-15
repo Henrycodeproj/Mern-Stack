@@ -3,7 +3,6 @@ import {useState, useEffect} from "react"
 import "./RightSideCol.css"
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
-import SendIcon from '@mui/icons-material/Send';
 import Tooltip from "@mui/material/Tooltip";
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
@@ -61,7 +60,16 @@ export const RightSideCol = () => {
                                     }
                             </div>
                         </div>
-                        <Avatar onClick={handleClick} sx = {{background:'rgba(80, 80, 80, 0.4)', cursor:"pointer", borderStyle:"solid"}}>+{post.attendingLength}</Avatar>
+                        <Avatar onClick={handleClick} 
+                        sx = {{
+                            background:'rgba(80, 80, 80, 0.4)',
+                            cursor:"pointer",
+                            borderStyle:"solid",
+                            width:"35px",
+                            height:"35px"
+                        }}>
+                            +{post.attendingLength}
+                        </Avatar>
                     </div>
                 </div>
             )}
@@ -69,9 +77,6 @@ export const RightSideCol = () => {
         <div className="recent_message_container">
             <div className="recent_message_title">
                 <h2>Recent Messages</h2>
-                <Tooltip title ="Send a Message">
-                <SendIcon className = "send_message_icon" sx = {{fontSize:"25px", color:"rgb(68, 68, 68)", cursor:"pointer"}}/>
-                </Tooltip>
             </div>
             <div className = "recent_message_avatars">
                 <div style = {{display:"flex", alignItems:"center"}}>
