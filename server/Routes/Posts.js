@@ -113,7 +113,8 @@ router.patch('/edit/:postId', isAuthenticated, async (req, res) => {
 
     const changedPosts = await PostModel.findOne({_id:postID})
     .populate('posterId', ['username','email', 'createdAt'])
-    
+    .populate('attending', 'username')
+
     res.status(200).send(changedPosts)
 })
 
@@ -132,9 +133,16 @@ router.delete('/delete/:postId', isAuthenticated, async (req, res) =>{
     }
 })
 
-// router.post('/report/:postId', isAuthenticated, async (req, res) => {
-    
-// })
+router.post('/report/:postId', isAuthenticated, async (req, res) =>{  
+    const {reason, postId, reportingUserID} = req.body.data
+    const newReport = new ReportModel({
+        reason: reason,
+        reportedPostId: postId,
+        reportUserId: reportingUserID
+    })
+    await newReport.save()
+    res.status(200).send({message:"report recieved"})
+})
 
 
 router.get('/popular', async (req, res) => {

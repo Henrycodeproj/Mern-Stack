@@ -50,6 +50,9 @@
     font-weight: 500;
     margin:0
 }
+.popular_container{
+    padding:10px;
+}
 .popular_post_container{
     margin: 20px 0;
     display:flex;

@@ -42,7 +42,12 @@ export const Profile = ()=> {
         <button onClick={createChat}>Chat</button>
         {viewedUser &&
             <div>
-            {viewedUser._id !== user.id ? <div>{viewedUser.username}'s Dashboard</div>: <div>Hello {viewedUser.username} this is your dashboard.</div>}
+            {
+              viewedUser._id !== user.id ? 
+                <div>{viewedUser.username}'s Dashboard</div>
+                : 
+                <div>Hello {viewedUser.username} this is your dashboard.</div>
+            }
             </div>
         }
         </>
