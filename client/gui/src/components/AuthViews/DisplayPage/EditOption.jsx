@@ -9,6 +9,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { Emojis } from "../../ReusablesComponents/Emojis";
 import "./EditOption.css"
 import { accountContext } from "../../Contexts/appContext";
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 
 
@@ -53,9 +54,11 @@ export const EditOption = ({post, editOpen, setEditOpen}) => {
         aria-describedby="alert-dialog-description"
         >
         <DialogTitle id="alert-dialog-title">
-          {"Edit Current Post"}
+          <div style = {{display:"flex", alignItems:"center", gap:"10px"}}>
+            {"Edit Current Post"} <HistoryEduIcon sx = {{fontSize:"25px"}}/>
+          </div>
         </DialogTitle>
-        <DialogContent sx={{width: "300px", height: "300px"}}>
+        <DialogContent sx={{width: "300px", height: "auto"}}>
             <TextareaAutosize
             aria-label="empty textarea"
             placeholder="Empty"
@@ -67,13 +70,15 @@ export const EditOption = ({post, editOpen, setEditOpen}) => {
             >
             {postDescription}
             </TextareaAutosize>
-            <Emojis
-            input = {postDescription}
-            setInput = {setPostDescription}
-            anchor = {editAnchor}
-            setAnchor = {setEditAnchor}
-            title = {false}
-            />
+            <div className="emoji_css">
+              <Emojis
+              input = {postDescription}
+              setInput = {setPostDescription}
+              anchor = {editAnchor}
+              setAnchor = {setEditAnchor}
+              title = {false}
+              />
+            </div>
         </DialogContent>
         <DialogActions>
             <Button onClick={()=> submitEdit()} variant="contained" size="medium" color="secondary">

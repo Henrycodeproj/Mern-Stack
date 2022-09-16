@@ -8,7 +8,7 @@ import { ExpiredVerification } from "./components/config/ExpiredVerified";
 import { Confirmation } from "./components/config/ConfirmationPage";
 import { UserAuthentication } from './components/config/userAuth';
 import { Profile } from "./components/AuthViews/ProfileViews/profile";
-import { Display } from './components/AuthViews/DisplayPage/display';
+import { Display } from './components/AuthViews/DisplayPage/Display';
 import { Chat } from "./components/AuthViews/ChatViews/Chat"
 import { NotFound } from "./components/config/NotFound";
 

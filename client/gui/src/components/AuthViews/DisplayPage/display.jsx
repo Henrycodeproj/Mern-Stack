@@ -1,9 +1,9 @@
 import axios from 'axios';
-import './display.css'
+import './Display.css'
 import { useState, useEffect, useContext} from 'react';
 import { Posts } from '../Posts/Posting.jsx';
 import { accountContext } from '../../Contexts/appContext';
-import { LeftColumn } from './leftSideCol';
+import { LeftColumn } from './LeftSideCol';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -12,12 +12,12 @@ import { motion } from 'framer-motion';
 import Zoom from '@mui/material/Zoom';
 import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
-import Attending from './attending';
+import Attending from './Attending';
 import io from "socket.io-client"
-import SendIcon from '@mui/icons-material/Send';
 import { RightSideCol } from './RightSideCol';
 import { MoreOptions } from './MoreOptions';
 import { Truncating } from '../../ReusablesComponents/Truncating.jsx';
+import { SendMessage } from './SendMessage';
 
 export const Display = () =>{
 
@@ -123,18 +123,7 @@ export const Display = () =>{
                                             >
                                             {
                                                 post.posterId._id !== user.id ?
-                                                    <Tooltip title ={`Send ${post.posterId.username.charAt(0).toUpperCase() + post.posterId.username.slice(1)} a Message`}>
-                                                        <SendIcon 
-                                                        className = "send_message_icon" 
-                                                        sx = {{
-                                                            fontSize:"20px",
-                                                            color:"rgb(68, 68, 68)",
-                                                            cursor:"pointer",
-                                                            transform:"rotate(-20deg)",
-                                                            marginRight:"5px"
-                                                        }}
-                                                        />
-                                                    </Tooltip>
+                                                    <SendMessage post = {post}/>
                                                     : 
                                                     null
                                             }
@@ -150,7 +139,7 @@ export const Display = () =>{
                                         <div className='posts_icon_wrapper'>
                                             <div className='posts_icon_bar'>
                                                 {
-                                                post.attending.some(users => users._id === user.id) ?
+                                                 post.attending.some(attendUsers => attendUsers._id === user.id) ?
                                                     <motion.button 
                                                         whileHover={{ scale: 1.3 }}
                                                         whileTap={{ scale: 0.9 }}

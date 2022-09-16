@@ -22,7 +22,7 @@ export const Emojis = ({input, setInput, anchor, setAnchor, title}) => {
     <>  
         <div style = {{display:"flex", alignItems:"center"}}>
             <SentimentSatisfiedAltIcon 
-            className="emoji_select"
+            className= "emoji_select"
             variant="contained" 
             onClick = {handleClick}
             />

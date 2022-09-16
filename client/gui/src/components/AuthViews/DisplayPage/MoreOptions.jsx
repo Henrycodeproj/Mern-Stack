@@ -3,7 +3,8 @@ import Popover from '@mui/material/Popover';
 import {useState, useContext} from 'react';
 import { accountContext } from '../../Contexts/appContext';
 import { EditOption } from './EditOption';
-import axios from "axios";
+import { ReportOption } from './ReportOption';
+import { DeleteOption } from './DeleteOption';
 
 
 import List from '@mui/material/List';
@@ -15,12 +16,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 
+
 export const MoreOptions = ({post}) => {
-const {user, posts, setPosts} = useContext(accountContext)
+const {user} = useContext(accountContext)
 
-const [optionsAnchor, setOptionsAnchor] = useState(null);
+const [optionsAnchor, setOptionsAnchor] = useState(null)
 
-const [editOpen, setEditOpen] = useState(false);
+const [deleteMessageOpen, setDelteMessageOpen] = useState(false);
+const [editOpen, setEditOpen] = useState(false)
+const [reportOpen, setReportOpen] = useState(false)
 
   const handleOptionsClick = (event) => {
     setOptionsAnchor(event.currentTarget);
@@ -35,22 +39,9 @@ const [editOpen, setEditOpen] = useState(false);
     setEditOpen(true);
   };
 
-  const postDeleteHandler = (postId) => {
-    const URL = `http://localhost:3001/posts/delete/${postId}`
-    const data = {userId: user.id}
-    axios.delete(URL, {
-      headers:{
-        "authorization":localStorage.getItem("Token")
-      },
-      data:{
-        data
-      }
-    })
-    .then(res=> {
-      const newPosts = posts.filter(post => post._id !== res.data)
-      setPosts(newPosts)
-    })
-    .catch(err => console.log(err))
+  const openReportOption = () => {
+    MoreOptionsClose()
+    setReportOpen(true)
   }
 
   const openOptions = Boolean(optionsAnchor);
@@ -66,35 +57,47 @@ const [editOpen, setEditOpen] = useState(false);
           vertical: 'bottom',
           horizontal: 'left',
         }}
-      > 
+        >
         <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon >
-                <FeedbackIcon />
-              </ListItemIcon>
-              <ListItemText primary="Report" />
-            </ListItemButton>
-          </ListItem>
-          {post.posterId._id === user.id &&
-          <>
-            <ListItem disablePadding>
-              <ListItemButton onClick = {()=> openEditOption()}>
-                <ListItemIcon>
-                  <EditIcon />
-                </ListItemIcon>
-                <ListItemText primary="Edit"/>
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton onClick={()=> postDeleteHandler(post._id)}>
-                <ListItemIcon>
-                  <DeleteIcon />
-                </ListItemIcon>
-                <ListItemText primary="Delete"/>
-              </ListItemButton>
-            </ListItem>
-          </>
+          {
+          post.posterId._id !== user.id &&
+            <>
+              <ListItem disablePadding>
+                <ListItemButton onClick = {()=> openReportOption()}>
+                  <ListItemIcon >
+                    <FeedbackIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Report" />
+                </ListItemButton>
+              </ListItem>
+            </>
+          }
+          {
+          post.posterId._id === user.id &&
+            <>
+              <ListItem disablePadding>
+                <ListItemButton onClick = {()=> openEditOption()}>
+                  <ListItemIcon>
+                    <EditIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Edit"/>
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton onClick={()=> 
+                  {
+                    setDelteMessageOpen(true)
+                    MoreOptionsClose()
+                  }
+                }
+                  >
+                  <ListItemIcon>
+                    <DeleteIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Delete"/>
+                </ListItemButton>
+              </ListItem>
+            </>
           }
         </List>
       </Popover>
@@ -102,6 +105,16 @@ const [editOpen, setEditOpen] = useState(false);
       post = {post}
       editOpen = {editOpen}
       setEditOpen = {setEditOpen}
+      />
+      <ReportOption
+      post = {post}
+      reportOpen = {reportOpen}
+      setReportOpen = {setReportOpen}
+      />
+      <DeleteOption
+      post = {post}
+      deleteMessageOpen = {deleteMessageOpen}
+      setDelteMessageOpen = {setDelteMessageOpen}
       />
     </div>
   )

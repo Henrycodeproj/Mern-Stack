@@ -1,13 +1,13 @@
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { accountContext } from '../../Contexts/appContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import "./attending.css"
+import "./Attending.css"
 
 import Popover from '@mui/material/Popover';
 
@@ -25,7 +25,6 @@ const Attending = (posting) => {
     const [search, setSearch] = useState('')
 
     const post = posting.posting
-    const ref = useRef()
     const open = Boolean(anchorEl);
     let currentShownUsers = 5
 
@@ -121,7 +120,15 @@ const Attending = (posting) => {
                       horizontal: 'left',
                     }}
                     >
-                    <div style={{ padding: 10, maxWidth:170, maxHeight:170, overflow:"scroll"}} onScroll={(event)=>handleScroll(event, post._id)} >
+                    <div 
+                    style={{
+                        padding: 10,
+                        maxWidth:170,
+                        maxHeight:170,
+                        overflow:"scroll"
+                    }}
+                    onScroll={(event) => handleScroll(event, post._id)}
+                    >
 
                         <div className='remaining_users_search_bar_container' style = {{ display:"flex"}}>
                             <PersonSearchIcon/>
@@ -133,36 +140,39 @@ const Attending = (posting) => {
                             />
                         </div>
 
-                        { remainingUsers && search ? 
-                        <> 
-                            { searchUsers.map((remainUser) =>
-                                <div className = "remaining_users_container">
-                                    <Avatar
-                                    sx = {{ 
-                                        width:35, 
-                                        height:35, 
-                                        marginRight:"10px",
-                                    }}
-                                    src="https://faces-img.xcdn.link/image-lorem-face-6511.jpg" />
-                                    <h2 style = {{textTransform:"capitalize"}}>{remainUser.username}</h2>
-                                </div>
-                            )} 
-                        </>
-                        :
-                        <> 
-                            { remainingUsers.map((remainUser) =>
-                                <div className = "remaining_users_container">
-                                    <Avatar 
-                                    sx = {{ 
-                                        width:35, 
-                                        height:35, 
-                                        marginRight:"10px",
-                                    }}
-                                    src="https://faces-img.xcdn.link/image-lorem-face-6511.jpg" />
-                                    <h2 style = {{textTransform:"capitalize"}}>{remainUser.username}</h2>
-                                </div>
-                            )} 
-                        </> 
+                        { 
+                        remainingUsers && search ? 
+                            <> 
+                                { 
+                                 searchUsers.map((remainUser) =>
+                                    <div className = "remaining_users_container">
+                                        <Avatar
+                                        sx = {{ 
+                                            width:35, 
+                                            height:35, 
+                                            marginRight:"10px",
+                                        }}
+                                        src="https://faces-img.xcdn.link/image-lorem-face-6511.jpg" />
+                                        <h2 style = {{textTransform:"capitalize"}}>{remainUser.username}</h2>
+                                    </div>
+                                )} 
+                            </>
+                            :
+                            <> 
+                                { 
+                                remainingUsers.map((remainUser) =>
+                                    <div className = "remaining_users_container">
+                                        <Avatar 
+                                        sx = {{ 
+                                            width:35, 
+                                            height:35, 
+                                            marginRight:"10px",
+                                        }}
+                                        src="https://faces-img.xcdn.link/image-lorem-face-6511.jpg" />
+                                        <h2 style = {{textTransform:"capitalize"}}>{remainUser.username}</h2>
+                                    </div>
+                                )} 
+                            </> 
                         } 
                     </div>
 
