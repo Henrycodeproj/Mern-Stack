@@ -4,14 +4,8 @@ import MessageModel from "../Models/messages.js";
 
 export const router = express.Router()
 
-// router.get('/:conversationId', isAuthenticated, async (req, res) => {
-//     const results = await MessageModel.find({conversationID:req.params.conversationId})
-//     if (results) res.status(200).send(results)
-//     else res.status(404).send("nothing")
-// })
-
 router.get
-router.post('/send', isAuthenticated, async (req, res) =>{
+router.post('/send/', isAuthenticated, async (req, res) =>{
     const {chatId, message, senderId} = req.body
 
     const newMessage = new MessageModel({
@@ -22,5 +16,5 @@ router.post('/send', isAuthenticated, async (req, res) =>{
 
     const savedMessage = await newMessage.save()
     
-    if (savedMessage) res.status(200)
+    if (savedMessage) res.status(200).send({message:"Message sent"})
 })

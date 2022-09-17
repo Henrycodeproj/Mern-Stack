@@ -53,7 +53,7 @@ export const DeleteOption = ({post, deleteMessageOpen, setDelteMessageOpen}) => 
           <Button 
           variant="outlined" 
           color ="secondary"
-          className='delete_submit'
+          className= "outlined_submit_button"
           onClick={()=>
             {
               DeleteMessageClose()
@@ -63,7 +63,7 @@ export const DeleteOption = ({post, deleteMessageOpen, setDelteMessageOpen}) => 
           >
           {"Yes"}
           </Button>
-          <Button onClick={DeleteMessageClose} autoFocus>
+          <Button variant = "contained" onClick={DeleteMessageClose} autoFocus>
             No
           </Button>
         </DialogActions>

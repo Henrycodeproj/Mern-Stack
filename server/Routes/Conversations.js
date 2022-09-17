@@ -7,20 +7,22 @@ export const router = express.Router()
 
 router.post('/create', isAuthenticated, async (req, res) => {
     const { user1, user2 } = req.body
-
     const check = await ConversationModel.find({
         participants:[user1, user2]
     })
 
     if (check.length === 0){
-        const startConversation = new ConversationModel({
+        const createConversation = new ConversationModel({
             participants:[user1, user2]
         })
 
-        await startConversation.save()
-
+        await createConversation.save()
+    }
+    try {
         const newConversation = await ConversationModel.find({user1, user2})
         res.status(200).send(newConversation)
+    } catch (err) {
+        res.status(500).send({message:"Internal Server Error"})
     }
 })
 

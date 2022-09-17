@@ -15,25 +15,21 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Popover from '@mui/material/Popover';
 import Divider from '@mui/material/Divider';
-import io from "socket.io-client"
 
 import "../navigation/navbar.css"
 
 export const Navbar = () =>{
 
     const navigateTo = useNavigate()
-    const {userStatus, user, logoutHandler} = useContext(accountContext)
-
-    const socket = io.connect("http://localhost:3001")
+    const {userStatus, user, logoutHandler, socket} = useContext(accountContext)
 
     const [profile, setProfile] = useState(null)
     const [notification, setNotification] = useState(null)
     
     const navlogoutHandler = () => {
-        socket.emit("logout", {userId:user.id})
+        socket.emit("logout", {userID:user.id})
         logoutHandler()
         setProfile(false)
-        socket.disconnect()
     }
 
     const test = [1,2]

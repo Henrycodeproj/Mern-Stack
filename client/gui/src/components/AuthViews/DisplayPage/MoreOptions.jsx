@@ -5,6 +5,7 @@ import { accountContext } from '../../Contexts/appContext';
 import { EditOption } from './EditOption';
 import { ReportOption } from './ReportOption';
 import { DeleteOption } from './DeleteOption';
+import "./MoreOptions.css"
 
 
 import List from '@mui/material/List';
@@ -48,7 +49,7 @@ const [reportOpen, setReportOpen] = useState(false)
 
   return (
     <div>
-        <MoreHorizIcon onClick={handleOptionsClick} sx = {{cursor:"pointer"}}/>
+        <MoreHorizIcon className = "moreOptions_dots" onClick={handleOptionsClick} sx = {{cursor:"pointer"}}/>
         <Popover
         open={openOptions}
         anchorEl={optionsAnchor}
@@ -64,7 +65,7 @@ const [reportOpen, setReportOpen] = useState(false)
             <>
               <ListItem disablePadding>
                 <ListItemButton onClick = {()=> openReportOption()}>
-                  <ListItemIcon >
+                  <ListItemIcon sx ={{minWidth:44}}>
                     <FeedbackIcon />
                   </ListItemIcon>
                   <ListItemText primary="Report" />
@@ -77,7 +78,7 @@ const [reportOpen, setReportOpen] = useState(false)
             <>
               <ListItem disablePadding>
                 <ListItemButton onClick = {()=> openEditOption()}>
-                  <ListItemIcon>
+                  <ListItemIcon sx ={{minWidth:44}}>
                     <EditIcon />
                   </ListItemIcon>
                   <ListItemText primary="Edit"/>
@@ -91,7 +92,7 @@ const [reportOpen, setReportOpen] = useState(false)
                   }
                 }
                   >
-                  <ListItemIcon>
+                  <ListItemIcon sx ={{minWidth:44}}>
                     <DeleteIcon />
                   </ListItemIcon>
                   <ListItemText primary="Delete"/>

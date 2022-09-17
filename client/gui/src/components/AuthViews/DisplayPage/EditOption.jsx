@@ -9,7 +9,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { Emojis } from "../../ReusablesComponents/Emojis";
 import "./EditOption.css"
 import { accountContext } from "../../Contexts/appContext";
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 
 
@@ -54,8 +54,13 @@ export const EditOption = ({post, editOpen, setEditOpen}) => {
         aria-describedby="alert-dialog-description"
         >
         <DialogTitle id="alert-dialog-title">
-          <div style = {{display:"flex", alignItems:"center", gap:"10px"}}>
-            {"Edit Current Post"} <HistoryEduIcon sx = {{fontSize:"25px"}}/>
+          <div style = {{
+            display:"flex",
+            alignItems:"center",
+            gap:"10px", 
+          }}>
+            <h3 style = {{color:"black"}}>Edit Your Current Post</h3> 
+            <BorderColorIcon sx = {{fontSize:"25px"}}/>
           </div>
         </DialogTitle>
         <DialogContent sx={{width: "300px", height: "auto"}}>
@@ -65,7 +70,7 @@ export const EditOption = ({post, editOpen, setEditOpen}) => {
             style={{ width: 300 }}
             onChange = {e => setPostDescription(e.target.value)}
             value = {postDescription}
-            rows = {10}
+            minRows = {10}
             className = "edit_textbox"
             >
             {postDescription}
@@ -81,7 +86,11 @@ export const EditOption = ({post, editOpen, setEditOpen}) => {
             </div>
         </DialogContent>
         <DialogActions>
-            <Button onClick={()=> submitEdit()} variant="contained" size="medium" color="secondary">
+            <Button onClick={()=> submitEdit()} 
+            variant="contained"
+            size="medium"
+            className = "outlined_submit_button"
+            color="secondary">
               Submit
             </Button>
         </DialogActions>

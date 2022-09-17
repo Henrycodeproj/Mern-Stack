@@ -13,7 +13,8 @@ import Zoom from '@mui/material/Zoom';
 import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import Attending from './Attending';
-import io from "socket.io-client"
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import { RightSideCol } from './RightSideCol';
 import { MoreOptions } from './MoreOptions';
 import { Truncating } from '../../ReusablesComponents/Truncating.jsx';
@@ -22,9 +23,10 @@ import { SendMessage } from './SendMessage';
 export const Display = () =>{
 
     const {posts, setPosts, user, activeUsers, setActiveUsers} = useContext(accountContext)
-    const socket = io.connect("http://localhost:3001")
 
     const [lastPostIndex, setLastPostIndex] = useState(15)
+    const [loadingState, setLoadingState] = useState(true)
+
 
     const handleScroll = async (e) => {
 
@@ -57,7 +59,6 @@ export const Display = () =>{
         .catch(error => console.log(error))
     }
 
-    //get current posts
     useEffect (()=>{
         const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`
         axios.get(URL, {
@@ -69,13 +70,14 @@ export const Display = () =>{
         .catch(err => console.log(err))
     },[])
 
-    //sends socket information
-    useEffect(()=>{
-        socket.emit("status", {userId:user.id})
-        socket.on("activeUsers", (userStatus) => {
-            setActiveUsers(userStatus)
-        })
-    },[])
+    if (posts.length === 0) return (
+        <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loadingState}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    )
 
     return (
         <div className='display_container' >
@@ -102,9 +104,10 @@ export const Display = () =>{
                                         </Avatar>
 
                                         {
-                                            activeUsers.some(activeUser => 
-                                                activeUser.userId === post.posterId._id
-                                            ) &&
+                                            // activeUsers.some(activeUser => 
+                                            //     activeUser.userId === post.posterId._id
+                                            user.id in activeUsers
+                                            &&
                                             <Tooltip title="Online">
                                                 <span className='online'/>
                                             </Tooltip>
