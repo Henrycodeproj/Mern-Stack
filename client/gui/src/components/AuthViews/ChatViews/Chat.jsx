@@ -6,7 +6,7 @@ import { accountContext } from "../../Contexts/appContext"
 
 
 export const Chat = () => {
-    const socket = io.connect("http://localhost:3001")
+    const socket = io.connect("http://localhost:3001", {autoConnect:false})
     const { user } = useContext(accountContext)
     const { chatId } = useParams()
     const [message, setMessage] = useState('')
@@ -14,7 +14,6 @@ export const Chat = () => {
     const navigateTo = useNavigate()
     
     const sendMessage = (e) => {
-        console.log("message")
         e.preventDefault()
         const sendMessageUrl = 'http://localhost:3001/message/send'
         const data = {
@@ -54,6 +53,7 @@ export const Chat = () => {
     },[])
 
     useEffect(()=>{
+        socket.io.open()
         socket.on(`${chatId}`, (data) => {
             setConvo(newMessage => [...newMessage, data])
         })

@@ -13,6 +13,7 @@ import { router as PostsRouter } from './Routes/posts.js';
 import { router as UserRouter } from './Routes/Users.js'
 import { router as MessageRouter } from './Routes/Messages.js'
 import { router as ConversationRouter } from "./Routes/Conversations.js"
+import { router as LoginRouter } from "./Routes/Login.js"
 import { Server } from 'socket.io';
 import { createServer } from "http"; 
 
@@ -24,7 +25,7 @@ dotenv.config();
 
 const corsOptions ={
     origin:'http://localhost:3000',
-    credentials:true,            //access-control-allow-credentials:true
+    credentials:true,           
     optionSuccessStatus:200,
 }
 
@@ -46,6 +47,7 @@ app.use('/posts', PostsRouter);
 app.use('/user', UserRouter);
 app.use('/message', MessageRouter);
 app.use('/conversation', ConversationRouter);
+app.use('/login', LoginRouter);
 
 const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
 
@@ -56,33 +58,6 @@ mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 app.get('/authtest', isAuthenticated, (req,res) =>{
     if (req.isAuth) res.status(200).send(true)
     else res.status(200).send(false)
-})
-
-app.post('/login', async (req,res) =>{
-    const {login_username, login_password} = req.body
-    const user = await UserModel.findOne({username:login_username})
-    if (user){
-        bcrypt.compare(login_password, user.password, (err, result) =>{
-            if(err) return res.status(500).send({message:'Internal server problem'})
-            if(!result) return res.status(400).send({message:'This password you have entered is incorrect. Please try again.'})
-
-            const accessToken = jwt.sign(
-                {username:user.username, id:user.id},
-                 process.env.SECRET_SESSION,
-                { expiresIn: '1d'}
-            )
-            res.status(200).send(
-                {
-                    message:'Logging In...',
-                    accessToken: accessToken, 
-                    user: {id: user.id, username: user.username}
-                }
-            )
-
-        })
-    } else{
-        res.status(404).send({message:"This user does not exist."})
-    }
 })
 
 app.get("/verify/:token", async (req, res)=>{
@@ -150,25 +125,33 @@ app.post("/createUser", async (req,res) => {
     })
 })
 
-let activeUsers = []
+let activeUsers = {}
 
 io.on("connection", (socket) => {
-    socket.on("status", (userInfo) => {
-        if (userInfo.userId && !activeUsers.some(user => user.userId === userInfo.userId)) activeUsers.push({userId:userInfo.userId, socketId:socket.id})
+
+    socket.on("login", (userInfo) => {
+        if (userInfo.userId && !(userInfo.userId in activeUsers))
+            activeUsers[userInfo.userId] = socket.id
         socket.emit("activeUsers", activeUsers)
     })
     socket.on("logout", (data) =>{
-        console.log(data)
-        activeUsers = activeUsers.filter(ids => ids.userId !== data.userId)
+        delete activeUsers[data.userID]
     })
     socket.on("sendUserId", (data)=>{
         socket.broadcast.emit(`${data.chatId}`, {message:data.message})
     });
 
-    socket.on("disconnect", () => {
-        activeUsers = activeUsers.filter(ids => ids.socketId !== socket.id)
+    socket.on("disconnect", (data) => {
+        console.log(socket.id,'sss')
+        //delete activeUsers
+        //activeUsers = activeUsers.filter(ids => ids.socketId !== socket.id)
     });
+
+    socket.on("test", (data) => {
+      console.log(data,'aaaa')  
+    })
 })
+
 
 httpServer.listen(PORT, () => {
     console.log('Server is hosted on port 3001');

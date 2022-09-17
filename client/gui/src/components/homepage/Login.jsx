@@ -10,7 +10,7 @@ import LockIcon from '@mui/icons-material/Lock';
 
 export const Login = ({setOption, option, active, inactive}) => {
 
-  const {userStatus, setUserStatus, setUser} = useContext(accountContext)
+  const {setUser, user, socket, setActiveUsers} = useContext(accountContext)
 
     const [loginInfo, setLoginInfo] = useState({
         login_username:"",
@@ -28,23 +28,21 @@ export const Login = ({setOption, option, active, inactive}) => {
       setLoginInfo({...loginInfo, [name]:value})
     }
     
-    const handleSubmit = async (e) =>{
+    const handleSubmit = (e) =>{
       setLoginLoading(true)
       e.preventDefault()
-      await axios({
-        method:"POST",
-        data:loginInfo,
-        withCredentials:true,
-        url:'http://localhost:3001/login'
+      const Url = 'http://localhost:3001/login'
+      axios.post(Url, loginInfo,{
+        //withCredentials:true,
       })
       .then(res => {
-        console.log(res.data.user)
         if (res.data.accessToken){
           localStorage.setItem("Token", res.data.accessToken)
           localStorage.setItem("userStatus", true)
           localStorage.setItem("User", JSON.stringify(res.data.user))
           setUser(JSON.parse(localStorage.getItem("User")))
           setLoginLoading(false)
+          socket.emit("login", {userId:user.id})
           navigateTo("/display")
         }
       }).catch(error =>{

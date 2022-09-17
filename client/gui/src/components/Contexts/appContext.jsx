@@ -1,13 +1,23 @@
-import {createContext, useState} from "react";
+import {createContext, useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-
+import io from "socket.io-client"
 export const accountContext = createContext()
 
 export const AppContext = ({children}) =>{
 
+    const socket = io.connect("http://localhost:3001")
+
+    useEffect(()=>{
+        socket.on("activeUsers", (usersStatus) => {
+            console.log(usersStatus,'111111232131231')
+            setActiveUsers(usersStatus)
+        })
+    },[])
+
     const navigateTo = useNavigate()
 
     const logoutHandler = () => {
+        socket.disconnect()
         localStorage.removeItem("userStatus")
         localStorage.removeItem("Token")
         localStorage.removeItem("User")
@@ -34,7 +44,8 @@ export const AppContext = ({children}) =>{
             setPosts,
             activeUsers,
             setActiveUsers,
-            logoutHandler
+            logoutHandler,
+            socket
         }}>
             {children}
         </accountContext.Provider>    

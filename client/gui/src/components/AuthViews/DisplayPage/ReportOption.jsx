@@ -61,20 +61,24 @@ export const ReportOption = ({post, reportOpen, setReportOpen}) => {
             className="report_textarea"
             aria-label="empty textarea"
             placeholder="What is the reason for your report?"
-            minRows={10}
+            minRows={4}
             value = {reason}
           />
         </DialogContent>
         <DialogActions>
           <Button
-          variant = "contained"
-          color = "secondary" 
-          onClick={()=>
-            {
-              sendReport(post._id)
-              handleReportClose()
-              setReason('')
-            }
+          variant = "outlined"
+          color = "secondary"
+          className = "outlined_submit_button" 
+          onClick={
+          reason ? () => 
+          {
+            sendReport(post._id)
+            handleReportClose()
+            setReason('')
+          }
+          : 
+          null
           }
           >
             Submit
