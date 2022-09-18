@@ -129,20 +129,24 @@ let activeUsers = {}
 
 io.on("connection", (socket) => {
 
-    socket.on("login", (userInfo) => {
-        if (userInfo.userId && !(userInfo.userId in activeUsers))
+    socket.on("status", (userInfo) => {
+        if (userInfo.userId)
             activeUsers[userInfo.userId] = socket.id
+            socket.to(activeUsers[userInfo.userId]).emit("testing")
         socket.emit("activeUsers", activeUsers)
     })
+
     socket.on("logout", (data) =>{
         delete activeUsers[data.userID]
     })
+
     socket.on("sendUserId", (data)=>{
         socket.broadcast.emit(`${data.chatId}`, {message:data.message})
     });
 
-    socket.on("disconnect", (data) => {
-        console.log(socket.id,'sss')
+    socket.on("disconnect", () => {
+        //console.log(socket.id)
+        console.log(activeUsers)
         //delete activeUsers
         //activeUsers = activeUsers.filter(ids => ids.socketId !== socket.id)
     });

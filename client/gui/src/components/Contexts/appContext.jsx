@@ -4,16 +4,8 @@ import io from "socket.io-client"
 export const accountContext = createContext()
 
 export const AppContext = ({children}) =>{
-
     const socket = io.connect("http://localhost:3001")
-
-    useEffect(()=>{
-        socket.on("activeUsers", (usersStatus) => {
-            console.log(usersStatus,'111111232131231')
-            setActiveUsers(usersStatus)
-        })
-    },[])
-
+    
     const navigateTo = useNavigate()
 
     const logoutHandler = () => {

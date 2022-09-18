@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import {useState, useContext } from 'react';
-import { Button, Alert, CircularProgress, setRef } from "@mui/material";
+import { Button, Alert, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { accountContext } from "../Contexts/appContext";
 import axios from "axios";
@@ -10,7 +10,7 @@ import LockIcon from '@mui/icons-material/Lock';
 
 export const Login = ({setOption, option, active, inactive}) => {
 
-  const {setUser, user, socket, setActiveUsers} = useContext(accountContext)
+  const {setUser} = useContext(accountContext)
 
     const [loginInfo, setLoginInfo] = useState({
         login_username:"",
@@ -42,7 +42,6 @@ export const Login = ({setOption, option, active, inactive}) => {
           localStorage.setItem("User", JSON.stringify(res.data.user))
           setUser(JSON.parse(localStorage.getItem("User")))
           setLoginLoading(false)
-          socket.emit("login", {userId:user.id})
           navigateTo("/display")
         }
       }).catch(error =>{

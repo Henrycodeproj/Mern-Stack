@@ -1,18 +1,21 @@
 import axios from "axios"
-import {useState, useEffect} from "react"
+import {useState, useEffect, useContext} from "react"
 import "./RightSideCol.css"
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Tooltip from "@mui/material/Tooltip";
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ChatIcon from '@mui/icons-material/Chat';
+import { accountContext } from "../../Contexts/appContext";
 
 export const RightSideCol = () => {
+
+    const {user} = useContext(accountContext)
+
     const [popularPosts, setPopularPosts] = useState([])
     const [attendingUsers, setAttendingUsers] = useState([])
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const [recentMessages, setRecentMessages] = useState([])
 
     useEffect(()=>{
         const url = "http://localhost:3001/posts/popular"
@@ -26,6 +29,16 @@ export const RightSideCol = () => {
             setPopularPosts(res.data)
         })
         .catch(err => console.log(err))
+    },[])
+
+    useEffect(()=>{
+        const Url = `http://localhost:3001/message/recent/all/${user.id}`
+        axios.get(Url, {
+            headers:{
+                "authorization":localStorage.getItem("Token")
+            }
+        })
+        .then(res => console.log(res.data))
     },[])
 
     const handleClick = (event) => {
@@ -78,6 +91,7 @@ export const RightSideCol = () => {
             <div className="recent_message_title">
                 <h2>Recent Messages</h2>
             </div>
+            {}
             <div className = "recent_message_avatars">
                 <div style = {{display:"flex", alignItems:"center"}}>
                     <div>
@@ -87,43 +101,7 @@ export const RightSideCol = () => {
                     <h3 className="recent_message_names">Jacky</h3>
                 </div>
                 <Tooltip title ="Chat">
-                <ChatIcon sx = {{color:"gray", cursor:"pointer"}}/>
-                </Tooltip>
-            </div>
-            <div className = "recent_message_avatars">
-                <div style = {{display:"flex", alignItems:"center"}}>
-                    <div>
-                        <Avatar sx = {{marginRight:"10px"}}src = "https://i.pinimg.com/750x/26/12/73/261273da88b3732c008a871d0284642b.jpg"/>
-                        <div className="recent_message_online"></div>
-                    </div>
-                    <h3 className="recent_message_names">Vicky</h3>
-                </div>
-                <Tooltip title ="Chat">
-                <ChatIcon sx = {{color:"gray", cursor:"pointer"}}/>
-                </Tooltip>
-            </div>
-            <div className = "recent_message_avatars">
-                <div style = {{display:"flex", alignItems:"center"}}>
-                    <div>
-                        <Avatar sx = {{marginRight:"10px"}}src = "https://www.lensrentals.com/blog/media/2020/03/Zach-Sutton-Beauty-Photograph-1.jpg"/>
-                        <div className="recent_message_online"></div>
-                    </div>
-                    <h3 className="recent_message_names">Emily</h3>
-                </div>
-                <Tooltip title ="Chat">
-                <ChatIcon sx = {{color:"gray", cursor:"pointer"}}/>
-                </Tooltip>
-            </div>
-            <div className = "recent_message_avatars">
-                <div style = {{display:"flex", alignItems:"center",justifyContent:"center"}}>
-                    <div>
-                        <Avatar sx = {{marginRight:"10px"}}src = "https://expertphotography.b-cdn.net/wp-content/uploads/2020/05/photo-of-woman-wearing-yellow.jpg"/>
-                        <div className="recent_message_online"></div>
-                    </div>
-                    <h3 className="recent_message_names">Fiona</h3>
-                </div>
-                <Tooltip title ="Chat">
-                <ChatIcon sx = {{color:"gray", cursor:"pointer"}}/>
+                    <ChatIcon sx = {{color:"gray", cursor:"pointer"}}/>
                 </Tooltip>
             </div>
         </div>
