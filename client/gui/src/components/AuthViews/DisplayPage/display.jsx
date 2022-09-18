@@ -22,11 +22,18 @@ import { SendMessage } from './SendMessage';
 
 export const Display = () =>{
 
-    const {posts, setPosts, user, activeUsers, setActiveUsers} = useContext(accountContext)
+    const {posts, setPosts, user, activeUsers, setActiveUsers, socket} = useContext(accountContext)
 
     const [lastPostIndex, setLastPostIndex] = useState(15)
     const [loadingState, setLoadingState] = useState(true)
 
+    useEffect(()=>{
+        socket.emit("status", {userId:user.id})
+        socket.on("activeUsers", (usersStatus) => {
+            console.log(usersStatus,'111111232131231')
+            setActiveUsers(usersStatus)
+        })
+    },[])
 
     const handleScroll = async (e) => {
 

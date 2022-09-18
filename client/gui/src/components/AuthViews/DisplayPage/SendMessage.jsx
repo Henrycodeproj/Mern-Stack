@@ -20,13 +20,14 @@ export const SendMessage = ({post}) => {
     const handleClickOpen = async () => {
       setSendMessageOpen(true);
       const Url = "http://localhost:3001/conversation/create"
+      console.log(user.id, post.posterId._id)
       const data = {user1:user.id, user2:post.posterId._id}
       const newConvoId = await axios.post(Url, data, {
         headers:{
             "authorization": localStorage.getItem("Token")
         }
       })
-      setConvoID(newConvoId.data[0]._id)
+      if (newConvoId) setConvoID(newConvoId.data._id)
     };
 
     const handleClose = () => {
@@ -34,12 +35,14 @@ export const SendMessage = ({post}) => {
     };
 
     const sendChatMessage = async () =>{
+      console.log(convoID,'convodsdadsad')
         handleClose()
         const Url = "http://localhost:3001/message/send"
         const data = {
           chatId:convoID,
           message:message,
-          senderId:user.id
+          senderId:user.id,
+          recipientId:post.posterId._id
         }
         const response = await axios.post(Url, data, {
           headers:{
