@@ -170,15 +170,6 @@ router.get('/popular', async (req, res) => {
                 as: "original_poster"
             }
         },
-        {
-            $lookup: {
-                from: "users",
-                localField: "attending",
-                foreignField: "_id",
-                as: "attending_info"
-            }
-        }
     ])
-    
     return res.status(200).send(results)
 })

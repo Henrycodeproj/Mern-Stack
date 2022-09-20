@@ -12,8 +12,7 @@
 }
 .recent_message_avatars {
     display:flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     margin-bottom: 10px;
 }
 .recent_message_container {
@@ -27,6 +26,10 @@
     justify-content: space-between;
     align-items: flex-end;
     margin-bottom: 17px;
+}
+.profile_image_name_container {
+    display:flex;
+    align-items: center;
 }
 .recent_message_online {
     position: relative;
@@ -46,6 +49,7 @@
     animation: online-pulse 2s infinite;
 }
 .recent_message_names {
+    text-transform: capitalize;
     color:black;
     font-weight: 500;
     margin:0
