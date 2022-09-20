@@ -7,29 +7,41 @@ export const router = express.Router()
 
 router.get('/recent/all/:id', isAuthenticated, async (req, res) => {
     const currentUserId = req.params.id
-    const g = await MessageModel.aggregate([
-        {
-            $match:{senderId:mongoose.Types.ObjectId(currentUserId)}
-        },
-        {
-            $sort: {
-                createdAt: -1
-            }
-        },
-        {
-            $group: {_id: "$conversationId",
-            doc: {$first: "$$ROOT"}}
-        },
-        {
-            $limit:3
-        },
-    ])
-    console.log(g)
+
     try {
-        const results = 
-            await MessageModel.find({senderId: currentUserId})
-            .sort({ createdAt:-1 })
-            .populate('recipientId', ['username'])
+        const results = await MessageModel.aggregate([
+            {
+                $match:{ senderId:mongoose.Types.ObjectId(currentUserId) }
+            },
+            {
+                $group:{
+                _id:"$conversationId",
+                date: {$max: '$createdAt'},
+                recentInfo: {$last: "$$ROOT"},
+                }
+            },
+            {
+                $sort: {date: -1}
+            },
+            {
+                $limit:5
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "recentInfo.recipientId",
+                    foreignField: "_id",
+                    as: "recieverInfo"
+                }
+            },
+            {
+                $project: {
+                    'recieverInfo._id': 1,
+                    'recieverInfo.username': 1,
+                    //profile
+                }
+            }
+        ])
         res.send(results)
     } catch (err) {
         res.send(err)
@@ -49,4 +61,9 @@ router.post('/send/', isAuthenticated, async (req, res) =>{
     const savedMessage = await newMessage.save()
     
     if (savedMessage) res.status(200).send({message:"Message sent"})
+})
+
+router.post('/conversation/:convoID', isAuthenticated, async (req, res) =>{
+    console.log(req.params.convoID)
+    console.log(req.body)
 })

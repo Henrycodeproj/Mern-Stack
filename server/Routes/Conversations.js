@@ -27,19 +27,25 @@ router.post('/create', isAuthenticated, async (req, res) => {
 })
 
 router.get('/:conversationId', isAuthenticated, async (req, res) => {
-    const conversationId = await ConversationModel
-    .find({ 
-        _id:req.params.conversationId,
-        participants:req.results.id
-     })
+    try{
+        const conversationId = await ConversationModel
+        .find({ 
+            _id:req.params.conversationId,
+            participants:req.results.id
+         })
 
-    if (conversationId.length === 0) return res.status(401).send({message:"Unauthorized"})
+        if (conversationId.length === 0) return res.status(401).send({message:"Unauthorized"})
+        
+    } catch(error) {
+        return res.status(404).send({message:"Bad Request"})
+    }
+    
 
     try{
         const results = await MessageModel.find({ conversationId:req.params.conversationId })
         if (results) res.status(200).send(results) 
     } catch(err) {
-        res.status(404).send({message:"User is not found"})
+        return res.status(404).send({message:"User is not found"})
     }
 
 })

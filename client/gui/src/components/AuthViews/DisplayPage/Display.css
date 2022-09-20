@@ -116,6 +116,11 @@
     background-color: rgb(232, 231, 231);
     min-width: 30%;
 }
+@media (max-width:1800px){
+    .display_newsfeed_wrapper{
+        width:70%;
+    }
+}
 @media (max-width:1500px) {
     .display_newsfeed_wrapper{
         width:100%;
