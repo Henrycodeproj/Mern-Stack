@@ -1,5 +1,6 @@
 import express from "express"
 import isAuthenticated from '../Middleware/auth.js';
+import ConversationModel from "../Models/Conversations.js";
 import MessageModel from "../Models/messages.js";
 import mongoose from "mongoose";
 
@@ -64,6 +65,11 @@ router.post('/send/', isAuthenticated, async (req, res) =>{
 })
 
 router.post('/conversation/:convoID', isAuthenticated, async (req, res) =>{
-    console.log(req.params.convoID)
-    console.log(req.body)
+    const currentConvoMessages = 
+    await MessageModel.find({conversationId:req.params.convoID})
+    .sort({ createdAt:1 })
+    .limit(25)
+
+    res.send(currentConvoMessages)
+
 })
