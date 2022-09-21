@@ -35,7 +35,6 @@ export const SendMessage = ({post}) => {
     };
 
     const sendChatMessage = async () =>{
-      console.log(convoID,'convodsdadsad')
         handleClose()
         const Url = "http://localhost:3001/message/send"
         const data = {
@@ -54,7 +53,11 @@ export const SendMessage = ({post}) => {
 
     return (
       <>
-          <Tooltip title ={`Send ${post.posterId.username.charAt(0).toUpperCase() + post.posterId.username.slice(1)} a Message`}>
+          <Tooltip 
+            title = {
+            `Send ${post.posterId.username.charAt(0).toUpperCase() + post.posterId.username.slice(1)} a Message`
+            }
+          >
           <SendIcon 
           className = "send_message_icon"
           onClick= {()=> handleClickOpen()} 

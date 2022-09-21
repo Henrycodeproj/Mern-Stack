@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider';
 import Tooltip from "@mui/material/Tooltip";
 import ChatIcon from '@mui/icons-material/Chat';
 import { accountContext } from "../../Contexts/appContext";
-import { IndividualChats } from "./IndividualChats";
+import { IndividualChats } from "./IndividualChat";
 
 export const RightSideCol = () => {
 

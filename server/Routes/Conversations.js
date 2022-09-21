@@ -2,13 +2,14 @@ import express from "express"
 import isAuthenticated from "../Middleware/auth.js"
 import ConversationModel from "../Models/Conversations.js"
 import MessageModel from "../Models/messages.js"
+import mongoose from "mongoose"
 
 export const router = express.Router()
 
 router.post('/create', isAuthenticated, async (req, res) => {
     const { user1, user2 } = req.body
     const check = await ConversationModel.find({
-        participants:[user1, user2]
+        participants:{$all:[user1, user2]}
     })
 
     if (check.length === 0){
@@ -19,7 +20,9 @@ router.post('/create', isAuthenticated, async (req, res) => {
         await createConversation.save()
     }
     try {
-        const newConversation = await ConversationModel.findOne({participants:[user1, user2]})
+        const newConversation = await ConversationModel.findOne({
+            participants:{$all:[user1, user2]}
+        })
         res.status(200).send(newConversation)
     } catch (err) {
         res.status(500).send({message:"Internal Server Error"})
