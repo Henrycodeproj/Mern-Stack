@@ -10,7 +10,7 @@ import { IndividualChats } from "./IndividualChat";
 
 export const RightSideCol = () => {
 
-    const {user} = useContext(accountContext)
+    const {user, activeUsers} = useContext(accountContext)
 
     const [popularPosts, setPopularPosts] = useState([])
     const [attendingUsers, setAttendingUsers] = useState([])
@@ -26,7 +26,6 @@ export const RightSideCol = () => {
             }
         })
         .then(res => {
-            console.log(res.data)
             setPopularPosts(res.data)
         })
         .catch(err => console.log(err))
@@ -92,20 +91,25 @@ export const RightSideCol = () => {
         <div className="recent_message_container">
             <div className="recent_message_title">
                 <h2>Recent Messages</h2>
+                {console.log(recentMessages)}
             </div>
             <div className = "recent_message_avatars">
                 { 
                  recentMessages && recentMessages.map((queryInfo) => 
-                    <div style = {{display:"flex", alignItems:"center", justifyContent:"space-between", height:"100%"}}>
+                    <div style = {{display:"flex", alignItems:"center", justifyContent:"space-between", height:"100%", marginBottom:"10px"}}>
                         <div className="profile_image_name_container">
                             <div>
-                            <Avatar sx = {{marginRight:"10px"}}src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1& ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"/>
-                            <div className="recent_message_online"></div>
+                                <Avatar sx = {{marginRight:"10px"}} src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&     ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"/>
+                                {console.log(queryInfo, user.username)}
+                                {
+                                queryInfo.recieverInfo._id in activeUsers &&
+                                    <div className="recent_message_online"></div>
+                                }
                             </div>
-                            <h3 className="recent_message_names">{queryInfo.recieverInfo[0].username}</h3>
+                            <h3 className="recent_message_names">{queryInfo.recieverInfo[0].username === user.username ? queryInfo.senderInfo[0].username : queryInfo.recieverInfo[0].username}</h3>
                         </div>
                         <IndividualChats
-                        recievingUserInfo = {queryInfo.recieverInfo[0]}
+                        recievingUserInfo = {queryInfo.recieverInfo[0].username === user.username ? queryInfo.senderInfo[0] : queryInfo.recieverInfo[0]}
                         convoId = {queryInfo._id}
                         />
                     </div>
@@ -115,3 +119,4 @@ export const RightSideCol = () => {
     </div>
   )
 }
+

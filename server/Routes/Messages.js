@@ -12,7 +12,12 @@ router.get('/recent/all/:id', isAuthenticated, async (req, res) => {
     try {
         const results = await MessageModel.aggregate([
             {
-                $match:{ senderId:mongoose.Types.ObjectId(currentUserId) }
+                $match:{
+                    $or:[
+                        {senderId:mongoose.Types.ObjectId(currentUserId)},
+                        {recipientId:mongoose.Types.ObjectId(currentUserId)}
+                    ] 
+                }
             },
             {
                 $group:{
@@ -36,13 +41,24 @@ router.get('/recent/all/:id', isAuthenticated, async (req, res) => {
                 }
             },
             {
+                $lookup: {
+                    from: "users",
+                    localField: "recentInfo.senderId",
+                    foreignField: "_id",
+                    as: "senderInfo"
+                }
+            },
+            {
                 $project: {
                     'recieverInfo._id': 1,
                     'recieverInfo.username': 1,
-                    //profile
+                    'senderInfo._id': 1,
+                    'senderInfo.username':1 
+                    //profile picture
                 }
             }
         ])
+        console.log(results)
         res.send(results)
     } catch (err) {
         res.send(err)
@@ -67,8 +83,8 @@ router.post('/send/', isAuthenticated, async (req, res) =>{
 router.post('/conversation/:convoID', isAuthenticated, async (req, res) =>{
     const currentConvoMessages = 
     await MessageModel.find({conversationId:req.params.convoID})
-    .sort({ createdAt:1 })
-    .limit(25)
+    .sort({ createdAt: 1 })
+    .limit(50)
 
     res.send(currentConvoMessages)
 
