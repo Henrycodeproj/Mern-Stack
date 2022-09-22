@@ -141,14 +141,12 @@ io.on("connection", (socket) => {
     })
 
     socket.on("sendUserId", (data)=>{
-        socket.broadcast.emit(`${data.chatId}`, {message:data.message})
+        console.log(data)
+        socket.broadcast.emit(`${data.chatId}`, data)
     });
 
     socket.on("disconnect", () => {
-        //console.log(socket.id)
         console.log(activeUsers)
-        //delete activeUsers
-        //activeUsers = activeUsers.filter(ids => ids.socketId !== socket.id)
     });
 
     socket.on("test", (data) => {

@@ -18,6 +18,7 @@
     padding: 5px 10px;
     background-color: #469bf0;
     background-color: rgb(253, 234, 129);
+    font-weight: 500;
 }
 .otherUser_message {
     border-top-right-radius: 5px;
@@ -25,11 +26,21 @@
     border-bottom-right-radius: 5px;
     padding: 5px 10px;
     background-color: #edacf8d3;
+    font-weight: 500;
 }
 .input_messages{
     padding:5px;
     caret-color: black;
     border-top-style: solid;
+
+}
+.message-out::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 10px;
+}
+.message-out::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, .5);
 }
 @media (max-width:920px){
     .chat_tabs{

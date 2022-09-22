@@ -30,7 +30,6 @@ export const Display = () =>{
     useEffect(()=>{
         socket.emit("status", {userId:user.id})
         socket.on("activeUsers", (usersStatus) => {
-            console.log(usersStatus,'111111232131231')
             setActiveUsers(usersStatus)
         })
     },[])
@@ -109,11 +108,8 @@ export const Display = () =>{
                                     <>
                                         <Avatar src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330? ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80" className='faker'>
                                         </Avatar>
-
                                         {
-                                            // activeUsers.some(activeUser => 
-                                            //     activeUser.userId === post.posterId._id
-                                            user.id in activeUsers
+                                            post.posterId._id in activeUsers
                                             &&
                                             <Tooltip title="Online">
                                                 <span className='online'/>
