@@ -15,4 +15,5 @@
 -Mongoose\
 -React JS\
 -Send Grid\
--Jsonwebtokens
+-Jsonwebtokens\
+-socket Io
