@@ -76,8 +76,8 @@ router.post('/send/', isAuthenticated, async (req, res) =>{
     })
 
     const savedMessage = await newMessage.save()
-    
-    if (savedMessage) res.status(200).send({message:"Message sent"})
+
+    if (savedMessage) res.status(200).send({message:"Message Sent"})
 })
 
 router.post('/conversation/:convoID', isAuthenticated, async (req, res) =>{
@@ -89,3 +89,10 @@ router.post('/conversation/:convoID', isAuthenticated, async (req, res) =>{
     res.send(currentConvoMessages)
 
 })
+
+//router.post('/recent/new/:convoId', isAuthenticated, async(req, res) => {
+//    const newestChat = 
+//    await MessageModel.findOne({conversationId: req.params.convoId})
+//    .sort({ createdAt: 1 })
+//
+//})

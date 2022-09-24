@@ -22,7 +22,7 @@ import { SendMessage } from './SendMessage';
 
 export const Display = () =>{
 
-    const {posts, setPosts, user, activeUsers, setActiveUsers, socket} = useContext(accountContext)
+    const {posts, setPosts, user, activeUsers, setActiveUsers, socket, dark, setDark} = useContext(accountContext)
 
     const [lastPostIndex, setLastPostIndex] = useState(15)
     const [loadingState, setLoadingState] = useState(true)

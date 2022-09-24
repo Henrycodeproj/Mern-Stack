@@ -1,4 +1,4 @@
-import {createContext, useState, useEffect} from "react";
+import {createContext, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client"
 export const accountContext = createContext()
@@ -24,6 +24,11 @@ export const AppContext = ({children}) =>{
     
     const [activeUsers, setActiveUsers] = useState([])
 
+    const [recentMessages, setRecentMessages] = useState([])
+
+    const [dark, setDark] = useState(false)
+
+    const [newRecievedChat, setNewRecievedChat] = useState(false)
 
     return(
         <accountContext.Provider 
@@ -37,7 +42,11 @@ export const AppContext = ({children}) =>{
             activeUsers,
             setActiveUsers,
             logoutHandler,
-            socket
+            socket,
+            recentMessages,
+            setRecentMessages,
+            newRecievedChat,
+            setNewRecievedChat
         }}>
             {children}
         </accountContext.Provider>    

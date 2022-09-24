@@ -10,13 +10,10 @@ import { IndividualChats } from "./IndividualChat";
 
 export const RightSideCol = () => {
 
-    const {user, activeUsers} = useContext(accountContext)
+    const {user, activeUsers, recentMessages, setRecentMessages, socket, setNewRecievedChat} = useContext(accountContext)
 
     const [popularPosts, setPopularPosts] = useState([])
-    const [attendingUsers, setAttendingUsers] = useState([])
     const [anchorEl, setAnchorEl] = useState(null);
-
-    const [recentMessages, setRecentMessages] = useState([])
 
     useEffect(()=>{
         const url = "http://localhost:3001/posts/popular"
@@ -32,6 +29,7 @@ export const RightSideCol = () => {
     },[])
 
     useEffect(()=>{
+        console.log("first effect")
         const Url = `http://localhost:3001/message/recent/all/${user.id}`
         axios.get(Url, {
             headers:{
@@ -42,6 +40,16 @@ export const RightSideCol = () => {
         .catch(err => console.log(err))
     },[])
 
+    useEffect(()=>{
+        socket.on(`${user.id}`, (data) =>{
+            if (!checkNewMessageInRecents(data)) {
+                setRecentMessages(prevChats => [data, ...prevChats])
+                setNewRecievedChat(true)
+            }
+        })
+    },[])
+    
+    console.log(recentMessages)
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
@@ -49,6 +57,10 @@ export const RightSideCol = () => {
     const handleClose = () => {
       setAnchorEl(null);
     };
+
+    const checkNewMessageInRecents = (data) => {
+        return recentMessages.some(chat => chat._id.toString() === data._id.toString())
+    }
   
     const open = Boolean(anchorEl);
 
@@ -91,26 +103,33 @@ export const RightSideCol = () => {
         <div className="recent_message_container">
             <div className="recent_message_title">
                 <h2>Recent Messages</h2>
-                {console.log(recentMessages)}
             </div>
             <div className = "recent_message_avatars">
                 { 
-                 recentMessages && recentMessages.map((queryInfo) => 
+                 recentMessages && recentMessages.map((queryInfo, index) => 
                     <div style = {{display:"flex", alignItems:"center", justifyContent:"space-between", height:"100%", marginBottom:"10px"}}>
                         <div className="profile_image_name_container">
                             <div>
                                 <Avatar sx = {{marginRight:"10px"}} src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&     ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"/>
-                                {console.log(queryInfo, user.username)}
                                 {
                                 queryInfo.recieverInfo._id in activeUsers &&
                                     <div className="recent_message_online"></div>
                                 }
                             </div>
-                            <h3 className="recent_message_names">{queryInfo.recieverInfo[0].username === user.username ? queryInfo.senderInfo[0].username : queryInfo.recieverInfo[0].username}</h3>
+                            <h3 className="recent_message_names">
+                            {
+                            queryInfo.recieverInfo[0].username === user.username ? 
+                            queryInfo.senderInfo[0].username : queryInfo.recieverInfo[0].username
+                            }
+                            </h3>
                         </div>
                         <IndividualChats
-                        recievingUserInfo = {queryInfo.recieverInfo[0].username === user.username ? queryInfo.senderInfo[0] : queryInfo.recieverInfo[0]}
+                        recievingUserInfo = {
+                            queryInfo.recieverInfo[0].username === user.username ?
+                            queryInfo.senderInfo[0] : queryInfo.recieverInfo[0]
+                        }
                         convoId = {queryInfo._id}
+                        index ={index}
                         />
                     </div>
                 )}

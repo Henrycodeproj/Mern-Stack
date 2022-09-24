@@ -136,8 +136,27 @@ io.on("connection", (socket) => {
         socket.emit("activeUsers", activeUsers)
     })
 
-    socket.on("logout", (data) =>{
+    socket.on("logout", (data) => {
         delete activeUsers[data.userID]
+    })
+    socket.on("messages", async (newChatInfo) => {
+        console.log(newChatInfo)
+        const newMessage = {
+            _id: newChatInfo.chatId,
+            recieverInfo: [
+                {
+                    _id: newChatInfo.recipientId,
+                    username: newChatInfo.recipientUsername
+                }
+            ],
+            senderInfo: [
+                {
+                    _id: newChatInfo.senderId,
+                    username: newChatInfo.senderUsername
+                }
+            ]
+        }
+        socket.broadcast.emit(`${newChatInfo.recipientId}`, newMessage)
     })
 
     socket.on("sendUserId", (data)=>{
