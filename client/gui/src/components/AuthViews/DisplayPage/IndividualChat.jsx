@@ -4,24 +4,24 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 import Tooltip from "@mui/material/Tooltip";
 import ChatIcon from '@mui/icons-material/Chat';
-import {useState, useContext, useEffect} from "react"
+import {useState, useContext, useEffect, useRef} from "react"
 import { accountContext } from '../../Contexts/appContext';
 import CircularProgress from '@mui/material/CircularProgress'
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import "./IndividualChat.css"
-import Box from '@mui/material/Box';
-import Popper from '@mui/material/Popper';
 
 
 export const IndividualChats = ({recievingUserInfo, convoId}) => {
-    const {user, socket} = useContext(accountContext)
+    const {user, socket, newRecievedChat, setNewRecievedChat, recentMessages} = useContext(accountContext)
 
     const [chatAnchor, setChatAnchor] = useState(null);
     const [chatHistory, setChatHistory] = useState([])
     const [message, setMessage] = useState('')
     const [notification, setNotification] = useState(0)
     const [chatOpen, setChatOpen] = useState(false)
+
+    //const chatOpen = useRef(null)
 
     const open = Boolean(chatAnchor);
     const data = {
@@ -34,12 +34,15 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
     useEffect(()=> {
         socket.on(`${convoId}`, (recievedMessageData) => {
             setChatHistory(newMessage => [...newMessage, recievedMessageData])
-            console.log(chatOpen)
-            if (chatOpen === false) {
-                setNotification(prevNotification => prevNotification + 1)
-            }
+            //setNotification(prevNotifications => prevNotifications + 1)
         })
     },[])
+
+    useEffect(()=>{
+        //chatOpen.current = false
+        console.log(chatOpen)
+    },[])
+
 
     const sendChatMessage = async (data) =>{
         const Url = "http://localhost:3001/message/send"
@@ -53,6 +56,9 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
 
     const handleClick = async (event) => {
         setNotification(0)
+        setChatOpen(true)
+        //chatOpen[convoId].current = true
+        console.log(chatOpen)
         setChatAnchor(event.currentTarget);
         const Url = `http://localhost:3001/message/conversation/${convoId}`
         const response = await axios.post(Url, {
@@ -60,13 +66,14 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
                 "authorization":localStorage.getItem("Token")
             },
         })
-        console.log(chatOpen,1)
         setChatHistory(response.data)
     };
   
     const handleChatClose = () => {
         setChatAnchor(null);
         setChatOpen(false)
+        //chatOpen.current = false
+        console.log(chatOpen)
     };
     
     const handleReplySubmit = async (e) =>{
@@ -77,13 +84,12 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
             setMessage("")
         }
     }
-
     
     return (
       <>
         <Tooltip title ="Chat">
             <Badge badgeContent={notification} color="primary">
-                <ChatIcon onClick = { handleClick} sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}/>
+                <ChatIcon onClick = { handleClick } sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}/>
             </Badge>
         </Tooltip>
         <Popover
@@ -100,7 +106,7 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
         chatHistory.length === 0 ? <CircularProgress/> :
             <> 
             <Typography variant="h6">{recievingUserInfo.username}</Typography>
-            <div style= {{ padding: '16px', height:"300px", overflowY:"scroll", display:"flex", flexDirection:"column", justifyContent:"space-between"}} className = "message-out">
+            <div style= {{ padding: '16px', height:"300px", minWidth:"332px", overflowY:"scroll", display:"flex", flexDirection:"column", justifyContent:"space-between"}} className = "message-out">
                 <div className='Message_container'>
                     {chatHistory.map((message) =>
                         message.senderId === user.id ?

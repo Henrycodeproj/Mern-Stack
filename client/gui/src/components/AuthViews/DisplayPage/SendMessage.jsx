@@ -12,22 +12,22 @@ import { accountContext } from "../../Contexts/appContext";
 import axios from "axios"
 
 export const SendMessage = ({post}) => {
-    const {user} = useContext(accountContext)
+    const {user, setRecentMessages, socket} = useContext(accountContext)
     const [sendMessageOpen, setSendMessageOpen] = useState(false);
     const [message, setMessage] = useState('')
-    const [convoID, setConvoID] = useState(null)
+    const [currentPostConvoID, setCurrentPostConvoID] = useState(null)
+
 
     const handleClickOpen = async () => {
       setSendMessageOpen(true);
       const Url = "http://localhost:3001/conversation/create"
-      console.log(user.id, post.posterId._id)
       const data = {user1:user.id, user2:post.posterId._id}
       const newConvoId = await axios.post(Url, data, {
         headers:{
             "authorization": localStorage.getItem("Token")
         }
       })
-      if (newConvoId) setConvoID(newConvoId.data._id)
+      if (newConvoId) setCurrentPostConvoID(newConvoId.data._id)
     };
 
     const handleClose = () => {
@@ -38,10 +38,12 @@ export const SendMessage = ({post}) => {
         handleClose()
         const Url = "http://localhost:3001/message/send"
         const data = {
-          chatId:convoID,
-          message:message,
-          senderId:user.id,
-          recipientId:post.posterId._id
+          chatId: currentPostConvoID,
+          message: message,
+          senderId: user.id,
+          senderUsername: user.username,
+          recipientId: post.posterId._id,
+          recipientUsername: post.posterId.username
         }
         const response = await axios.post(Url, data, {
           headers:{
@@ -49,8 +51,24 @@ export const SendMessage = ({post}) => {
           }
         })
         setMessage("")
+        const newMessage = {
+          _id: data.chatId,
+          recieverInfo: [
+              {
+                  _id: data.recipientId,
+                  username: data.recipientUsername
+              }
+          ],
+          senderInfo: [
+              {
+                  _id: data.senderId,
+                  username: data.senderUsername
+              }
+          ]
+        }
+        setRecentMessages(prevChats => [newMessage, ...prevChats])
+        socket.emit("messages", data)
     }
-
     return (
       <>
           <Tooltip 
