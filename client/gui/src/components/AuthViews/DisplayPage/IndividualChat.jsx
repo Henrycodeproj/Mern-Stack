@@ -13,34 +13,35 @@ import "./IndividualChat.css"
 
 
 export const IndividualChats = ({recievingUserInfo, convoId}) => {
-    const {user, socket, newRecievedChat, setNewRecievedChat, recentMessages} = useContext(accountContext)
+    const {user, socket, newRecievedChat} = useContext(accountContext)
 
-    const [chatAnchor, setChatAnchor] = useState(null);
+    const [chatAnchor, setChatAnchor] = useState(false);
     const [chatHistory, setChatHistory] = useState([])
     const [message, setMessage] = useState('')
     const [notification, setNotification] = useState(0)
-    const [chatOpen, setChatOpen] = useState(false)
-
-    //const chatOpen = useRef(null)
 
     const open = Boolean(chatAnchor);
+    const chatOpen = useRef()
+
     const data = {
         chatId:convoId,
         message:message,
         senderId:user.id,
         recipientId:recievingUserInfo._id
     }
-
+    console.log(chatHistory)
     useEffect(()=> {
         socket.on(`${convoId}`, (recievedMessageData) => {
-            setChatHistory(newMessage => [...newMessage, recievedMessageData])
-            //setNotification(prevNotifications => prevNotifications + 1)
+            setChatHistory(newMessage => [...newMessage, recievedMessageData]);
+            if (chatOpen.current === false) setNotification(prevNotifications => prevNotifications + 1)
         })
     },[])
 
     useEffect(()=>{
-        //chatOpen.current = false
-        console.log(chatOpen)
+        chatOpen.current = false
+        //if (newRecievedChat) {
+        //    setNotification(prevNotifications => prevNotifications + 1)
+        //}
     },[])
 
 
@@ -56,9 +57,7 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
 
     const handleClick = async (event) => {
         setNotification(0)
-        setChatOpen(true)
-        //chatOpen[convoId].current = true
-        console.log(chatOpen)
+        chatOpen.current = true
         setChatAnchor(event.currentTarget);
         const Url = `http://localhost:3001/message/conversation/${convoId}`
         const response = await axios.post(Url, {
@@ -70,15 +69,13 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
     };
   
     const handleChatClose = () => {
-        setChatAnchor(null);
-        setChatOpen(false)
-        //chatOpen.current = false
-        console.log(chatOpen)
+        setChatAnchor(false);
+        chatOpen.current = false
     };
     
     const handleReplySubmit = async (e) =>{
         if (e.key === "Enter") {
-            await sendChatMessage(data)
+            sendChatMessage(data)
             socket.emit("sendUserId", data)
             setChatHistory(newMessage => [...newMessage, data])
             setMessage("")
@@ -88,7 +85,7 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
     return (
       <>
         <Tooltip title ="Chat">
-            <Badge badgeContent={notification} color="primary">
+            <Badge badgeContent={notification} color="primary" style = {{minWidth:'15px', height:"15px"}}>
                 <ChatIcon onClick = { handleClick } sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}/>
             </Badge>
         </Tooltip>

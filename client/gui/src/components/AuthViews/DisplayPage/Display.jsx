@@ -76,7 +76,7 @@ export const Display = () =>{
         .catch(err => console.log(err))
     },[])
 
-    if (posts.length === 0) return (
+    if (posts === null) return (
         <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loadingState}

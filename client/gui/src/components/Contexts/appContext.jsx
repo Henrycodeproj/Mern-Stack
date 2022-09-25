@@ -20,15 +20,13 @@ export const AppContext = ({children}) =>{
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")))
 
-    const [posts, setPosts] = useState([])
+    const [posts, setPosts] = useState(null)
     
     const [activeUsers, setActiveUsers] = useState([])
 
     const [recentMessages, setRecentMessages] = useState([])
 
     const [dark, setDark] = useState(false)
-
-    const [newRecievedChat, setNewRecievedChat] = useState(false)
 
     return(
         <accountContext.Provider 
@@ -45,8 +43,6 @@ export const AppContext = ({children}) =>{
             socket,
             recentMessages,
             setRecentMessages,
-            newRecievedChat,
-            setNewRecievedChat
         }}>
             {children}
         </accountContext.Provider>    

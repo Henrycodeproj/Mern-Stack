@@ -12,7 +12,7 @@ import { accountContext } from "../../Contexts/appContext";
 import axios from "axios"
 
 export const SendMessage = ({post}) => {
-    const {user, setRecentMessages, socket} = useContext(accountContext)
+    const {user, setRecentMessages, socket, recentMessages} = useContext(accountContext)
     const [sendMessageOpen, setSendMessageOpen] = useState(false);
     const [message, setMessage] = useState('')
     const [currentPostConvoID, setCurrentPostConvoID] = useState(null)
@@ -66,7 +66,9 @@ export const SendMessage = ({post}) => {
               }
           ]
         }
-        setRecentMessages(prevChats => [newMessage, ...prevChats])
+        !recentMessages.some((chat) => chat._id === newMessage._id) 
+        && setRecentMessages(prevChats => [...prevChats, newMessage])
+
         socket.emit("messages", data)
     }
     return (

@@ -1,5 +1,5 @@
 import axios from "axios"
-import {useState, useEffect, useContext} from "react"
+import {useState, useEffect, useContext, useRef} from "react"
 import "./RightSideCol.css"
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
@@ -10,7 +10,13 @@ import { IndividualChats } from "./IndividualChat";
 
 export const RightSideCol = () => {
 
-    const {user, activeUsers, recentMessages, setRecentMessages, socket, setNewRecievedChat} = useContext(accountContext)
+    const {
+        user,
+        activeUsers, 
+        recentMessages, 
+        setRecentMessages, 
+        socket, 
+    } = useContext(accountContext)
 
     const [popularPosts, setPopularPosts] = useState([])
     const [anchorEl, setAnchorEl] = useState(null);
@@ -29,27 +35,25 @@ export const RightSideCol = () => {
     },[])
 
     useEffect(()=>{
-        console.log("first effect")
         const Url = `http://localhost:3001/message/recent/all/${user.id}`
         axios.get(Url, {
             headers:{
                 "authorization":localStorage.getItem("Token")
             }
         })
-        .then(res => setRecentMessages(res.data))
+        .then(res => setRecentMessages(res.data.reverse()))
         .catch(err => console.log(err))
     },[])
 
     useEffect(()=>{
-        socket.on(`${user.id}`, (data) =>{
-            if (!checkNewMessageInRecents(data)) {
-                setRecentMessages(prevChats => [data, ...prevChats])
-                setNewRecievedChat(true)
-            }
-        })
+        socket.on(`${user.id}`, data => {
+            setRecentMessages(prevChats => console.log(prevChats,'sss'))
+        });
+        return () => {
+            socket.off(`${user.id}`);
+        };
     },[])
     
-    console.log(recentMessages)
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
@@ -58,7 +62,8 @@ export const RightSideCol = () => {
       setAnchorEl(null);
     };
 
-    const checkNewMessageInRecents = (data) => {
+    const checkNewMessageInRecents = async (data) => {
+        console.log(recentMessages, '1232131231231231')
         return recentMessages.some(chat => chat._id.toString() === data._id.toString())
     }
   
@@ -76,10 +81,11 @@ export const RightSideCol = () => {
                         <Avatar sx = {{marginRight:"10px"}}src = "https://dvyvvujm9h0uq.cloudfront.net/com/articles/1525891879-379720-warren-wong-242286-unsplashjpg.jpg"/>
                             <div>
                                 <h3 style = {{textTransform:"capitalize", color:"black", margin:0}}>{post.original_poster[0].username}</h3>
-                                    {post.Description.length >= 50 ?
+                                    {
+                                    post.Description.length >= 50 ?
                                         <div>
-                                        {post.Description.substring(0, 50)}
-                                        <span style = {{cursor:"pointer"}} onClick={handleClick}>...</span>
+                                            {post.Description.substring(0, 50)}
+                                            <span style = {{cursor:"pointer"}} onClick={handleClick}>...</span>
                                         </div>
                                         :
                                         post.Description.substring(0, 50)
