@@ -12,7 +12,7 @@
 }
 .recent_message_avatars {
     display:flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     margin-bottom: 10px;
 }
 .recent_message_container {

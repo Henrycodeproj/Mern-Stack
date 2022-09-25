@@ -132,14 +132,13 @@ io.on("connection", (socket) => {
     socket.on("status", (userInfo) => {
         if (userInfo.userId)
             activeUsers[userInfo.userId] = socket.id
-            socket.to(activeUsers[userInfo.userId]).emit("testing")
         socket.emit("activeUsers", activeUsers)
     })
 
     socket.on("logout", (data) => {
         delete activeUsers[data.userID]
     })
-    socket.on("messages", async (newChatInfo) => {
+    socket.on("messages", (newChatInfo) => {
         console.log(newChatInfo)
         const newMessage = {
             _id: newChatInfo.chatId,
