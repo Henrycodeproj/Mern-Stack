@@ -34,6 +34,27 @@ export const SendMessage = ({post}) => {
         setSendMessageOpen(false);
     };
 
+    const saveNewMessage = (data) => {
+      const newMessage = {
+        _id: data.chatId,
+        recieverInfo: [
+            {
+                _id: data.recipientId,
+                username: data.recipientUsername
+            }
+        ],
+        senderInfo: [
+            {
+                _id: data.senderId,
+                username: data.senderUsername
+            }
+        ]
+      }
+
+      !recentMessages.some((chat) => chat._id === newMessage._id) 
+      && setRecentMessages(prevChats => [...prevChats, newMessage])
+    };
+
     const sendChatMessage = async () =>{
         handleClose()
         const Url = "http://localhost:3001/message/send"
@@ -51,26 +72,11 @@ export const SendMessage = ({post}) => {
           }
         })
         setMessage("")
-        const newMessage = {
-          _id: data.chatId,
-          recieverInfo: [
-              {
-                  _id: data.recipientId,
-                  username: data.recipientUsername
-              }
-          ],
-          senderInfo: [
-              {
-                  _id: data.senderId,
-                  username: data.senderUsername
-              }
-          ]
-        }
-        !recentMessages.some((chat) => chat._id === newMessage._id) 
-        && setRecentMessages(prevChats => [...prevChats, newMessage])
-
+        saveNewMessage(data)
         socket.emit("messages", data)
+        socket.emit("sendUserId", data)
     }
+
     return (
       <>
           <Tooltip 

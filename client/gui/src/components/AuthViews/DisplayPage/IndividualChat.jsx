@@ -32,6 +32,7 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
     console.log(chatHistory)
     useEffect(()=> {
         socket.on(`${convoId}`, (recievedMessageData) => {
+            console.log(recievedMessageData, 'receieved')
             setChatHistory(newMessage => [...newMessage, recievedMessageData]);
             if (chatOpen.current === false) setNotification(prevNotifications => prevNotifications + 1)
         })
@@ -43,7 +44,6 @@ export const IndividualChats = ({recievingUserInfo, convoId}) => {
         //    setNotification(prevNotifications => prevNotifications + 1)
         //}
     },[])
-
 
     const sendChatMessage = async (data) =>{
         const Url = "http://localhost:3001/message/send"
