@@ -9,6 +9,7 @@ import { accountContext } from "../../Contexts/appContext";
 import { IndividualChats } from "./IndividualChat";
 
 export const RightSideCol = () => {
+    const newMessageCheck = useRef()
 
     const {
         user,
@@ -47,7 +48,8 @@ export const RightSideCol = () => {
 
     useEffect(()=>{
         socket.on(`${user.id}`, data => {
-            setRecentMessages(prevChats => console.log(prevChats,'sss'))
+            newMessageCheck.current = data
+            checkNewMessageInRecents()
         });
         return () => {
             socket.off(`${user.id}`);
@@ -62,13 +64,18 @@ export const RightSideCol = () => {
       setAnchorEl(null);
     };
 
-    const checkNewMessageInRecents = async (data) => {
-        console.log(recentMessages, '1232131231231231')
-        return recentMessages.some(chat => chat._id.toString() === data._id.toString())
+    const checkNewMessageInRecents = async () => {
+        setRecentMessages
+        (
+            prevMessages => prevMessages.some(chat => chat._id === newMessageCheck.current._id) ? 
+            [...prevMessages]
+            : 
+            [...prevMessages, newMessageCheck.current]
+        )
     }
-  
-    const open = Boolean(anchorEl);
 
+    const open = Boolean(anchorEl);
+    
   return (
     <div className = "right_column_wrapper">
         <div className = "popular_container">
