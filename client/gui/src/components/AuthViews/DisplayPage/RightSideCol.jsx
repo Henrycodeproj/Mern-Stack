@@ -142,7 +142,7 @@ export const RightSideCol = () => {
                             queryInfo.senderInfo[0] : queryInfo.recieverInfo[0]
                         }
                         convoId = {queryInfo._id}
-                        index ={index}
+                        isNewMessage ={newMessageCheck.current}
                         />
                     </div>
                 )}

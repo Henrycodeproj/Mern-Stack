@@ -28,6 +28,8 @@ export const AppContext = ({children}) =>{
 
     const [dark, setDark] = useState(false)
 
+    const [isNewChat, setIsNewChat] = useState([])
+
     return(
         <accountContext.Provider 
         value = {{
@@ -43,6 +45,8 @@ export const AppContext = ({children}) =>{
             socket,
             recentMessages,
             setRecentMessages,
+            isNewChat,
+            setIsNewChat
         }}>
             {children}
         </accountContext.Provider>    

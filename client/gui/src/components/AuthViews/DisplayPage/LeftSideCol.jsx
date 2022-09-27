@@ -1,18 +1,14 @@
 import { Avatar } from "@mui/material"
 import { accountContext } from "../../Contexts/appContext"
-import { useContext, useState, useEffect, useRef } from "react"
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
+import { useContext, useState} from "react"
+import { LeftSideSettingsMenu } from "./LeftSideSettingsMenu";
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-import Divider from '@mui/material/Divider';
 import "./LeftSideCol.css"
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LogoutIcon from '@mui/icons-material/Logout';
 
@@ -25,6 +21,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import Switch from '@mui/material/Switch';
 
 export const LeftColumn = ()=>{
     const {user, logoutHandler} = useContext(accountContext)
@@ -71,14 +68,13 @@ export const LeftColumn = ()=>{
                 expandIcon={<ExpandMoreIcon className = "expand_icon" sx = {{color:"white"}}/>}
               >
                 <div style = {{minWidth:36}}>
-                <SettingsIcon fontSize="small" sx ={{color:"white"}}/>
+                  <SettingsIcon fontSize="small" sx ={{color:"white"}}/>
                 </div>
                 <Typography sx = {{color:"white"}} className= "list_item_text">Settings</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                  malesuada lacus ex, sit amet blandit leo lobortis eget.
+                  <LeftSideSettingsMenu/>
                 </Typography>
               </AccordionDetails>
             </Accordion>

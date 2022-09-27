@@ -53,6 +53,8 @@ export const SendMessage = ({post}) => {
 
       !recentMessages.some((chat) => chat._id === newMessage._id) 
       && setRecentMessages(prevChats => [...prevChats, newMessage])
+
+      return !recentMessages.some((chat) => chat._id === newMessage._id) 
     };
 
     const sendChatMessage = async () =>{
@@ -66,7 +68,7 @@ export const SendMessage = ({post}) => {
           recipientId: post.posterId._id,
           recipientUsername: post.posterId.username
         }
-        const response = await axios.post(Url, data, {
+        const res = await axios.post(Url, data, {
           headers:{
             "authorization":localStorage.getItem("Token")
           }
