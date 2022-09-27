@@ -16,6 +16,7 @@ import { router as ConversationRouter } from "./Routes/Conversations.js"
 import { router as LoginRouter } from "./Routes/Login.js"
 import { Server } from 'socket.io';
 import { createServer } from "http"; 
+import ConversationModel from './Models/Conversations.js';
 
 
 const app = express()
@@ -138,8 +139,8 @@ io.on("connection", (socket) => {
     socket.on("logout", (data) => {
         delete activeUsers[data.userID]
     })
+    // new chats socket handler
     socket.on("messages", (newChatInfo) => {
-        console.log(newChatInfo)
         const newMessage = {
             _id: newChatInfo.chatId,
             recieverInfo: [
@@ -158,7 +159,8 @@ io.on("connection", (socket) => {
         socket.broadcast.emit(`${newChatInfo.recipientId}`, newMessage)
     })
 
-    socket.on("sendUserId", (data)=>{
+    //Direct Messages
+    socket.on("sendUserId", data =>{
         console.log(data)
         socket.broadcast.emit(`${data.chatId}`, data)
     });
@@ -166,10 +168,6 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log(activeUsers)
     });
-
-    socket.on("test", (data) => {
-      console.log(data,'aaaa')  
-    })
 })
 
 
