@@ -89,10 +89,3 @@ router.post('/conversation/:convoID', isAuthenticated, async (req, res) =>{
     res.send(currentConvoMessages)
 
 })
-
-//router.post('/recent/new/:convoId', isAuthenticated, async(req, res) => {
-//    const newestChat = 
-//    await MessageModel.findOne({conversationId: req.params.convoId})
-//    .sort({ createdAt: 1 })
-//
-//})

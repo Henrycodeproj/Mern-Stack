@@ -21,12 +21,13 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     const [notification, setNotification] = useState(0)
     const [newMessages, setNewMessages] = useState(false)
     const [ownMessage, setOwnMessage] = useState(false)
+    const [scrollPosition, setScrollPosition] = useState(0)
+    const [containerMaxHeight, setContainerMaxHeight] = useState(0)
 
     const open = Boolean(chatAnchor);
     const chatOpen = useRef()
     const chatContainer = useRef()
-    const chatClicked = useRef()
-    const chatLoad = useRef()
+    const chatClicked = useRef(false)
 
     const data = {
         chatId:convoId,
@@ -48,16 +49,21 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         chatOpen.current = false
         if (isNewMessage) setNotification(prevNotifications => prevNotifications + 1)
     },[])
-    useEffect(()=>{
 
-    })
+    useEffect(()=>{
+        console.log(chatClicked)
+        if (chatContainer.current && chatClicked.current){
+            chatContainer.current.scrollIntoView()
+            chatClicked.current = false
+        }
+    }, [chatHistory])
+
     useEffect(()=>{
         if (chatContainer.current) chatContainer.current.scrollIntoView({behavior: "smooth"})
         setOwnMessage(false)
     }, [ownMessage])
 
     const handleNewMessageScroll = () =>{
-        console.log(chatContainer.current.clientHeight, chatContainer.current.scrollTop, chatContainer.current.scrollHeight)
         if (chatContainer.current) chatContainer.current.scrollIntoView({behavior: "smooth"})
         setNewMessages(false)
     }
@@ -101,12 +107,17 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             setOwnMessage(true)
         }
     }
+
+    const handleChatScroll = (event) => {
+        setScrollPosition(event.target.clientHeight + event.target.scrollTop + 1)
+        if (scrollPosition >= containerMaxHeight) setNewMessages(false)
+    }
     
     return (
       <>
         <Tooltip title ="Chat">
             <Badge badgeContent={notification} color="primary" style = {{minWidth:'15px', height:"15px"}}>
-                <ChatIcon onClick = { handleClick } sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}ref = {chatClicked}/>
+                <ChatIcon onClick = { handleClick } sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}/>
             </Badge>
         </Tooltip>
         <Popover
@@ -118,7 +129,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
           vertical: 'top',
           horizontal: 'right',
         }}
-        ref = {chatLoad}
         >
         {
         chatHistory.length === 0 ? <CircularProgress/> :
@@ -128,11 +138,12 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                 <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOCLcCD0l0PpNGuRAmtNh47ovGB3c_a59DPQ&usqp=CAU"
                 sx ={{width:"30px", height:"30px"}}
                 />
-                <h2 style ={{fontWeight:"600"}}>{recievingUserInfo.username}</h2>
+                <h2 style ={{fontWeight:"600"}}>{recievingUserInfo.username.charAt(0).toUpperCase() + recievingUserInfo.username.slice(1)}</h2>
                 </div>
                 <div style ={{display:"flex", flexDirection:"row"}}> 
+                {console.log(newMessages, containerMaxHeight, scrollPosition)}
                 {
-                newMessages && 
+                newMessages && scrollPosition <= containerMaxHeight && scrollPosition !== 0 && containerMaxHeight !== 0 &&
                 <>
                     <div>
                         <Tooltip title = "New Message(s)">
@@ -144,7 +155,19 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                 </div>
             </div>
 
-            <div style= {{ padding: '16px', height:"300px", minWidth:"332px", overflowY:"scroll", display:"flex", flexDirection:"column", justifyContent:"space-between"}} className = "message-out">
+            <div 
+            style= {{ 
+                padding: '16px',
+                height:"300px", 
+                minWidth:"332px", 
+                overflowY:"scroll", 
+                display:"flex", 
+                flexDirection:"column", 
+                justifyContent:"space-between"
+            }}
+            className = "message-out" 
+            onScroll={ e => {handleChatScroll(e); setContainerMaxHeight(e.target.scrollHeight) }}
+            >
                 <div className='Message_container'>
                     {chatHistory.map((message) =>
                         message.senderId === user.id ?
@@ -164,16 +187,16 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                         </div>
                     )}
                 </div>
+                </div>
                 <div>
+                <input type="text"
+                className='input_messages' 
+                placeholder='Reply' 
+                onChange={e => setMessage(e.target.value)}
+                onKeyDown = {e => handleReplySubmit(e)}
+                value = {message}
+                />
                 </div>
-                </div>
-                    <input type="text"
-                    className='input_messages' 
-                    placeholder='Reply' 
-                    onChange={e => setMessage(e.target.value)}
-                    onKeyDown = {e => handleReplySubmit(e)}
-                    value = {message}
-                    />
                 </>   
             }
         </Popover>
