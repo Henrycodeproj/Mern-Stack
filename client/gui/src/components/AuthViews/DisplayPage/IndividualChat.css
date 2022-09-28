@@ -38,7 +38,7 @@
 }
 .input_messages{
     padding:5px;
-    caret-color: black;
+    caret-color: gray;
     border-top-style: solid;
 
 }
