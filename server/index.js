@@ -138,7 +138,9 @@ io.on("connection", (socket) => {
 
     socket.on("logout", (data) => {
         delete activeUsers[data.userID]
+        socket.emit("activeUsers", activeUsers)
     })
+
     // new chats socket handler
     socket.on("messages", (newChatInfo) => {
         const newMessage = {
@@ -161,12 +163,11 @@ io.on("connection", (socket) => {
 
     //Direct Messages
     socket.on("sendUserId", data =>{
-        console.log(data)
         socket.broadcast.emit(`${data.chatId}`, data)
     });
 
     socket.on("disconnect", () => {
-        console.log(activeUsers)
+        console.log(activeUsers, 'remaining active users')
     });
 })
 

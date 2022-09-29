@@ -1,16 +1,17 @@
 import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import axios from 'axios';
 import Tooltip from "@mui/material/Tooltip";
 import ChatIcon from '@mui/icons-material/Chat';
 import {useState, useContext, useEffect, useRef} from "react"
 import { accountContext } from '../../Contexts/appContext';
+import { Emojis } from '../../ReusablesComponents/Emojis';
 import CircularProgress from '@mui/material/CircularProgress'
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import "./IndividualChat.css"
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import SendIcon from '@mui/icons-material/Send';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     const {user, socket} = useContext(accountContext)
@@ -23,6 +24,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     const [ownMessage, setOwnMessage] = useState(false)
     const [scrollPosition, setScrollPosition] = useState(0)
     const [containerMaxHeight, setContainerMaxHeight] = useState(0)
+    const [individualChatAnchor, setIndividualChatAnchor] = useState(null);
 
     const open = Boolean(chatAnchor);
     const chatOpen = useRef()
@@ -75,7 +77,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             "authorization":localStorage.getItem("Token")
           }
         })
-
+        console.log(response)
     }
 
     const handleClick = async (event) => {
@@ -99,7 +101,8 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     };
     
     const handleReplySubmit = async (e) =>{
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && message) {
+            e.preventDefault()
             sendChatMessage(data)
             socket.emit("sendUserId", data)
             setChatHistory(newMessage => [...newMessage, data])
@@ -159,7 +162,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             style= {{ 
                 padding: '16px',
                 height:"300px", 
-                minWidth:"332px", 
+                width:"332px", 
                 overflowY:"scroll", 
                 display:"flex", 
                 flexDirection:"column", 
@@ -172,30 +175,50 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                     {chatHistory.map((message) =>
                         message.senderId === user.id ?
                         <div className = "currentUser_message_wrapper">
-                            <div className='currentUser_message' ref = {el => chatContainer.current = el}>
-                                {message.message}
+                            <div className='currentUser_messsage_container'>
+                                <div className='currentUser_message' ref = {el => chatContainer.current = el}>
+                                    {message.message}
+                                </div>
+                                <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUBMYLhvdVc5YocrrSJpyYXnb274TDj50OZQ&usqp=CAU"
+                                />
                             </div>
-                            <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUBMYLhvdVc5YocrrSJpyYXnb274TDj50OZQ&usqp=CAU"
-                            />
                         </div>
                         :
                         <div className = "otherUser_message_wrapper">
-                            <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVY-iEh_KAqonOvgpFX8keZ3qd_l4TwwfoPA&usqp=CAU"/>
-                            <div className='otherUser_message' ref = {el => chatContainer.current = el}>
-                                {message.message}
+                            <div className='otherUser_messsage_container'>
+                                <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVY-iEh_KAqonOvgpFX8keZ3qd_l4TwwfoPA&usqp=CAU"/>
+                                <div className='otherUser_message' ref = {el => chatContainer.current = el}>
+                                    {message.message}
+                                </div>
                             </div>
                         </div>
                     )}
                 </div>
                 </div>
                 <div>
-                <input type="text"
-                className='input_messages' 
-                placeholder='Reply' 
-                onChange={e => setMessage(e.target.value)}
-                onKeyDown = {e => handleReplySubmit(e)}
-                value = {message}
-                />
+                    <div style = {{display:"flex", justifyContent:"center", alignItems:"center"}}>
+                        <div style ={{display:"flex", justifyContent:"space-between", alignItems:"center", background:"rgba(128, 128, 128, 0.150)", borderRadius:"20px", maxWidth:"90%",padding:"5px"}}>
+                            <TextareaAutosize
+                            className='input_messages' 
+                            placeholder='Reply' 
+                            minRows = {1}
+                            maxRows = {5}
+                            onChange={e => setMessage(e.target.value)}
+                            onKeyDown = {e => handleReplySubmit(e)}
+                            value = {message}
+                            />
+                            <Emojis
+                            input = {message}
+                            setInput = {setMessage}
+                            anchor = {individualChatAnchor}
+                            setAnchor = {setIndividualChatAnchor}
+                            title = {false}
+                            />
+                        </div>
+                    <div>
+                    <SendIcon />
+                    </div>
+                    </div>
                 </div>
                 </>   
             }
