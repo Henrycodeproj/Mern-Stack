@@ -58,13 +58,22 @@ router.get('/recent/all/:id', isAuthenticated, async (req, res) => {
                 }
             }
         ])
-        console.log(results)
         res.send(results)
     } catch (err) {
         res.send(err)
     }
 })
 
+// router.get('/test', async (req,res) => {
+//     const results = await MessageModel.aggregate([
+//         {
+//             $group:{
+//             _id:{"$hour":"$createdAt"}
+//             }
+//         }
+//     ])
+//     res.send(results)
+// })
 router.post('/send/', isAuthenticated, async (req, res) =>{
     const {chatId, message, senderId, recipientId} = req.body
 
@@ -83,9 +92,7 @@ router.post('/send/', isAuthenticated, async (req, res) =>{
 router.post('/conversation/:convoID', isAuthenticated, async (req, res) =>{
     const currentConvoMessages = 
     await MessageModel.find({conversationId:req.params.convoID})
-    .sort({ createdAt: 1 })
+    .sort({ createdAt: -1 })
     .limit(50)
-
-    res.send(currentConvoMessages)
-
+    res.send(currentConvoMessages.reverse())
 })

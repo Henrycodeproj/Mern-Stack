@@ -30,6 +30,7 @@ export const Display = () =>{
     useEffect(()=>{
         socket.emit("status", {userId:user.id})
         socket.on("activeUsers", (usersStatus) => {
+            console.log(usersStatus)
             setActiveUsers(usersStatus)
         })
     },[])

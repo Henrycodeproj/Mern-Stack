@@ -122,18 +122,22 @@ export const RightSideCol = () => {
                  recentMessages && recentMessages.map((queryInfo, index) => 
                     <div style = {{display:"flex", alignItems:"center", justifyContent:"space-between", height:"100%", marginBottom:"10px"}}>
                         <div className="profile_image_name_container">
-                            <div>
+                            <div className = "recent_chatMessages_container">
                                 <Avatar sx = {{marginRight:"10px"}} src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&     ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"/>
                                 {
-                                queryInfo.recieverInfo._id in activeUsers &&
+                                queryInfo.recieverInfo[0]._id === user.id ?
+                                    queryInfo.senderInfo[0]._id in activeUsers && 
+                                    <div className="recent_message_online"></div>
+                                :
+                                    queryInfo.recieverInfo[0]._id in activeUsers && 
                                     <div className="recent_message_online"></div>
                                 }
                             </div>
                             <h3 className="recent_message_names">
-                            {
-                            queryInfo.recieverInfo[0].username === user.username ? 
-                            queryInfo.senderInfo[0].username : queryInfo.recieverInfo[0].username
-                            }
+                                {
+                                    queryInfo.recieverInfo[0].username === user.username ? 
+                                    queryInfo.senderInfo[0].username : queryInfo.recieverInfo[0].username
+                                }
                             </h3>
                         </div>
                         <IndividualChats
