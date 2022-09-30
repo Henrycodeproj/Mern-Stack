@@ -22,24 +22,8 @@ export const Profile = ()=> {
         .catch(err => console.log(err))
     },[])
 
-    const createChat = () =>{
-        const URL = `http://localhost:3001/conversation/create`
-        const data = {
-            user1:user.id,
-            user2:viewedUser._id
-        }
-        axios.post(URL, data, {
-            headers:{
-                "authorization" : localStorage.getItem("Token")
-            }
-        })
-        .then(res => navigateTo(`/conversation/${res.data[0]._id}`))
-        .catch(err => console.log(err))
-    }
-
     return(
         <>
-        <button onClick={createChat}>Chat</button>
         {viewedUser &&
             <div>
             {
