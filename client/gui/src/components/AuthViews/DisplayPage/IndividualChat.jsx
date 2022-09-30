@@ -100,9 +100,21 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         chatClicked.current = false
     };
     
-    const handleReplySubmit = async (e) =>{
-        if (e.key === "Enter" && message) {
-            e.preventDefault()
+    const handleReplyEnter = (event) =>{
+        if (event.key === "Enter") {
+            event.preventDefault()
+            if (message){
+                sendChatMessage(data)
+                socket.emit("sendUserId", data)
+                setChatHistory(newMessage => [...newMessage, data])
+                setMessage("")
+                setOwnMessage(true)
+            }
+        }
+    }
+    const handleReplySubmit = (event) =>{
+        if (message){
+            event.preventDefault()
             sendChatMessage(data)
             socket.emit("sendUserId", data)
             setChatHistory(newMessage => [...newMessage, data])
@@ -110,6 +122,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             setOwnMessage(true)
         }
     }
+    
 
     const handleChatScroll = (event) => {
         setScrollPosition(event.target.clientHeight + event.target.scrollTop + 1)
@@ -172,15 +185,15 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             onScroll={ e => {handleChatScroll(e); setContainerMaxHeight(e.target.scrollHeight) }}
             >
                 <div className='Message_container'>
-                    {chatHistory.map((message) =>
+                    {chatHistory.map((message, index) =>
                         message.senderId === user.id ?
                         <div className = "currentUser_message_wrapper">
                             <div className='currentUser_messsage_container'>
                                 <div className='currentUser_message' ref = {el => chatContainer.current = el}>
-                                    {message.message}
+                                    <p style ={{display:"block"}}>{message.message}</p>
+                                    {console.log(chatHistory[index-1]._id)}
                                 </div>
-                                <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUBMYLhvdVc5YocrrSJpyYXnb274TDj50OZQ&usqp=CAU"
-                                />
+                                <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUBMYLhvdVc5YocrrSJpyYXnb274TDj50OZQ&usqp=CAU"/>
                             </div>
                         </div>
                         :
@@ -196,15 +209,15 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                 </div>
                 </div>
                 <div>
-                    <div style = {{display:"flex", justifyContent:"center", alignItems:"center"}}>
-                        <div style ={{display:"flex", justifyContent:"space-between", alignItems:"center", background:"rgba(128, 128, 128, 0.150)", borderRadius:"20px", maxWidth:"90%",padding:"5px"}}>
+                    <div style = {{display:"flex", justifyContent:"flex-end", alignItems:"center", gap:"10px", padding:"5px"}}>
+                        <div style ={{display:"flex", justifyContent:"space-between", alignItems:"center", background:"rgba(128, 128, 128, 0.30)", borderRadius:"20px", maxWidth:"90%",padding:"5px",flexGrow:1}}>
                             <TextareaAutosize
                             className='input_messages' 
-                            placeholder='Reply' 
+                            placeholder='Reply'
                             minRows = {1}
                             maxRows = {5}
                             onChange={e => setMessage(e.target.value)}
-                            onKeyDown = {e => handleReplySubmit(e)}
+                            onKeyDown = {e => handleReplyEnter(e)}
                             value = {message}
                             />
                             <Emojis
@@ -216,7 +229,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                             />
                         </div>
                     <div>
-                    <SendIcon />
+                    <SendIcon sx ={{fontSize:"25px", cursor:"pointer"}} onClick = { e => handleReplySubmit(e)}/>
                     </div>
                     </div>
                 </div>
