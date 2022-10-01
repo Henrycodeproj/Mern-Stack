@@ -6,9 +6,9 @@ import DialogContent from '@mui/material/DialogContent';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-import { Emojis } from "../../ReusablesComponents/Emojis";
+import { Emojis } from "../../../ReusablesComponents/Emojis";
 import "./EditOption.css"
-import { accountContext } from "../../Contexts/appContext";
+import { accountContext } from "../../../Contexts/appContext";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 

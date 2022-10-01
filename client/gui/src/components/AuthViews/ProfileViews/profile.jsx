@@ -25,7 +25,7 @@ export const Profile = ()=> {
     return(
         <>
         {viewedUser &&
-            <div>
+            <div style={{height:"100vh", background:"white"}}>
             {
               viewedUser._id !== user.id ? 
                 <div>{viewedUser.username}'s Dashboard</div>

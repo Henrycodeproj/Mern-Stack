@@ -27,15 +27,17 @@
     flex-direction: column;
     flex-grow: 1;
 }
-.buss {
-    margin-bottom: 10px;
+.status_post_textarea {
     width:100%;
     height:auto;
     border-radius: 5px;
     color:black;
-    opacity: .5;
+    opacity: .7;
     border: none;
     caret-color: black;
+}
+.status_post_textarea::-webkit-input-placeholder {
+    color:rgba(0, 0, 0, 0.532) !important;
 }
 textarea {
     font-size: 1.6rem;
