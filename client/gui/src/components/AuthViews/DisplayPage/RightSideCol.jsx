@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider';
 import Tooltip from "@mui/material/Tooltip";
 import ChatIcon from '@mui/icons-material/Chat';
 import { accountContext } from "../../Contexts/appContext";
-import { IndividualChats } from "./IndividualChat";
+import { IndividualChats } from "../ChatViews/IndividualChat";
 
 export const RightSideCol = () => {
     const newMessageCheck = useRef()

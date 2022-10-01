@@ -12,6 +12,7 @@ import "./IndividualChat.css"
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import SendIcon from '@mui/icons-material/Send';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import { TextAreaEmojis } from '../../ReusablesComponents/TextAreaEmojis';
 
 export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     const {user, socket} = useContext(accountContext)
@@ -30,6 +31,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     const chatOpen = useRef()
     const chatContainer = useRef()
     const chatClicked = useRef(false)
+    const textAreaRef = useRef()
 
     const data = {
         chatId:convoId,
@@ -104,6 +106,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         if (event.key === "Enter") {
             event.preventDefault()
             if (message){
+                textAreaRef.current.value = ''
                 sendChatMessage(data)
                 socket.emit("sendUserId", data)
                 setChatHistory(newMessage => [...newMessage, data])
@@ -114,7 +117,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     }
     const handleReplySubmit = (event) =>{
         if (message){
-            event.preventDefault()
+            textAreaRef.current.value = ''
             sendChatMessage(data)
             socket.emit("sendUserId", data)
             setChatHistory(newMessage => [...newMessage, data])
@@ -157,7 +160,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                 <h2 style ={{fontWeight:"600"}}>{recievingUserInfo.username.charAt(0).toUpperCase() + recievingUserInfo.username.slice(1)}</h2>
                 </div>
                 <div style ={{display:"flex", flexDirection:"row"}}> 
-                {console.log(newMessages, containerMaxHeight, scrollPosition)}
                 {
                 newMessages && scrollPosition <= containerMaxHeight && scrollPosition !== 0 && containerMaxHeight !== 0 &&
                 <>
@@ -190,8 +192,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                         <div className = "currentUser_message_wrapper">
                             <div className='currentUser_messsage_container'>
                                 <div className='currentUser_message' ref = {el => chatContainer.current = el}>
-                                    <p style ={{display:"block"}}>{message.message}</p>
-                                    {console.log(chatHistory[index-1]._id)}
+                                    <p style ={{display:"block"}} className ="testzz">{message.message}</p>
                                 </div>
                                 <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUBMYLhvdVc5YocrrSJpyYXnb274TDj50OZQ&usqp=CAU"/>
                             </div>
@@ -218,11 +219,10 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                             maxRows = {5}
                             onChange={e => setMessage(e.target.value)}
                             onKeyDown = {e => handleReplyEnter(e)}
-                            value = {message}
+                            ref = {textAreaRef}
                             />
-                            <Emojis
-                            input = {message}
-                            setInput = {setMessage}
+                            <TextAreaEmojis
+                            input = {textAreaRef.current}
                             anchor = {individualChatAnchor}
                             setAnchor = {setIndividualChatAnchor}
                             title = {false}

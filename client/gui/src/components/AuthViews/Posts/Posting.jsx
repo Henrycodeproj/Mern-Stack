@@ -1,5 +1,5 @@
 import "../Posts/Posting.css"
-import {useState, useContext} from "react"
+import {useState, useContext, useRef} from "react"
 import { accountContext } from "../../Contexts/appContext";
 import { Emojis } from "../../ReusablesComponents/Emojis";
 import axios from "axios"
@@ -7,6 +7,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import {Button} from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { TextAreaEmojis } from "../../ReusablesComponents/TextAreaEmojis";
 
 export const Posts = ({lastPostIndex, setLastPostIndex})=>{
 
@@ -14,7 +15,7 @@ export const Posts = ({lastPostIndex, setLastPostIndex})=>{
     const [anchorEl, setAnchorEl] = useState(null);
 
     const {user, setPosts} = useContext(accountContext)
-
+    const ref = useRef()
 
     const formHandler = (e) => {
         e.preventDefault()
@@ -23,6 +24,7 @@ export const Posts = ({lastPostIndex, setLastPostIndex})=>{
             post:status,
         })
         .then(res => {
+            ref.current.value = ''
             setPosts(prevPosts => [res.data.newestPost, ...prevPosts])
             setLastPostIndex(lastPostIndex + 1)
             setStatus('')
@@ -39,18 +41,19 @@ export const Posts = ({lastPostIndex, setLastPostIndex})=>{
             <div className = "post_form_container">
                 <div className="post_form">
                     <TextareaAutosize
-                    className="buss"
+                    className="status_post_textarea"
                     placeholder={`Hi ${user.username.charAt(0).toUpperCase() + user.username.slice(1)}, what are you doing on campus today?`}
                     onChange = {(e) => setStatus(e.target.value)}
-                    value = {status}
+                    ref = {ref}
+                    minRows = {3}
+                    maxRows = {6}
                     />
                 </div>
                 <div className="bottom_posts_container">
                         <div className="bottom_icon_bar_wrapper">
                             <div className="input_icons_bar">
-                                <Emojis
-                                input = {status}
-                                setInput = {setStatus}
+                                <TextAreaEmojis
+                                input = {ref.current}
                                 anchor = {anchorEl}
                                 setAnchor = {setAnchorEl}
                                 title = {true}

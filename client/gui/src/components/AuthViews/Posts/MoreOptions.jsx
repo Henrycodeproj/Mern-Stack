@@ -2,9 +2,9 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Popover from '@mui/material/Popover';
 import {useState, useContext} from 'react';
 import { accountContext } from '../../Contexts/appContext';
-import { EditOption } from './EditOption';
-import { ReportOption } from './ReportOption';
-import { DeleteOption } from './DeleteOption';
+import { EditOption } from './PostOptions/EditOption';
+import { ReportOption } from './PostOptions/ReportOption';
+import { DeleteOption } from './PostOptions/DeleteOption';
 import "./MoreOptions.css"
 
 

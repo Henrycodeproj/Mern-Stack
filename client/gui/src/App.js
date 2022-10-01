@@ -9,7 +9,6 @@ import { Confirmation } from "./components/config/ConfirmationPage";
 import { UserAuthentication } from './components/config/userAuth';
 import { Profile } from "./components/AuthViews/ProfileViews/profile";
 import { Display } from './components/AuthViews/DisplayPage/Display';
-import { Chat } from "./components/AuthViews/ChatViews/Chat"
 import { NotFound } from "./components/config/NotFound";
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
        <Navbar/>
         <Routes>
           <Route path="/" element ={<Signup/>}/>
-          <Route path="/conversation/:chatId" element ={<Chat/>}/>
           <Route element = {<UserAuthentication/>}>
               <Route path="/display" element = {<Display/>}/>
               <Route path="/profile/:userId" element = {<Profile/>}/>

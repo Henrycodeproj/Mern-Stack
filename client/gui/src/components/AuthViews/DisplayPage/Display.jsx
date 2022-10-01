@@ -1,6 +1,7 @@
 import axios from 'axios';
 import './Display.css'
 import { useState, useEffect, useContext} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Posts } from '../Posts/Posting.jsx';
 import { accountContext } from '../../Contexts/appContext';
 import { LeftColumn } from './LeftSideCol';
@@ -12,13 +13,13 @@ import { motion } from 'framer-motion';
 import Zoom from '@mui/material/Zoom';
 import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
-import Attending from './Attending';
+import Attending from '../Posts/Attending';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { RightSideCol } from './RightSideCol';
-import { MoreOptions } from './MoreOptions';
+import { MoreOptions } from '../Posts/MoreOptions';
 import { Truncating } from '../../ReusablesComponents/Truncating.jsx';
-import { SendMessage } from './SendMessage';
+import { SendMessage } from '../Posts/SendMessage';
 
 export const Display = () =>{
 
@@ -26,6 +27,7 @@ export const Display = () =>{
 
     const [lastPostIndex, setLastPostIndex] = useState(15)
     const [loadingState, setLoadingState] = useState(true)
+    const navigateTo = useNavigate()
 
     useEffect(()=>{
         socket.emit("status", {userId:user.id})
@@ -33,6 +35,17 @@ export const Display = () =>{
             console.log(usersStatus)
             setActiveUsers(usersStatus)
         })
+    },[])
+
+    useEffect (()=>{
+        const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`
+        axios.get(URL, {
+            headers:{
+                "authorization":localStorage.getItem("Token")
+            }
+        })
+        .then(res => setPosts(res.data))
+        .catch(err => console.log(err))
     },[])
 
     const handleScroll = async (e) => {
@@ -66,17 +79,6 @@ export const Display = () =>{
         .catch(error => console.log(error))
     }
 
-    useEffect (()=>{
-        const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`
-        axios.get(URL, {
-            headers:{
-                "authorization":localStorage.getItem("Token")
-            }
-        })
-        .then(res => setPosts(res.data))
-        .catch(err => console.log(err))
-    },[])
-
     if (posts === null) return (
         <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -106,9 +108,17 @@ export const Display = () =>{
                             posts.length > 0 ? posts.map((post)=>
 
                                 <li key = {post._id} className = "posts_articles">
-                                    <>
-                                        <Avatar src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330? ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80" className='faker'>
-                                        </Avatar>
+                                    <>  
+                                        <Tooltip 
+                                            title ={
+                                                `${post.posterId.username.charAt(0).toUpperCase() + post.posterId.username.slice(1)}'s  Profile`
+                                            }
+                                        >
+                                            <Avatar onClick = {() => navigateTo(`/profile/${post.posterId._id}`)}
+                                                src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1& ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80"  className='faker'
+                                            >
+                                            </Avatar>
+                                        </Tooltip>
                                         {
                                             post.posterId._id in activeUsers
                                             &&
