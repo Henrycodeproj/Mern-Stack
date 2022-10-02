@@ -1,0 +1,26 @@
+.profile_background {
+    height:100vh;
+    background: linear-gradient(355deg,white 60%, rgba(0, 0, 0, 0.473) 60%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+}.profile_introduction_wrapper {
+    width:50%;
+    display: flex;
+    justify-content: center;
+}
+.profile_image {
+    border-radius: 50%;
+    border-style: solid;
+    border-color: rgba(128, 128, 128, 0.432);
+    border-width: .4rem;
+}
+.social_media_bar{
+    width:20%;
+    display:flex;
+    justify-content: space-evenly;
+}
+.instagram {
+    background-color: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%) !important;
+}
