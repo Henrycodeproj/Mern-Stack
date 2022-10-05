@@ -70,15 +70,13 @@ export const ReportOption = ({post, reportOpen, setReportOpen}) => {
           variant = "outlined"
           color = "secondary"
           className = "outlined_submit_button" 
-          onClick={
-          reason ? () => 
+          onClick={ reason ? () => 
           {
             sendReport(post._id)
             handleReportClose()
             setReason('')
           }
-          : 
-          null
+          :null
           }
           >
             Submit

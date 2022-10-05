@@ -14,12 +14,11 @@ import Zoom from '@mui/material/Zoom';
 import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import Attending from '../Posts/Attending';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
 import { RightSideCol } from './RightSideCol';
 import { MoreOptions } from '../Posts/MoreOptions';
 import { Truncating } from '../../ReusablesComponents/Truncating.jsx';
 import { SendMessage } from '../Posts/SendMessage';
+import { LoadingCircle } from '../../ReusablesComponents/LoadingCircle';
 
 export const Display = () =>{
 
@@ -80,12 +79,9 @@ export const Display = () =>{
     }
 
     if (posts === null) return (
-        <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loadingState}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+        <LoadingCircle
+        loadingState={loadingState}
+        />
     )
 
     return (

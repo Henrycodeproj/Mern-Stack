@@ -4,8 +4,7 @@ import { Navigate} from "react-router-dom";
 import { useState, useEffect, useContext} from "react";
 import { accountContext } from "../Contexts/appContext";
 import { authCheck } from "../../UserAuth/checkAuth";
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import { LoadingCircle } from "../ReusablesComponents/LoadingCircle";
 
 
 export const UserAuthentication = () =>{
@@ -21,13 +20,11 @@ export const UserAuthentication = () =>{
         })
     },[])
     
-    if (loading) return (    
-    <Backdrop
-    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    open={loading}
-    >
-        <CircularProgress color="inherit" />
-    </Backdrop>)
+    if (loading) return (
+        <LoadingCircle
+        loadingState={loading}
+        />
+    )
 
     return (
         userStatus ? <Outlet/> : <Navigate to="/" replace={true} />

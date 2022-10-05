@@ -23,7 +23,7 @@ export const Truncating = ({postDescription, truncateNumber}) => {
             {
             postDescription.length > truncateNumber ?
             <Tooltip title ="Expand">
-            <span style = {{cursor:"pointer"}} onClick={showTruncate}>...</span> 
+                <span style = {{cursor:"pointer"}} onClick={showTruncate}>...</span> 
             </Tooltip> 
             :null
             }

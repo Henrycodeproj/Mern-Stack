@@ -37,7 +37,7 @@ export const LeftColumn = ()=>{
                     <h5 style={{wordWrap:"break-word"}}>@Stevenson</h5>
                 </div>
             </div>
-        <MenuList sx ={{borderTop:"solid", borderTopColor:"rgb(255, 255, 255, .6)", borderTopWidth:"1.5px", padding:'10px'}}>
+          <MenuList sx ={{borderTop:"solid", borderTopColor:"rgb(255, 255, 255, .6)", borderTopWidth:"1.5px", padding:'10px'}}>
             <MenuItem sx = {{margin:"10px 0px"}} className = "leftsidebar_menuItems">
               <ListItemIcon sx ={{color:"white"}}>
                 <InboxIcon fontSize="small"/>
@@ -86,7 +86,7 @@ export const LeftColumn = ()=>{
               <Typography variant="body2" sx ={{color:"white"}}>
               </Typography>
             </MenuItem>
-        </MenuList>
+          </MenuList>
         </div>
     )
 }
