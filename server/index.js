@@ -48,7 +48,7 @@ app.use('/message', MessageRouter);
 app.use('/conversation', ConversationRouter);
 app.use('/login', LoginRouter);
 
-const DB_URL = `mongodb+srv://UnplugDemo:${demoDatabasePassword}@cluster0.scacjob.mongodb.net/?retryWrites=true&w=majority`
+const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
 
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
