@@ -87,7 +87,7 @@ export const RightSideCol = () => {
                         <div style = {{display:"flex"}}>
                         <Avatar sx = {{marginRight:"10px"}}src = "https://dvyvvujm9h0uq.cloudfront.net/com/articles/1525891879-379720-warren-wong-242286-unsplashjpg.jpg"/>
                             <div>
-                                <h3 style = {{textTransform:"capitalize", color:"black", margin:0}}>{post.original_poster[0].username}</h3>
+                                <h3 style = {{textTransform:"capitalize", color:"black", margin:0, fontWeight:"500"}}>{post.original_poster[0].username}</h3>
                                     {
                                     post.Description.length >= 50 ?
                                         <div>

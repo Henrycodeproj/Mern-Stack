@@ -47,12 +47,7 @@ export const Profile = ()=> {
                 <div>Hello {viewedUser.username} this is your dashboard.</div>
             }
      */
-            // <div className="social_media_bar">
-            // <LinkedInIcon sx = {{fontSize:"30px", color:"#0072b1"}}/>
-            // <InstagramIcon sx = {{fontSize:"30px", color:"#bc2a8d"}} className ="instagram"/>
-            // <FacebookIcon sx = {{fontSize:"30px", color:"#4267B2"}}/>
-            // <TwitterIcon sx = {{fontSize:"30px", color:"#00acee"}}/>
-            // </div>
+
     return(
         <>
         {viewedUser &&
@@ -62,7 +57,9 @@ export const Profile = ()=> {
                         <div className="Profile_picture_section">
                             <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white",     borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
                             <div>
-                                <h1 style = {{fontSize:'4rem'}}>Henry</h1>
+                                <h1 style = {{fontSize:'4rem'}}>
+                                    {viewedUser.username.charAt(0).toUpperCase() + viewedUser.username.slice(1)}
+                                </h1>
                                 <h4 style={{margin:"10px 0", fontSize:"1.3rem", color:"gray"}}>@Stevenson</h4>
                                 <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon />}>
                                 Send Message
@@ -100,7 +97,7 @@ export const Profile = ()=> {
                     </div>
                     <div>
                         <h1>A Little About Me...</h1>
-                        <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, ratione quo! Quibusdam, dolor. Repellat labore iste tempora necessitatibus, tempore at. Iure, excepturi? Tempore dolor eaque cupiditate, eveniet quisquam officiis, assumenda quam, sapiente nisi praesentium aliquid deserunt totam nulla numquam! Nobis distinctio repellat ab velit quam optio expedita voluptatum reiciendis necessitatibus quibusdam perspiciatis in maxime quaerat explicabo, nisi nihil cumque enim, amet deleniti iusto numquam ex debitis eius! Voluptate molestiae iste inventore numquam libero asperiores dolorum consectetur minima, eum et totam, quaerat earum facere. Vero enim harum qui, ex dolorem veritatis, placeat perferendis consequatur dolor optio assumenda. Dicta expedita omnis iusto beatae ullam reprehenderit, quam numquam tenetur quos excepturi quidem et rem harum natus optio. Maiores rem tempora quis iure, recusandae quos accusantium facere incidunt est esse officiis natus sed molestiae quibusdam in, quam, adipisci soluta dolore non voluptates totam vel? Vero corporis libero modi adipisci, dicta sunt distinctio obcaecati expedita!
+                        <p style = {{lineHeight:"2rem"}}> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, ratione quo! Quibusdam, dolor. Repellat labore iste tempora necessitatibus, tempore at. Iure, excepturi? Tempore dolor eaque cupiditate, eveniet quisquam officiis, assumenda quam, sapiente nisi praesentium aliquid deserunt totam nulla numquam! Nobis distinctio repellat ab velit quam optio expedita voluptatum reiciendis necessitatibus quibusdam perspiciatis in maxime quaerat explicabo, nisi nihil cumque enim, amet deleniti iusto numquam ex debitis eius! Voluptate molestiae iste inventore numquam libero asperiores dolorum consectetur minima, eum et totam, quaerat earum facere. Vero enim harum qui, ex dolorem veritatis, placeat perferendis consequatur dolor optio assumenda. Dicta expedita omnis iusto beatae ullam reprehenderit, quam numquam tenetur quos excepturi quidem et rem harum natus optio. Maiores rem tempora quis iure, recusandae quos accusantium facere incidunt est esse officiis natus sed molestiae quibusdam in, quam, adipisci soluta dolore non voluptates totam vel? Vero corporis libero modi adipisci, dicta sunt distinctio obcaecati expedita!
                         </p>
                     </div>
                     <div>

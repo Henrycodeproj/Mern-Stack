@@ -8,6 +8,7 @@ import {Button} from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { TextAreaEmojis } from "../../ReusablesComponents/TextAreaEmojis";
+import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
 
 export const Posts = ({lastPostIndex, setLastPostIndex})=>{
 
@@ -32,7 +33,12 @@ export const Posts = ({lastPostIndex, setLastPostIndex})=>{
         .catch(err=>console.log(err))
     }
 
-    if (user === null) return <div>loading...</div>
+    if (user === null) return(
+        <LoadingCircle
+        loadingState={user}
+        />
+    ) 
+    
 
     return (
         <div className="add_post_container">
