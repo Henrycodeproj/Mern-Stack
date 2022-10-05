@@ -7,7 +7,6 @@ import bcrypt from 'bcrypt';
 import verifyTokenModel from './Models/Token.js';
 import crypto from 'crypto';
 import sendMail from './config/mail.js';
-import jwt from 'jsonwebtoken'
 import isAuthenticated from './Middleware/auth.js';
 import { router as PostsRouter } from './Routes/posts.js';
 import { router as UserRouter } from './Routes/Users.js'
@@ -16,7 +15,6 @@ import { router as ConversationRouter } from "./Routes/Conversations.js"
 import { router as LoginRouter } from "./Routes/Login.js"
 import { Server } from 'socket.io';
 import { createServer } from "http"; 
-import ConversationModel from './Models/Conversations.js';
 
 
 const app = express()
@@ -31,7 +29,7 @@ const corsOptions ={
 }
 
 const httpServer = createServer(app);
-const databasePassword = process.env.password
+const demoDatabasePassword = process.env.demoPassword
 const PORT = process.env.PORT || 3001
 
 const io = new Server(httpServer, {
@@ -50,7 +48,7 @@ app.use('/message', MessageRouter);
 app.use('/conversation', ConversationRouter);
 app.use('/login', LoginRouter);
 
-const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
+const DB_URL = `mongodb+srv://UnplugDemo:${demoDatabasePassword}@cluster0.scacjob.mongodb.net/?retryWrites=true&w=majority`
 
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=> console.log('Sucessfully connected to database'))
