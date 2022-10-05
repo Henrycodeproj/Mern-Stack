@@ -29,7 +29,7 @@ const corsOptions ={
 }
 
 const httpServer = createServer(app);
-const demoDatabasePassword = process.env.demoPassword
+const databasePassword = process.env.password
 const PORT = process.env.PORT || 3001
 
 const io = new Server(httpServer, {
