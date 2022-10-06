@@ -12,8 +12,9 @@ const UserSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
+    selfDescription:String,
     isVerified:Boolean,
-    sessionToken:String
+    sessionToken:String,
 }, {timestamps:true})
 
 const UserModel = mongoose.model("Users", UserSchema)

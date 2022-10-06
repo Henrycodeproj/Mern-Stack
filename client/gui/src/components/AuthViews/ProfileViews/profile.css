@@ -27,3 +27,8 @@
 .Connect_title {
     margin-bottom: 10px;
 }
+.About_Me_Edit_Button:hover {
+    border-radius: 50%;
+    background-color: rgba(128, 128, 128, 0.4);
+    padding:5px;
+}
