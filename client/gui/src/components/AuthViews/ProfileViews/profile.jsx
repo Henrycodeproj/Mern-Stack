@@ -92,7 +92,7 @@ export const Profile = ()=> {
                       />
                     </ListItem>
                     <ListItem>
-                      <Button variant = "contained">Submit</Button>
+                      <Button variant = "contained">Submit Description</Button>
                     </ListItem>
                 </List>
               </Box>
