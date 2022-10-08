@@ -15,11 +15,25 @@ router.get("/information/:id", isAuthenticated, async (req, res)=>{
     }
 })
 
-router.get("/recent/conversation/:id", async (req,res)=>{
+router.get("/recent/conversation/:id", isAuthenticated, async (req,res)=>{
     try {
         const results = await ConversationModel.find({participants:req.params.id})
         console.log(results)
     } catch(error) {
         console.log(err)
+    }
+})
+
+router.patch("/update/description/:userId", async (req,res) => {
+    const newDescription = req.body.description
+    try {
+        const user = await UserModel.findOne({id:req.params.userId})
+        if (user && newDescription) {
+            user.selfDescription = newDescription
+            await user.save()
+        }
+        res.send(user)
+    } catch (error){
+        console.log(error)
     }
 })

@@ -48,6 +48,17 @@ export const Profile = ()=> {
         .then(res => setViewedUser(res.data))
         .catch(err => console.log(err))
     },[])
+
+    const submitDescription = async () => {
+      const url = `http://localhost:3001/user/update/description/${user.id}`
+      const data = {description: userDescription}
+      const response = await axios.patch(url, data, {
+        headers:{
+          "authorization": localStorage.getItem("Token")
+        }
+      })
+      setViewedUser(response.data)
+    }
     /*
                 {
               viewedUser._id !== user.id ? 
@@ -92,7 +103,7 @@ export const Profile = ()=> {
                       />
                     </ListItem>
                     <ListItem>
-                      <Button variant = "contained">Submit Description</Button>
+                      <Button variant = "contained" onClick = {submitDescription}>Submit</Button>
                     </ListItem>
                 </List>
               </Box>
@@ -167,7 +178,8 @@ export const Profile = ()=> {
                           </div>
                         </div>
                         <p style = {{lineHeight:"2rem", fontSize:"1.2rem"}}>
-                          {viewedUser.selfDescription ? viewedUser.selfDescription: "There is no current description"}
+                          {viewedUser.selfDescription ?
+                           viewedUser.selfDescription: "There is no current description"}
                         </p>
                     </div>
                     <div>
