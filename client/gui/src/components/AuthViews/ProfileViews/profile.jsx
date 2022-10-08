@@ -20,6 +20,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import Divider from '@mui/material/Divider';
 import EditIcon from '@mui/icons-material/Edit';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -35,6 +36,7 @@ export const Profile = ()=> {
     const navigateTo = useNavigate()
 
     const[viewedUser, setViewedUser] = useState(null)
+    const[userDescription, setUserDescription] = useState('')
 
     useEffect(()=>{
         const URL = `http://localhost:3001/user/information/${userId}`
@@ -47,6 +49,16 @@ export const Profile = ()=> {
         .catch(err => console.log(err))
     },[])
 
+    const submitDescription = async () => {
+      const url = `http://localhost:3001/user/update/description/${user.id}`
+      const data = {description: userDescription}
+      const response = await axios.patch(url, data, {
+        headers:{
+          "authorization": localStorage.getItem("Token")
+        }
+      })
+      setViewedUser(response.data)
+    }
     /*
                 {
               viewedUser._id !== user.id ? 
@@ -56,56 +68,43 @@ export const Profile = ()=> {
             }
      */
 
-            const [state, setState] = React.useState({
-              top: false,
-              left: false,
-              bottom: false,
-              right: false,
-            });
+            const [state, setState] = useState({bottom: false});
           
             const toggleDrawer = (anchor, open) => (event) => {
-              if (
-                event &&
-                event.type === 'keydown' &&
-                (event.key === 'Tab' || event.key === 'Shift')
-              ) {
-                return;
-              }
+              //if (
+              //  event &&
+              //  event.type === 'keydown' &&
+              //  (event.key === 'Tab' || event.key === 'Shift')
+              //) {
+              //  return;
+              //}
           
-              setState({ ...state, [anchor]: open });
+              setState({ [anchor]: open });
             };
           
             const list = (anchor) => (
               <Box
-                sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+                sx={anchor === 'bottom' ? 'auto' : 250 }
                 role="presentation"
-                onClick={toggleDrawer(anchor, false)}
-                onKeyDown={toggleDrawer(anchor, false)}
+                onClick={toggleDrawer(anchor, true)}
               >
                 <List>
-                  {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                      <ListItemButton>
-                        <ListItemIcon>
-                          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                      </ListItemButton>
+                    <ListItem>
+                      <h1>Add a Description</h1>
                     </ListItem>
-                  ))}
                 </List>
                 <Divider />
                 <List>
-                  {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                      <ListItemButton>
-                        <ListItemIcon>
-                          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                      </ListItemButton>
+                    <ListItem>
+                      <TextareaAutosize
+                        minRows= {10}
+                        style={{width:'50%'}}
+                        onChange = {e => setUserDescription(e.target.value)}
+                      />
                     </ListItem>
-                  ))}
+                    <ListItem>
+                      <Button variant = "contained" onClick = {submitDescription}>Submit</Button>
+                    </ListItem>
                 </List>
               </Box>
             );        
@@ -178,7 +177,9 @@ export const Profile = ()=> {
                             ))}
                           </div>
                         </div>
-                        <p style = {{lineHeight:"2rem"}}> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, ratione quo! Quibusdam, dolor. Repellat labore iste tempora necessitatibus, tempore at. Iure, excepturi? Tempore dolor eaque cupiditate, eveniet quisquam officiis, assumenda quam, sapiente nisi praesentium aliquid deserunt totam nulla numquam! Nobis distinctio repellat ab velit quam optio expedita voluptatum reiciendis necessitatibus quibusdam perspiciatis in maxime quaerat explicabo, nisi nihil cumque enim, amet deleniti iusto numquam ex debitis eius! Voluptate molestiae iste inventore numquam libero asperiores dolorum consectetur minima, eum et totam, quaerat earum facere. Vero enim harum qui, ex dolorem veritatis, placeat perferendis consequatur dolor optio assumenda. Dicta expedita omnis iusto beatae ullam reprehenderit, quam numquam tenetur quos excepturi quidem et rem harum natus optio. Maiores rem tempora quis iure, recusandae quos accusantium facere incidunt est esse officiis natus sed molestiae quibusdam in, quam, adipisci soluta dolore non voluptates totam vel? Vero corporis libero modi adipisci, dicta sunt distinctio obcaecati expedita!
+                        <p style = {{lineHeight:"2rem", fontSize:"1.2rem"}}>
+                          {viewedUser.selfDescription ?
+                           viewedUser.selfDescription: "There is no current description"}
                         </p>
                     </div>
                     <div>

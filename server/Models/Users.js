@@ -12,7 +12,10 @@ const UserSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-    selfDescription:String,
+    selfDescription:{
+        type:String,
+        default:''
+    },
     isVerified:Boolean,
     sessionToken:String,
 }, {timestamps:true})
