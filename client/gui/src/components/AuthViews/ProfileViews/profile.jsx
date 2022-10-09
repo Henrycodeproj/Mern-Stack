@@ -58,6 +58,7 @@ export const Profile = ()=> {
         }
       })
       setViewedUser(response.data)
+      setState(prev => prev['bottom'] = !prev['bottom'])
     }
     /*
                 {
@@ -114,7 +115,7 @@ export const Profile = ()=> {
         {viewedUser &&
             <div className="profile_background">
                 <div className="outer_profile_container">
-                    <div style = {{display:"flex", justifyContent:"flex-start", alignItems:"center", gap:'30%'}}>
+                    <div style = {{display:"flex", justifyContent:"flex-start", alignItems:"center", gap:'30%', flexWrap:"wrap"}}>
                         <div className="Profile_picture_section">
                             <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white",     borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
                             <div>

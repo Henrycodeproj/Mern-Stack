@@ -1,5 +1,5 @@
 .profile_background {
-    height:100vh;
+    min-height:100vh;
     background: linear-gradient(356deg,white 73%, rgba(0, 0, 0, 0.409) 73%);
     display: flex;
     justify-content: center;
@@ -31,4 +31,12 @@
     border-radius: 50%;
     background-color: rgba(128, 128, 128, 0.4);
     padding:5px;
+}
+@media (max-width:500px) {
+    .profile_background {
+        background: white;
+    }
+    .outer_profile_container {
+        width:100%;
+    }
 }
