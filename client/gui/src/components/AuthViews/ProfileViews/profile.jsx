@@ -71,15 +71,7 @@ export const Profile = ()=> {
 
             const [state, setState] = useState({bottom: false});
           
-            const toggleDrawer = (anchor, open) => (event) => {
-              //if (
-              //  event &&
-              //  event.type === 'keydown' &&
-              //  (event.key === 'Tab' || event.key === 'Shift')
-              //) {
-              //  return;
-              //}
-          
+            const toggleDrawer = (anchor, open) => (event) => {  
               setState({ [anchor]: open });
             };
           
@@ -98,8 +90,8 @@ export const Profile = ()=> {
                 <List>
                     <ListItem>
                       <TextareaAutosize
+                        className = "description_box"
                         minRows= {10}
-                        style={{width:'50%'}}
                         onChange = {e => setUserDescription(e.target.value)}
                       />
                     </ListItem>
@@ -115,7 +107,7 @@ export const Profile = ()=> {
         {viewedUser &&
             <div className="profile_background">
                 <div className="outer_profile_container">
-                    <div style = {{display:"flex", justifyContent:"flex-start", alignItems:"center", gap:'30%', flexWrap:"wrap"}}>
+                    <div className = "top_profile_container">
                         <div className="Profile_picture_section">
                             <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white",     borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
                             <div>
@@ -128,17 +120,17 @@ export const Profile = ()=> {
                                 </Button>
                             </div>
                         </div>
-                        <div style = {{maxWidth:"350px", maxHeight:"350px", borderRadius:"20px", padding:"1rem"}}>
+                        <div className = "profile_sidebox_container" style = {{maxWidth:"350px", maxHeight:"350px", borderRadius:"20px", padding:"1rem"}}>
                             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent' }}>
-                                <ListItem>
+                                <ListItem className = "profile_sidebox_listItems">
                                   <ListItemAvatar>
                                     <Avatar>
                                       <ImageIcon />
                                     </Avatar>
                                   </ListItemAvatar>
                                   <ListItemText primary="Photos" secondary="Jan 9, 2014" />
-                                </ListItem>
-                                <ListItem>
+                                </ListItem >
+                                <ListItem className = "profile_sidebox_listItems">
                                   <ListItemAvatar>
                                     <Avatar>
                                       <WorkIcon />
@@ -146,7 +138,7 @@ export const Profile = ()=> {
                                   </ListItemAvatar>
                                   <ListItemText primary="First Joined" secondary="Jan 7, 2014" />
                                 </ListItem>
-                                <ListItem>
+                                <ListItem className = "profile_sidebox_listItems">
                                   <ListItemAvatar>
                                     <Avatar>
                                       <BeachAccessIcon />
