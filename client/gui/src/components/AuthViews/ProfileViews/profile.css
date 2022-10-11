@@ -5,7 +5,6 @@
     justify-content: center;
     align-items: center;
     width:100%;
-    resize:both;git b
 }
 .Profile_picture_section {
     display: flex;
@@ -75,7 +74,6 @@
     }
    
 }
-/* right one */
 @media (max-width:678px) {
     .profile_sidebox_container{
         display: none;
@@ -89,16 +87,6 @@
     .Profile_picture_section{
         align-items: center;
     } 
-=======
-.profile_background_center_area {
-    height: 70%;
-    background: linear-gradient(356deg,white 1rem, transparent 1rem);
-}
-html 
-{
-  min-height: 100%;
-} 
-@media (max-width:500px) {
     .profile_background {
         background: white;
     }
