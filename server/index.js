@@ -61,25 +61,24 @@ app.get('/authtest', isAuthenticated, (req,res) =>{
 
 app.get("/verify/:token", async (req, res)=>{
     try {
-    const result = await verifyTokenModel.findOne({token:req.params.token})
-    if (!result){
-        res.status(404).redirect('http://localhost:3000/invalid/expired')
-    }
-    const account = await UserModel.findById(result.userId._id) 
-    if (account.isVerified === true) {
-        res.status(500).send('You have already been verified.')
-    } else {
+        const result = await verifyTokenModel.findOne({token:req.params.token})
+        if (!result) return res.status(404).redirect('http://localhost:3000/invalid/expired')
+
+        const account = await UserModel.findById(result.userId._id) 
+        if (account.isVerified) return res.status(500).send('You have already been verified.')
+
         account.isVerified = true
         await account.save()
         res.status(200).redirect('http://localhost:3000/valid')
-    }
-    } catch(error){
-        res.status(500).send('Internal Error')
+    
+    } catch(error) {
+        res.status(500).send('Internal Server Error')
     } 
 })
 
 app.post("/createUser", async (req,res) => {
     const {username, password, email} = req.body
+
     const newUser = new UserModel({
         username:username,
         password:password,
@@ -103,7 +102,6 @@ app.post("/createUser", async (req,res) => {
         res.status(201).send(response)
 
         try{
-            //sends the email with verification token 
             sendMail({
                 to:"hennypenny456@gmail.com",
                 from:"hennypenny456@gmail.com",
