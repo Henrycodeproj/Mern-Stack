@@ -27,7 +27,7 @@ router.get("/recent/conversation/:id", isAuthenticated, async (req,res)=>{
 router.patch("/update/description/:userId", async (req,res) => {
     const newDescription = req.body.description
     try {
-        const user = await UserModel.findOne({id:req.params.userId})
+        const user = await UserModel.findOne({_id:req.params.userId})
         if (user && newDescription) {
             user.selfDescription = newDescription
             await user.save()

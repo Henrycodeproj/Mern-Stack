@@ -1,6 +1,6 @@
 .profile_background {
     min-height:100vh;
-    background: linear-gradient(356deg,white 73%, rgba(0, 0, 0, 0.409) 73%);
+    background: linear-gradient(356deg,white 73%, rgba(0, 0, 0, 0.409) 73.1%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,35 +12,43 @@
 }
 .outer_profile_container {
     height:65%;
-    width: 50%;
+    width: 65%;
     padding:2rem;
     display: flex;
     flex-direction: column;
     /* justify-content: space-between; */
     border-radius: 50px;
     gap:75px;
-    position: absolute;
+    position: relative;
 }
 .social_media_bar {
     display: flex;
     gap:1%;
 }
-.Connect_title {
+.Connect_title_bar {
     margin-bottom: 10px;
 }
-.About_Me_Edit_Button:hover {
+.About_Me_Edit_Button:hover, .add_social_button:hover {
     border-radius: 50%;
     background-color: rgba(128, 128, 128, 0.4);
-    padding:5px;
+    padding:2px;
 }
 .top_profile_container {
     display:flex;
     justify-content:flex-start;
-    align-items:center;
+    align-items:flex-end;
     gap:30%;
 }
 .description_box {
-    width:50%;
+    width:100%;
+} 
+@media(min-width:1675px) {
+    .profile_page_description{
+        width:65%;
+    }
+    .outer_profile_container{
+        width:50%;
+    }
 }
 @media(max-width:1450px) {
     .outer_profile_container{
