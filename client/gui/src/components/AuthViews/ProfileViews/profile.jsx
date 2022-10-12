@@ -21,6 +21,7 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import Divider from '@mui/material/Divider';
 import EditIcon from '@mui/icons-material/Edit';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import AddIcon from '@mui/icons-material/Add';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -36,7 +37,7 @@ export const Profile = ()=> {
     const navigateTo = useNavigate()
 
     const[viewedUser, setViewedUser] = useState(null)
-    const[userDescription, setUserDescription] = useState('')
+    const[userDescription, setUserDescription] = useState(null)
 
     useEffect(()=>{
         const URL = `http://localhost:3001/user/information/${userId}`
@@ -45,9 +46,12 @@ export const Profile = ()=> {
                 "authorization": localStorage.getItem("Token")
             }
         })
-        .then(res => setViewedUser(res.data))
+        .then(res => {
+          setViewedUser(res.data)
+          setUserDescription(res.data.selfDescription)
+        })
         .catch(err => console.log(err))
-    },[])
+    },[userId])
 
     const submitDescription = async () => {
       const url = `http://localhost:3001/user/update/description/${user.id}`
@@ -93,6 +97,7 @@ export const Profile = ()=> {
                         className = "description_box"
                         minRows= {10}
                         onChange = {e => setUserDescription(e.target.value)}
+                        value = {userDescription}
                       />
                     </ListItem>
                     <ListItem>
@@ -112,12 +117,19 @@ export const Profile = ()=> {
                             <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white",     borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
                             <div>
                                 <h1 style = {{fontSize:'4rem'}}>
-                                    {viewedUser.username.charAt(0).toUpperCase() + viewedUser.username.slice(1)}
+                                    {
+                                      viewedUser._id !== user.id ?
+                                      viewedUser.username.charAt(0).toUpperCase() + viewedUser.username.slice(1)
+                                      :"Your Dashboard" 
+                                    }
                                 </h1>
                                 <h4 style={{margin:"10px 0", fontSize:"1.3rem", color:"gray"}}>@Stevenson</h4>
-                                <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon />}>
-                                Send Message
-                                </Button>
+                                {
+                                  viewedUser._id !== user.id &&
+                                  <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon/>}>
+                                  Send Message
+                                  </Button>
+                                }
                             </div>
                         </div>
                         <div className = "profile_sidebox_container" style = {{maxWidth:"350px", maxHeight:"350px", borderRadius:"20px", padding:"1rem"}}>
@@ -151,7 +163,8 @@ export const Profile = ()=> {
                     </div>
                     <div>
                         <div style ={{display:"flex", alignItems:"center", gap:"10px"}}>
-                        <h1>A Little About Me...</h1>
+                        <h1>A Little About Me</h1>
+                          {viewedUser._id === user.id &&
                           <div>
                             {['bottom'].map((anchor) => (
                               <React.Fragment key={anchor}>
@@ -169,14 +182,29 @@ export const Profile = ()=> {
                               </React.Fragment>
                             ))}
                           </div>
+                          }
                         </div>
-                        <p style = {{lineHeight:"2rem", fontSize:"1.2rem"}}>
+                        <div className = "profile_page_description" style = {{lineHeight:"2rem", fontSize:"1.2rem"}}>
                           {viewedUser.selfDescription ?
-                           viewedUser.selfDescription: "There is no current description"}
-                        </p>
+                           <div>
+                            <p style = {{maxHeight:"192px", overflow:"hidden"}}>{viewedUser.selfDescription}</p>
+                            {
+                              viewedUser.selfDescription.trim().split(' ').length > 100 && 
+                              <span style ={{cursor:"pointer", fontSize:"1.7rem", fontWeight:"700"}} onClick>...</span>
+                            }
+                           </div>
+                           : "There is no current description"
+                          }
+                        </div>
                     </div>
                     <div>
-                      <h1 className="Connect_title">Connect With Me</h1>
+                      <div className = "Connect_title_bar" style = {{display:"flex", alignItems:"center", gap:"1%"}}>
+                        <h1>Connect With Me</h1>
+                        {
+                          viewedUser._id === user.id &&
+                          <AddIcon className = "add_social_button" sx = {{fontSize:"1.7rem", cursor:"pointer"}} />
+                        }
+                      </div>
                       <div className="social_media_bar">
                           <LinkedInIcon sx = {{fontSize:"30px", color:"#0072b1", cursor:"pointer"}}/>
                           <InstagramIcon sx = {{fontSize:"30px", color:"#bc2a8d", cursor:"pointer"}} className ="instagram"/>
@@ -190,3 +218,4 @@ export const Profile = ()=> {
         </>
     ) 
 }
+
