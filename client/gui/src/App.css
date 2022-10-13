@@ -90,13 +90,6 @@ img{
   max-height: 100%;
   cursor: pointer;
 }
-label{
-  display:flex;
-  flex-direction: column;
-  margin: 15px 0px;
-  font-family: 'Mulish', sans-serif;
-  font-weight: 900;
-}
 .test{
   position: absolute;
 }

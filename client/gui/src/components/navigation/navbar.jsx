@@ -15,6 +15,8 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Popover from '@mui/material/Popover';
 import Divider from '@mui/material/Divider';
+import Tooltip from "@mui/material/Tooltip";
+
 
 import "../navigation/navbar.css"
 
@@ -137,8 +139,12 @@ export const Navbar = () =>{
     
     return(
         <nav>
-            {!userStatus? <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
-            :<img className ="unplug_logo" src ={logo} alt ="logo" onClick = {()=>navigateTo("/display")}/>}
+            {
+                !userStatus ? 
+                <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
+                :
+                <img className ="unplug_logo" src ={logo} alt ="logo" onClick = {()=>navigateTo("/display")}/>
+            }
             <div className="profile_section">
                 <div><Button variant = "contained" color ="secondary">Contact</Button></div>
             </div>

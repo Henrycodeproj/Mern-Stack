@@ -130,9 +130,7 @@ export const Display = () =>{
                                                 {post.posterId.username}
                                             </h4>
                                             <div
-                                                style ={{
-                                                    display:"flex",
-                                                }}
+                                            style ={{display:"flex",}}
                                             >
                                             {
                                                 post.posterId._id !== user.id ?
@@ -197,8 +195,8 @@ export const Display = () =>{
                                                         </Tooltip>
                                                     </motion.button>
                                                 }
-                                                    <CalendarMonthIcon/>
-                                                    <AddToHomeScreenIcon/>
+                                                    <CalendarMonthIcon sx = {{color:"gray"}}/>
+                                                    <AddToHomeScreenIcon sx = {{color:"gray"}}/>
                                             </div>
 
                                             <motion.div 
@@ -215,7 +213,7 @@ export const Display = () =>{
                                     </div>
                                 </li>
                             ):
-                                <h2>There are no current listed events on campus.</h2>
+                                <h2 style = {{marginTop:"5%", fontSize:"2rem"}}>There are no current listed events on campus.</h2>
                             }
                         </ul>
                     </div>

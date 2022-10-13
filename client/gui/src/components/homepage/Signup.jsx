@@ -7,6 +7,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { accountContext } from '../Contexts/appContext';
 import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import "./Signup.css"
 
 export const Signup = () =>{
 
@@ -196,7 +197,7 @@ export const Signup = () =>{
               {/* start of form */}
               <form className='signup' onSubmit={submitHandler}>
                 {/* username */}
-                  <label>
+                  <label className='signup_label'>
                     <h3>Username</h3>
                       <input name = "username" 
                         value = {newUser.username} 
@@ -205,7 +206,7 @@ export const Signup = () =>{
                       {<p className='form-errors'>{formErrors.username}</p>}
                   </label>
                 {/* Password section */}
-                  <label>
+                  <label className='signup_label'>
                     <h3>Password</h3>
                       <input 
                         name = "password" 
@@ -228,7 +229,7 @@ export const Signup = () =>{
                       </p>
                   </label>
                 {/* confirm pass */}
-                  <label>
+                  <label className='signup_label'>
                     <h3>Confirm Password</h3>
                       <input 
                         name = "Confirm" 
@@ -240,7 +241,7 @@ export const Signup = () =>{
                       <p className='form-errors'>{confirm.match}</p>
                   </label>
                 {/*Email  */}
-                  <label>
+                  <label className='signup_label'>
                     <h3>Email</h3>
                       <input
                         type = "email" 
@@ -257,7 +258,6 @@ export const Signup = () =>{
               </form>
             </motion.div>
             :
-            // Login component
             <Login 
             setOption = {setOption}
             option = {option}
