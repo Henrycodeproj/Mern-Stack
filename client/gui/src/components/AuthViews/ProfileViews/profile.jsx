@@ -1,43 +1,42 @@
 
 import { useParams, useNavigate } from "react-router-dom"
 import { useEffect, useState, useContext } from "react"
-import axios from "axios"
-import { accountContext } from "../../Contexts/appContext"
-import "./profile.css"
+import { SocialMediaBar } from "./SocialMediaBar"
 import { Avatar, Tooltip } from "@mui/material"
+import { accountContext } from "../../Contexts/appContext"
+import axios from "axios"
+import "./profile.css"
 import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import Divider from '@mui/material/Divider';
 import EditIcon from '@mui/icons-material/Edit';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import AddIcon from '@mui/icons-material/Add';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CloseIcon from '@mui/icons-material/Close';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
+import SidebarOptions from "./SidebarOptions";
+import AddSocialDialog from "./AddSocialDialog"
 
 export const Profile = ()=> {
     const { user } = useContext(accountContext) 
     const { userId } = useParams()
     const navigateTo = useNavigate()
 
-    const[viewedUser, setViewedUser] = useState(null)
-    const[userDescription, setUserDescription] = useState(null)
+    const [viewedUser, setViewedUser] = useState(null)
+    const [userDescription, setUserDescription] = useState(null)
+    const [fullDescription, setFullDescription] = useState(false)
+    const [socialMediaModal, setSocialMediaModal] = useState(false)
 
     useEffect(()=>{
         const URL = `http://localhost:3001/user/information/${userId}`
@@ -64,48 +63,52 @@ export const Profile = ()=> {
       setViewedUser(response.data)
       setState(prev => prev['bottom'] = !prev['bottom'])
     }
-    /*
-                {
-              viewedUser._id !== user.id ? 
-                <div>{viewedUser.username}'s Dashboard</div>
-                : 
-                <div>Hello {viewedUser.username} this is your dashboard.</div>
-            }
-     */
 
-            const [state, setState] = useState({bottom: false});
-          
-            const toggleDrawer = (anchor, open) => (event) => {  
-              setState({ [anchor]: open });
-            };
-          
-            const list = (anchor) => (
-              <Box
-                sx={anchor === 'bottom' ? 'auto' : 250 }
-                role="presentation"
-                onClick={toggleDrawer(anchor, true)}
-              >
-                <List>
-                    <ListItem>
-                      <h1>Add a Description</h1>
-                    </ListItem>
-                </List>
-                <Divider />
-                <List>
-                    <ListItem>
-                      <TextareaAutosize
-                        className = "description_box"
-                        minRows= {10}
-                        onChange = {e => setUserDescription(e.target.value)}
-                        value = {userDescription}
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <Button variant = "contained" onClick = {submitDescription}>Submit</Button>
-                    </ListItem>
-                </List>
-              </Box>
-            );        
+    const expandDescription = () => {
+      console.log("expanding")
+      setFullDescription(true)
+    }
+
+    const closeExpandedDescription = () => {
+      setFullDescription(false)
+    }
+    const handleOpenSocialMedia = () => {
+      setSocialMediaModal(true)
+    }
+
+    const [state, setState] = useState({bottom: false});
+
+    const toggleDrawer = (anchor, open) => (event) => {  
+      setState({ [anchor]: open });
+    };  
+
+    const list = (anchor) => (
+      <Box
+        sx={anchor === 'bottom' ? 'auto' : 250 }
+        role="presentation"
+        onClick={toggleDrawer(anchor, true)}
+      >
+        <List>
+            <ListItem>
+              <h1>Add a Description</h1>
+            </ListItem>
+        </List>
+        <Divider />
+        <List>
+            <ListItem>
+              <TextareaAutosize
+                className = "description_box"
+                minRows= {10}
+                onChange = {e => setUserDescription(e.target.value)}
+                value = {userDescription}
+              />
+            </ListItem>
+            <ListItem>
+              <Button variant = "contained" onClick = {submitDescription}>Submit</Button>
+            </ListItem>
+        </List>
+      </Box>
+    );       
 
     return(
         <>
@@ -116,7 +119,7 @@ export const Profile = ()=> {
                         <div className="Profile_picture_section">
                             <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white",     borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
                             <div>
-                                <h1 style = {{fontSize:'4rem'}}>
+                                <h1 className = "profile_username">
                                     {
                                       viewedUser._id !== user.id ?
                                       viewedUser.username.charAt(0).toUpperCase() + viewedUser.username.slice(1)
@@ -127,39 +130,15 @@ export const Profile = ()=> {
                                 {
                                   viewedUser._id !== user.id &&
                                   <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon/>}>
-                                  Send Message
+                                    Send Message
                                   </Button>
                                 }
                             </div>
                         </div>
-                        <div className = "profile_sidebox_container" style = {{maxWidth:"350px", maxHeight:"350px", borderRadius:"20px", padding:"1rem"}}>
-                            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent' }}>
-                                <ListItem className = "profile_sidebox_listItems">
-                                  <ListItemAvatar>
-                                    <Avatar>
-                                      <ImageIcon />
-                                    </Avatar>
-                                  </ListItemAvatar>
-                                  <ListItemText primary="Photos" secondary="Jan 9, 2014" />
-                                </ListItem >
-                                <ListItem className = "profile_sidebox_listItems">
-                                  <ListItemAvatar>
-                                    <Avatar>
-                                      <WorkIcon />
-                                    </Avatar>
-                                  </ListItemAvatar>
-                                  <ListItemText primary="First Joined" secondary="Jan 7, 2014" />
-                                </ListItem>
-                                <ListItem className = "profile_sidebox_listItems">
-                                  <ListItemAvatar>
-                                    <Avatar>
-                                      <BeachAccessIcon />
-                                    </Avatar>
-                                  </ListItemAvatar>
-                                  <ListItemText primary="Last Seen Online" secondary="July 20, 2014" />
-                                </ListItem>
-                            </List>
-                        </div>
+                        <SidebarOptions
+                        viewedUser={viewedUser}
+                        user = {user}
+                        />
                     </div>
                     <div>
                         <div style ={{display:"flex", alignItems:"center", gap:"10px"}}>
@@ -189,11 +168,40 @@ export const Profile = ()=> {
                            <div>
                             <p style = {{maxHeight:"192px", overflow:"hidden"}}>{viewedUser.selfDescription}</p>
                             {
-                              viewedUser.selfDescription.trim().split(' ').length > 100 && 
-                              <span style ={{cursor:"pointer", fontSize:"1.7rem", fontWeight:"700"}} onClick>...</span>
+                              viewedUser.selfDescription.trim().split(' ').length > 100 &&
+                              <Tooltip title = "Expand Description">
+                                <MoreHorizIcon sx ={{cursor:"pointer", fontSize:"1.7rem", fontWeight:"700"}} onClick =  {expandDescription}/>
+                              </Tooltip> 
+                            }
+                            {
+                              fullDescription &&
+                              <Dialog
+                              open={fullDescription}
+                              onClose={closeExpandedDescription}
+                              aria-labelledby="alert-dialog-title"
+                              aria-describedby="alert-dialog-description"
+                              >
+                              <div style = {{
+                                display:"flex",
+                                justifyContent:"space-between",
+                                alignItems:"center", 
+                                padding:"5px", 
+                                borderBottomStyle:"solid", 
+                                borderBottomWidth:"1px",
+                                borderBottomColor:"rgba(0,0,0,.5)"
+                              }}>
+                                <h1>Description</h1>
+                                <CloseIcon/>
+                              </div>
+                                <DialogContent>
+                                  <DialogContentText id="alert-dialog-description" sx = {{fontSize:"1.3rem"}}>
+                                    {viewedUser.selfDescription}
+                                  </DialogContentText>
+                                </DialogContent>
+                              </Dialog> 
                             }
                            </div>
-                           : "There is no current description"
+                           : "There is no current description."
                           }
                         </div>
                     </div>
@@ -202,15 +210,16 @@ export const Profile = ()=> {
                         <h1>Connect With Me</h1>
                         {
                           viewedUser._id === user.id &&
-                          <AddIcon className = "add_social_button" sx = {{fontSize:"1.7rem", cursor:"pointer"}} />
+                          <AddIcon className = "add_social_button" sx = {{fontSize:"1.7rem", cursor:"pointer"}} onClick={handleOpenSocialMedia} />
                         }
                       </div>
-                      <div className="social_media_bar">
-                          <LinkedInIcon sx = {{fontSize:"30px", color:"#0072b1", cursor:"pointer"}}/>
-                          <InstagramIcon sx = {{fontSize:"30px", color:"#bc2a8d", cursor:"pointer"}} className ="instagram"/>
-                          <FacebookIcon sx = {{fontSize:"30px", color:"#4267B2", cursor:"pointer"}}/>
-                          <TwitterIcon sx = {{fontSize:"30px", color:"#00acee", cursor:"pointer"}}/>
-                      </div>
+                      <SocialMediaBar 
+                        viewedUser = {viewedUser}
+                      />
+                      <AddSocialDialog
+                        socialMediaModal = {socialMediaModal}
+                        setSocialMediaModal = {setSocialMediaModal}
+                      />
                     </div>
                 </div>
             </div>
@@ -218,4 +227,3 @@ export const Profile = ()=> {
         </>
     ) 
 }
-

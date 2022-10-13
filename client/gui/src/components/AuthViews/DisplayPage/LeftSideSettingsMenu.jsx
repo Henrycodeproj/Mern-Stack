@@ -10,13 +10,15 @@ export const LeftSideSettingsMenu = () => {
     };
 
     return (
-      <div>
-      <Switch
-        checked={checked}
-        onChange={handleChange}
-        inputProps={{ 'aria-label': 'controlled' }}
-        label="Gilad Gray"
-      />
+      <div className='left_menu_options' style = {{display:"flex", alignItems:"center"}}>
+        <Switch
+          checked={checked}
+          onChange={handleChange}
+          inputProps={{ 'aria-label': 'controlled' }}
+          label="Gilad Gray"
+          color="secondary"
+        />
+        <h4 style = {{color:"white"}}>Dark Mode</h4>
       </div>
     )
 }

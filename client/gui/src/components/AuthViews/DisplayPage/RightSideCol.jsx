@@ -3,7 +3,6 @@ import {useState, useEffect, useContext, useRef} from "react"
 import "./RightSideCol.css"
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
-import Tooltip from "@mui/material/Tooltip";
 import ChatIcon from '@mui/icons-material/Chat';
 import { accountContext } from "../../Contexts/appContext";
 import { IndividualChats } from "../ChatViews/IndividualChat";
@@ -102,7 +101,6 @@ export const RightSideCol = () => {
                         <Avatar onClick={handleClick} 
                         sx = {{
                             background:'rgba(80, 80, 80, 0.4)',
-                            cursor:"pointer",
                             borderStyle:"solid",
                             width:"35px",
                             height:"35px"

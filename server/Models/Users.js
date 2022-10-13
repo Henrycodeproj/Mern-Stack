@@ -16,6 +16,14 @@ const UserSchema = new mongoose.Schema({
         type:String,
         default:''
     },
+    socialMedia: {
+        type:Map,
+        of:String,
+        default:""
+    },
+    collegeAffiliation:{
+        type:String,
+    },
     isVerified:Boolean,
     sessionToken:String,
 }, {timestamps:true})
