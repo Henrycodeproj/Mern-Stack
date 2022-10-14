@@ -21,17 +21,13 @@
     gap:75px;
     position: relative;
 }
-.social_media_bar {
-    display: flex;
-    gap:1%;
-}
 .Connect_title_bar {
     margin-bottom: 10px;
 }
 .About_Me_Edit_Button:hover, .add_social_button:hover {
     border-radius: 50%;
     background-color: rgba(128, 128, 128, 0.4);
-    padding:2px;
+    padding:0px;
 }
 .top_profile_container {
     display:flex;

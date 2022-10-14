@@ -6,9 +6,11 @@ import Divider from '@mui/material/Divider';
 import ChatIcon from '@mui/icons-material/Chat';
 import { accountContext } from "../../Contexts/appContext";
 import { IndividualChats } from "../ChatViews/IndividualChat";
+import { useNavigate } from "react-router-dom";
 
 export const RightSideCol = () => {
     const newMessageCheck = useRef()
+    const navigateTo = useNavigate()
 
     const {
         user,
@@ -84,9 +86,13 @@ export const RightSideCol = () => {
                     <Divider/>
                     <div className = "popular_post_container">
                         <div style = {{display:"flex"}}>
-                        <Avatar sx = {{marginRight:"10px"}}src = "https://dvyvvujm9h0uq.cloudfront.net/com/articles/1525891879-379720-warren-wong-242286-unsplashjpg.jpg"/>
+                        <Avatar 
+                        sx = {{ marginRight:"10px", cursor:"pointer" }} 
+                        src = "https://dvyvvujm9h0uq.cloudfront.net/com/articles/1525891879-379720-warren-wong-242286-unsplashjpg.jpg" 
+                        onClick = {()=> navigateTo(`/profile/${post.original_poster[0]._id}`)}
+                        />
                             <div>
-                                <h3 style = {{textTransform:"capitalize", color:"black", margin:0, fontWeight:"500"}}>{post.original_poster[0].username}</h3>
+                                <h3 style = {{textTransform:"capitalize", color:"black", margin:0, fontWeight:"600"}}>{post.original_poster[0].username}</h3>
                                     {
                                     post.Description.length >= 50 ?
                                         <div>

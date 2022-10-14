@@ -16,6 +16,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import AddIcon from '@mui/icons-material/Add';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -37,6 +38,7 @@ export const Profile = ()=> {
     const [userDescription, setUserDescription] = useState(null)
     const [fullDescription, setFullDescription] = useState(false)
     const [socialMediaModal, setSocialMediaModal] = useState(false)
+    const [deleteMedia, setDeleteMedia] = useState(false)
 
     useEffect(()=>{
         const URL = `http://localhost:3001/user/information/${userId}`
@@ -65,7 +67,6 @@ export const Profile = ()=> {
     }
 
     const expandDescription = () => {
-      console.log("expanding")
       setFullDescription(true)
     }
 
@@ -75,6 +76,9 @@ export const Profile = ()=> {
     const handleOpenSocialMedia = () => {
       setSocialMediaModal(true)
     }
+    const handleDeleteMedia = () => {
+      setDeleteMedia(clicked => !clicked)
+    } 
 
     const [state, setState] = useState({bottom: false});
 
@@ -123,7 +127,7 @@ export const Profile = ()=> {
                                     {
                                       viewedUser._id !== user.id ?
                                       viewedUser.username.charAt(0).toUpperCase() + viewedUser.username.slice(1)
-                                      :"Your Dashboard" 
+                                      :"Dashboard" 
                                     }
                                 </h1>
                                 <h4 style={{margin:"10px 0", fontSize:"1.3rem", color:"gray"}}>@Stevenson</h4>
@@ -210,15 +214,22 @@ export const Profile = ()=> {
                         <h1>Connect With Me</h1>
                         {
                           viewedUser._id === user.id &&
-                          <AddIcon className = "add_social_button" sx = {{fontSize:"1.7rem", cursor:"pointer"}} onClick={handleOpenSocialMedia} />
+                          <div>
+                          <AddIcon className = "add_social_button" sx = {{fontSize:"1.7rem", cursor:"pointer", fontSize:"2rem"}} onClick={handleOpenSocialMedia} />
+                          <RemoveIcon sx = {{cursor:"pointer", fontSize:"2rem"}} onClick = {handleDeleteMedia}/>
+                          </div>
                         }
                       </div>
                       <SocialMediaBar 
                         viewedUser = {viewedUser}
+                        setViewedUser = {setViewedUser}
+                        deleteMedia = {deleteMedia}
                       />
                       <AddSocialDialog
                         socialMediaModal = {socialMediaModal}
                         setSocialMediaModal = {setSocialMediaModal}
+                        user = {user}
+                        setViewedUser = {setViewedUser}
                       />
                     </div>
                 </div>
