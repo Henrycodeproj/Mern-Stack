@@ -16,5 +16,5 @@
 -React JS\
 -Send Grid\
 -Jsonwebtokens\
--socket Io\
+-Socket Io\
 -Emoji Picker
