@@ -215,7 +215,7 @@ export const Profile = ()=> {
                         {
                           viewedUser._id === user.id &&
                           <div>
-                          <AddIcon className = "add_social_button" sx = {{fontSize:"1.7rem", cursor:"pointer", fontSize:"2rem"}} onClick={handleOpenSocialMedia} />
+                          <AddIcon className = "add_social_button" sx = {{fontSize:"1.7rem", cursor:"pointer"}} onClick={handleOpenSocialMedia} />
                           <RemoveIcon sx = {{cursor:"pointer", fontSize:"2rem"}} onClick = {handleDeleteMedia}/>
                           </div>
                         }
@@ -224,6 +224,7 @@ export const Profile = ()=> {
                         viewedUser = {viewedUser}
                         setViewedUser = {setViewedUser}
                         deleteMedia = {deleteMedia}
+                        user = {user}
                       />
                       <AddSocialDialog
                         socialMediaModal = {socialMediaModal}

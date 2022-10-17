@@ -55,4 +55,15 @@ router.patch("/update/socials/:userId", async (req, res) => {
     }
 })
 
-router.patch("")
+router.patch("/update/current/socials/:userId", async (req, res) => {
+    const socialLink = req.body.data
+
+    try {
+        const user = await UserModel.findOne({_id: req.params.userId})
+        if (user.socialMedia.has(socialLink)) user.socialMedia.set(socialLink,'')
+        user.save()
+        res.send(user)
+    } catch (error) {
+        console.log(error)
+    } 
+})
