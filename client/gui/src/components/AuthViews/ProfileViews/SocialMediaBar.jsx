@@ -10,20 +10,28 @@ import { motion } from "framer-motion"
 import axios from 'axios';
 
 
-export const SocialMediaBar = ({viewedUser, setViewedUser, deleteMedia}) => {
-  console.log(viewedUser)
-  const removeSocialHandler = (media) => {
-    axios.patch()
+export const SocialMediaBar = ({viewedUser, setViewedUser, deleteMedia, user}) => {
+
+  const removeSocialHandler = async(socialMediaLink) => {
+    const url = `http://localhost:3001/user/update/current/socials/${user.id}`
+    const response = await axios.patch(url,{
+      headers:{
+        "authorization": localStorage.getItem("Token")
+      },
+      data:socialMediaLink
+    })
+    setViewedUser(response.data)
   }
+
   return (
-    <div className="social_media_bar" style = {{position: deleteMedia ? "relative": null, right: deleteMedia ? "15px" : null, gap: deleteMedia ? null : "15px"}}>
+    <div className="social_media_bar" style = {{position: deleteMedia ? "relative": null, right: deleteMedia ? "20px" : null, gap: deleteMedia ? null : "20px"}}>
     {
       viewedUser.socialMedia?.linkedin &&
       <motion.div whileHover={{ scale: 1.1 }}>
         { 
           deleteMedia &&
           <Tooltip title = "Remove Linkedin Link" placement="top">
-            <RemoveCircleIcon sx = {{fontSize:"15px", position:"relative", color:"rgb(199, 199, 199)", bottom:"24px", left:"38px", cursor:"pointer"}}/>
+            <RemoveCircleIcon sx = {{fontSize:"20px", position:"relative", color:"rgb(199, 199, 199)", bottom:"24px", left:"43px", cursor:"pointer"}} onClick = {()=> removeSocialHandler('linkedin')}/>
           </Tooltip>
         }
         <a href = {viewedUser.socialMedia.linkedin} target = "blank">
@@ -39,7 +47,7 @@ export const SocialMediaBar = ({viewedUser, setViewedUser, deleteMedia}) => {
         { 
           deleteMedia &&
         <Tooltip title = "Remove Instagram Link" placement="top">
-          <RemoveCircleIcon sx = {{fontSize:"15px", position:"relative", color:"rgb(199, 199, 199)",  bottom:"24px", left:"38px", cursor:"pointer"}}/>
+          <RemoveCircleIcon sx = {{fontSize:"20px", position:"relative", color:"rgb(199, 199, 199)",  bottom:"24px", left:"43px", cursor:"pointer"}} onClick = {()=> removeSocialHandler('instagram')}/>
         </Tooltip>
         }
         <a href = {viewedUser.socialMedia.instagram} target = "blank">
@@ -55,7 +63,7 @@ export const SocialMediaBar = ({viewedUser, setViewedUser, deleteMedia}) => {
         {
           deleteMedia &&
         <Tooltip title = "Remove Facebook Link" placement="top">
-          <RemoveCircleIcon sx = {{fontSize:"15px", position:"relative", color:"rgb(199, 199, 199)",  bottom:"24px", left:"38px", cursor:"pointer"}}/>
+          <RemoveCircleIcon sx = {{fontSize:"20px", position:"relative", color:"rgb(199, 199, 199)",  bottom:"24px", left:"43px", cursor:"pointer"}} onClick = {()=> removeSocialHandler('facebook')}/>
         </Tooltip>
         }
         <a href = {viewedUser.socialMedia.facebook} target = "blank">
@@ -71,7 +79,7 @@ export const SocialMediaBar = ({viewedUser, setViewedUser, deleteMedia}) => {
         { 
           deleteMedia &&
         <Tooltip title = "Remove Twitter Link" placement="top">
-          <RemoveCircleIcon sx = {{fontSize:"15px", position:"relative", color:"rgb(199, 199, 199)",  bottom:"24px", left:"38px", cursor:"pointer"}}/>
+          <RemoveCircleIcon sx = {{fontSize:"20px", position:"relative", color:"rgb(199, 199, 199)",  bottom:"24px", left:"43px", cursor:"pointer"}} onClick = {()=> removeSocialHandler('twitter')}/>
         </Tooltip>
         }
         <a href = {viewedUser.socialMedia.twitter} target = "blank">
@@ -87,7 +95,7 @@ export const SocialMediaBar = ({viewedUser, setViewedUser, deleteMedia}) => {
         {
           deleteMedia &&
           <Tooltip title = "Remove Github Link" placement="top">
-            <RemoveCircleIcon sx = {{fontSize:"15px", position:"relative", color:"rgb(199, 199, 199)", bottom:"24px", left:"38px", cursor:"pointer"}} onClick = {removeSocialHandler('github')}/>
+            <RemoveCircleIcon sx = {{fontSize:"20px", position:"relative", color:"rgb(199, 199, 199)", bottom:"24px", left:"43px", cursor:"pointer"}} onClick = {()=> removeSocialHandler('github')}/>
           </Tooltip>
         }
       <a href = {viewedUser.socialMedia.github} target = "blank">
