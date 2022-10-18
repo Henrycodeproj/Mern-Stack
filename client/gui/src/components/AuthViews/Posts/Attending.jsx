@@ -79,27 +79,31 @@ const Attending = (posting) => {
     };
 
     return (
-        <>
-        { post.attending.map((user, index) => index <= 2 ?
-            <div>
-            <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            whileHover = {{ y: -10, scale: 1.3}}
-            >
-                <Tooltip title = {currentUser.id !== user._id && user._id ? `${user.username.charAt(0).toUpperCase() + user.username.slice(1)} is attending`:'You are attending this event'}>
-                    <Avatar
-                    onClick = {()=> navigateTo(`/profile/${user._id}`)} 
-                    className = "attending_avatars" 
-                    alt="Trevor Henderson" 
-                    src="https://faces-img.xcdn.link/image-lorem-face-6511.jpg"
-                    />
-                </Tooltip>
-            </motion.div>
-            </div>
+        <ul className='attending_lists'>
+        <AnimatePresence>
+        { 
+        post.attending.map((user, index) => index <= 2 ?
+            <li key = {user._id}>
+                <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1}}
+                whileHover = {{ y: -10, scale: 1.3}}
+                exit={{ opacity: 0 }}
+                >
+                    <Tooltip title = {currentUser.id !== user._id && user._id ? `${user.username.charAt(0). toUpperCase() + user.username.slice(1)} is attending`:'You are attending this event'}>
+                        <Avatar
+                        onClick = {()=> navigateTo(`/profile/${user._id}`)} 
+                        className = "attending_avatars" 
+                        alt="Trevor Henderson" 
+                        src="https://faces-img.xcdn.link/image-lorem-face-6511.jpg"
+                        />
+                    </Tooltip>
+                </motion.div>
+            </li>
             :
             <span>
-                { post.attending.length - index === 1 ?
+                { 
+                post.attending.length - index === 1 ?
                 <motion.div
                 whileHover={{scale:1.15}}
                 >   
@@ -183,8 +187,8 @@ const Attending = (posting) => {
                 }
             </span>
         )}
-
-        </>
+        </AnimatePresence>
+        </ul>
     )
 }
 

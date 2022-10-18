@@ -80,7 +80,7 @@ export const RightSideCol = () => {
   return (
     <div className = "right_column_wrapper">
         <div className = "popular_container">
-            <h2 style = {{marginBottom:"10px", textDecoration:"underline", fontSize:"1.6rem"}}>Biggest Events Today</h2>
+            <h2 style = {{marginBottom:"10px", textDecoration:"underline", fontSize:"1.6rem", fontWeight:"900"}}>Biggest Events Today</h2>
             {popularPosts.map((post)=> 
                 <div>
                     <Divider/>
@@ -119,7 +119,7 @@ export const RightSideCol = () => {
         </div>
         <div className="recent_message_container">
             <div className="recent_message_title">
-                <h2 style = {{textDecoration:"underline", fontSize:"1.6rem"}}>Recent Messages</h2>
+                <h2 style = {{textDecoration:"underline", fontSize:"1.6rem", fontWeight:"900"}}>Recent Messages</h2>
             </div>
             <div className = "recent_message_avatars">
                 { 

@@ -150,7 +150,8 @@ export const Display = () =>{
                                         <div className='posts_icon_wrapper'>
                                             <div className='posts_icon_bar'>
                                                 {
-                                                 post.attending.some(attendUsers => attendUsers._id === user.id) ?
+                                                 post.attending.some(attendUsers => 
+                                                    attendUsers._id === user.id) ?
                                                     <motion.button 
                                                         whileHover={{ scale: 1.3 }}
                                                         whileTap={{ scale: 0.9 }}
@@ -203,7 +204,7 @@ export const Display = () =>{
                                                 style={{ display:"flex", alignItems:"center !important"}}
                                                 initial = {{ opacity:.10, x:-10 }}
                                                 animate = {{ opacity:1, x:0 }}
-                                                transition = {{ duration:1 }}
+                                                transition = {{ duration:.75 }}
                                             >
                                                 <Attending 
                                                     posting = { post }
