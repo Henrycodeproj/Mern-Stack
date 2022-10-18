@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema({
     },
     collegeAffiliation:{
         type:String,
+        default:""
     },
     isVerified:Boolean,
     sessionToken:String,

@@ -1,6 +1,7 @@
 import { Avatar } from "@mui/material"
 import { accountContext } from "../../Contexts/appContext"
 import { useContext, useState} from "react"
+import { useNavigate } from "react-router-dom";
 import { LeftSideSettingsMenu } from "./LeftSideSettingsMenu";
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -25,7 +26,7 @@ import Switch from '@mui/material/Switch';
 
 export const LeftColumn = ()=>{
     const {user, logoutHandler} = useContext(accountContext)
-
+    const navigateTo = useNavigate()
     return(
         <div className='side_header'>
             <div className="leftside_profile_card" style={{background:"rgba(139, 137, 137, 0.404)",borderTopLeftRadius:'5px', borderTopRightRadius:'5px'}}>
@@ -58,7 +59,7 @@ export const LeftColumn = ()=>{
               <ListItemIcon sx ={{color:"white"}}>
                 <PermContactCalendarIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText sx ={{color:"white"}} className= "list_item_text">Dashboard</ListItemText>
+              <ListItemText sx ={{color:"white"}} className= "list_item_text" onClick ={() => navigateTo(`/profile/${user.id}`)}>Dashboard</ListItemText>
               <Typography variant="body2" sx ={{color:"white"}}>
               </Typography>
             </MenuItem>
@@ -73,9 +74,7 @@ export const LeftColumn = ()=>{
                 <Typography sx = {{color:"white"}} className= "list_item_text">Settings</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>
                   <LeftSideSettingsMenu/>
-                </Typography>
               </AccordionDetails>
             </Accordion>
             <MenuItem onClick={()=> logoutHandler()} sx = {{margin:"10px 0px"}} className = "leftsidebar_menuItems">

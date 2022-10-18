@@ -3,6 +3,7 @@ import {Button} from "@mui/material"
 import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { accountContext } from '../Contexts/appContext'
+import { motion } from "framer-motion";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import Avatar from '@mui/material/Avatar';
@@ -16,6 +17,7 @@ import Badge from '@mui/material/Badge';
 import Popover from '@mui/material/Popover';
 import Divider from '@mui/material/Divider';
 import Tooltip from "@mui/material/Tooltip";
+
 
 
 import "../navigation/navbar.css"
@@ -140,8 +142,12 @@ export const Navbar = () =>{
     return(
         <nav>
             {
-                !userStatus ? 
+                !userStatus ?
+                <motion.div
+                whileHover= {{ scale:1.1, }}
+                >
                 <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
+                </motion.div> 
                 :
                 <img className ="unplug_logo" src ={logo} alt ="logo" onClick = {()=>navigateTo("/display")}/>
             }

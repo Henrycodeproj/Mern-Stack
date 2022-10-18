@@ -40,3 +40,6 @@
     display: flex;
     cursor: pointer;
 }
+.attending_lists{
+    display: flex;
+}

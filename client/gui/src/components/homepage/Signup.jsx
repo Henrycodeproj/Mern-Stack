@@ -202,6 +202,7 @@ export const Signup = () =>{
                       <input name = "username" 
                         value = {newUser.username} 
                         onChange={formHandler}
+                        className = "signup_username"
                       />
                       {<p className='form-errors'>{formErrors.username}</p>}
                   </label>
@@ -213,6 +214,7 @@ export const Signup = () =>{
                         type = "password"  
                         value = {newUser.password} 
                         onChange={formHandler}
+                        className = "signup_username"
                       />
                       <p className='form-errors'>{formErrors.password}</p>
                       <p className='requirement-warning' style ={{color:`${requirements.length}`}}>
@@ -236,6 +238,7 @@ export const Signup = () =>{
                         type = "password" 
                         value = {newUser.Confirm} 
                         onChange={formHandler}
+                        className = "signup_username"
                       />
                       <p className='form-errors'>{formErrors.Confirm}</p>
                       <p className='form-errors'>{confirm.match}</p>
@@ -248,6 +251,7 @@ export const Signup = () =>{
                         name = "email" 
                         value = {newUser.email} 
                         onChange = {formHandler}
+                        className = "signup_username"
                       />
                       <p className='form-errors'>{formErrors.email}</p>
                   </label>

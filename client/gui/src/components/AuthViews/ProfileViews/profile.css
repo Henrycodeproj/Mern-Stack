@@ -41,6 +41,19 @@
 .profile_username {
     font-size: 4rem;
 } 
+.social_options {
+    display: flex;
+    align-items: center;
+}
+.college_affiliation_bar {
+    border-bottom-style: none;
+    padding:10px 0;
+    caret-color: black;
+}
+.college_submit_checkmark_button:hover {
+    color:green;
+    cursor:pointer;
+}
 @media(min-width:1675px) {
     .profile_page_description{
         width:65%;

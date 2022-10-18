@@ -1,6 +1,6 @@
 
 import { useParams, useNavigate } from "react-router-dom"
-import { useEffect, useState, useContext } from "react"
+import { useEffect, useState, useContext, useRef } from "react"
 import { SocialMediaBar } from "./SocialMediaBar"
 import { Avatar, Tooltip } from "@mui/material"
 import { accountContext } from "../../Contexts/appContext"
@@ -17,6 +17,8 @@ import AddIcon from '@mui/icons-material/Add';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -32,13 +34,15 @@ import AddSocialDialog from "./AddSocialDialog"
 export const Profile = ()=> {
     const { user } = useContext(accountContext) 
     const { userId } = useParams()
-    const navigateTo = useNavigate()
+    const ref = useRef()
 
     const [viewedUser, setViewedUser] = useState(null)
     const [userDescription, setUserDescription] = useState(null)
     const [fullDescription, setFullDescription] = useState(false)
     const [socialMediaModal, setSocialMediaModal] = useState(false)
     const [deleteMedia, setDeleteMedia] = useState(false)
+    const [clicked, setClicked] = useState(false)
+    const [affiliation, setAffiliation] = useState('')
 
     useEffect(()=>{
         const URL = `http://localhost:3001/user/information/${userId}`
@@ -54,6 +58,20 @@ export const Profile = ()=> {
         .catch(err => console.log(err))
     },[userId])
 
+    useEffect(() => {
+      document.addEventListener("click", handleOutsideAffiliationClick, true)
+
+      return document.removeEventListener("click", handleOutsideAffiliationClick, false)
+    },[])
+
+    const handleOutsideAffiliationClick = (e) => {
+      console.log(e.target)
+      if (!ref.current.contains(e.target)) {
+        setClicked(prevState => !prevState)
+        setAffiliation('')
+      }
+    }
+
     const submitDescription = async () => {
       const url = `http://localhost:3001/user/update/description/${user.id}`
       const data = {description: userDescription}
@@ -64,6 +82,41 @@ export const Profile = ()=> {
       })
       setViewedUser(response.data)
       setState(prev => prev['bottom'] = !prev['bottom'])
+    }
+
+    const submitAffliliationHandler = async (event) => {
+      console.log(event.key, affiliation)
+      if (event.key === "Enter" && affiliation) {
+        const url = `http://localhost:3001/user/update/college/${user.id}`
+        const response = await axios.patch(url, {
+          headers:{
+            "authorization": localStorage.getItem("Token")
+          },
+          data: affiliation
+      })
+      if (response) {
+        setViewedUser(response.data)
+        setClicked(false)
+        setAffiliation('')
+      }
+    }
+    }
+    const submitButtonAffliliationHandler = async () => {
+      console.log(affiliation)
+      if (affiliation) {
+        const url = `http://localhost:3001/user/update/college/${user.id}`
+        const response = await axios.patch(url, {
+          headers:{
+            "authorization": localStorage.getItem("Token")
+          },
+          data: affiliation
+      })
+      if (response) {
+        setViewedUser(response.data)
+        setClicked(false)
+        setAffiliation('')
+      }
+    }
     }
 
     const expandDescription = () => {
@@ -79,6 +132,9 @@ export const Profile = ()=> {
     const handleDeleteMedia = () => {
       setDeleteMedia(clicked => !clicked)
     } 
+    const handleClick = () => {
+      setClicked(prevState => !prevState)
+    }
 
     const [state, setState] = useState({bottom: false});
 
@@ -121,7 +177,7 @@ export const Profile = ()=> {
                 <div className="outer_profile_container">
                     <div className = "top_profile_container">
                         <div className="Profile_picture_section">
-                            <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white",     borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
+                            <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white", borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
                             <div>
                                 <h1 className = "profile_username">
                                     {
@@ -130,7 +186,31 @@ export const Profile = ()=> {
                                       :"Dashboard" 
                                     }
                                 </h1>
-                                <h4 style={{margin:"10px 0", fontSize:"1.3rem", color:"gray"}}>@Stevenson</h4>
+                                <div style = {{display:"flex", alignItems:"center", margin:"10px 0", gap:"5%"}}>
+                                  {
+                                  viewedUser._id === user.id && clicked ?
+                                    <div style = {{display:"flex", alignItems:"center"}}>
+                                      <input 
+                                      value = {affiliation}
+                                      className = "college_affiliation_bar" onChange={e => setAffiliation (e.target.value)}
+                                      autoFocus
+                                      ref = {ref}
+                                      onKeyDown = {(e)=> submitAffliliationHandler(e)}
+                                      />
+                                      <CheckCircleIcon 
+                                        className = "college_submit_checkmark_button"
+                                        onClick = {submitButtonAffliliationHandler}
+                                      />
+                                    </div>
+                                  :
+                                  <h4 style={{fontSize:"1.3rem", color:"gray", textTransform:"uppercase", cursor:"pointer"}} onClick = {handleClick}>
+                                    {
+                                    viewedUser.collegeAffiliation ? 
+                                    viewedUser.collegeAffiliation : 'UCSC'
+                                    }
+                                  </h4>
+                                  }
+                                </div>
                                 {
                                   viewedUser._id !== user.id &&
                                   <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon/>}>
@@ -147,9 +227,11 @@ export const Profile = ()=> {
                     <div>
                         <div style ={{display:"flex", alignItems:"center", gap:"10px"}}>
                         <h1>A Little About Me</h1>
-                          {viewedUser._id === user.id &&
+                          {
+                          viewedUser._id === user.id &&
                           <div>
-                            {['bottom'].map((anchor) => (
+                            {
+                            ['bottom'].map((anchor) => (
                               <React.Fragment key={anchor}>
                                 <Tooltip title = "Add/Change Self Description">
                                   <EditIcon className = "About_Me_Edit_Button" onClick={toggleDrawer(anchor, true)} sx = {{fontSize:"1.7rem", cursor:"pointer"}}/>
@@ -163,7 +245,8 @@ export const Profile = ()=> {
                                   {list(anchor)}
                                 </SwipeableDrawer>
                               </React.Fragment>
-                            ))}
+                              )
+                            )}
                           </div>
                           }
                         </div>
@@ -214,7 +297,7 @@ export const Profile = ()=> {
                         <h1>Connect With Me</h1>
                         {
                           viewedUser._id === user.id &&
-                          <div>
+                          <div className="social_options">
                           <AddIcon className = "add_social_button" sx = {{fontSize:"1.7rem", cursor:"pointer"}} onClick={handleOpenSocialMedia} />
                           <RemoveIcon sx = {{cursor:"pointer", fontSize:"2rem"}} onClick = {handleDeleteMedia}/>
                           </div>

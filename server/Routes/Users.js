@@ -41,6 +41,7 @@ router.patch("/update/description/:userId", isAuthenticated, async (req,res) => 
 
 router.patch("/update/socials/:userId", async (req, res) => {
     const socialMediaLinks = req.body
+    console.log(req.body)
     try {
         const user = await UserModel.findOne({_id:req.params.userId})
         if (socialMediaLinks.twitter) user.socialMedia.set('twitter', socialMediaLinks.twitter)
@@ -66,4 +67,17 @@ router.patch("/update/current/socials/:userId", async (req, res) => {
     } catch (error) {
         console.log(error)
     } 
+})
+
+router.patch("/update/college/:userId", async (req, res) => {
+    const updatedCollege = req.body.data
+    console.log(updatedCollege)
+    try {
+        const user = await UserModel.findOne({_id: req.params.userId})
+        user.collegeAffiliation = updatedCollege
+        user.save()
+        res.send(user)
+    } catch(error) {
+        console.log(error)
+    }
 })
