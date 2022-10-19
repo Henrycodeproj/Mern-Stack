@@ -19,6 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -34,7 +35,6 @@ import AddSocialDialog from "./AddSocialDialog"
 export const Profile = ()=> {
     const { user } = useContext(accountContext) 
     const { userId } = useParams()
-    const ref = useRef()
 
     const [viewedUser, setViewedUser] = useState(null)
     const [userDescription, setUserDescription] = useState(null)
@@ -58,20 +58,6 @@ export const Profile = ()=> {
         .catch(err => console.log(err))
     },[userId])
 
-    useEffect(() => {
-      document.addEventListener("click", handleOutsideAffiliationClick, true)
-
-      return document.removeEventListener("click", handleOutsideAffiliationClick, false)
-    },[])
-
-    const handleOutsideAffiliationClick = (e) => {
-      console.log(e.target)
-      if (!ref.current.contains(e.target)) {
-        setClicked(prevState => !prevState)
-        setAffiliation('')
-      }
-    }
-
     const submitDescription = async () => {
       const url = `http://localhost:3001/user/update/description/${user.id}`
       const data = {description: userDescription}
@@ -85,7 +71,6 @@ export const Profile = ()=> {
     }
 
     const submitAffliliationHandler = async (event) => {
-      console.log(event.key, affiliation)
       if (event.key === "Enter" && affiliation) {
         const url = `http://localhost:3001/user/update/college/${user.id}`
         const response = await axios.patch(url, {
@@ -101,8 +86,8 @@ export const Profile = ()=> {
       }
     }
     }
-    const submitButtonAffliliationHandler = async () => {
-      console.log(affiliation)
+    const submitButtonAffliliationHandler = async (e) => {
+      console.log(e.target.value)
       if (affiliation) {
         const url = `http://localhost:3001/user/update/college/${user.id}`
         const response = await axios.patch(url, {
@@ -189,26 +174,25 @@ export const Profile = ()=> {
                                 <div style = {{display:"flex", alignItems:"center", margin:"10px 0", gap:"5%"}}>
                                   {
                                   viewedUser._id === user.id && clicked ?
-                                    <div style = {{display:"flex", alignItems:"center"}}>
-                                      <input 
-                                      value = {affiliation}
-                                      className = "college_affiliation_bar" onChange={e => setAffiliation (e.target.value)}
-                                      autoFocus
-                                      ref = {ref}
-                                      onKeyDown = {(e)=> submitAffliliationHandler(e)}
+                                  <div style = {{display:"flex", flexDirection:"column"}}>
+                                    <h4 style = {{marginBottom:"5%"}}>You can press enter on the keyboard or hit the check to change or edit your college.
+                                    </h4>
+                                    <div style = {{display:"flex"}}>
+                                      <input
+                                      value={clicked ? affiliation : viewedUser.collegeAffiliation}
+                                      onChange = {(e) => setAffiliation(e.target.value)}
+                                      style = {{caretColor:"black"}}
+                                      autoFocus 
+                                      onKeyDown={e => submitAffliliationHandler(e)}
                                       />
-                                      <CheckCircleIcon 
-                                        className = "college_submit_checkmark_button"
-                                        onClick = {submitButtonAffliliationHandler}
-                                      />
+                                      <CheckCircleIcon sx = {{color:"green", cursor:"pointer"}} onClick =   {e  => submitButtonAffliliationHandler(e)}/>
+                                      <CancelIcon sx = {{color:"gray", cursor:"pointer"}} onClick = {()=> setClicked(prevState => !prevState)}/>
                                     </div>
+                                  </div>
                                   :
-                                  <h4 style={{fontSize:"1.3rem", color:"gray", textTransform:"uppercase", cursor:"pointer"}} onClick = {handleClick}>
-                                    {
-                                    viewedUser.collegeAffiliation ? 
-                                    viewedUser.collegeAffiliation : 'UCSC'
-                                    }
-                                  </h4>
+                                  <h1 onClick={handleClick}>
+                                    {viewedUser.collegeAffiliation ? viewedUser.collegeAffiliation :"UCSC"}
+                                  </h1>
                                   }
                                 </div>
                                 {
