@@ -64,16 +64,6 @@ router.get('/recent/all/:id', isAuthenticated, async (req, res) => {
     }
 })
 
-// router.get('/test', async (req,res) => {
-//     const results = await MessageModel.aggregate([
-//         {
-//             $group:{
-//             _id:{"$hour":"$createdAt"}
-//             }
-//         }
-//     ])
-//     res.send(results)
-// })
 router.post('/send/', isAuthenticated, async (req, res) =>{
     const {chatId, message, senderId, recipientId} = req.body
 
@@ -89,7 +79,7 @@ router.post('/send/', isAuthenticated, async (req, res) =>{
     if (savedMessage) res.status(200).send({message:"Message Sent"})
 })
 
-router.post('/conversation/:convoID', isAuthenticated, async (req, res) =>{
+router.get('/conversation/:convoID', isAuthenticated, async (req, res) =>{
     const currentConvoMessages = 
     await MessageModel.find({conversationId:req.params.convoID})
     .sort({ createdAt: -1 })
