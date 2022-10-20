@@ -145,7 +145,7 @@ router.post('/report/:postId', isAuthenticated, async (req, res) =>{
 })
 
 
-router.get('/popular', async (req, res) => {
+router.get('/popular', isAuthenticated, async (req, res) => {
     const results = await PostModel.aggregate([
         {
             $addFields: {

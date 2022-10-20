@@ -4,6 +4,7 @@ import { useEffect, useState, useContext, useRef } from "react"
 import { SocialMediaBar } from "./SocialMediaBar"
 import { Avatar, Tooltip } from "@mui/material"
 import { accountContext } from "../../Contexts/appContext"
+import { AnimatePresence, motion } from "framer-motion"
 import axios from "axios"
 import "./profile.css"
 import SendIcon from '@mui/icons-material/Send';
@@ -17,17 +18,14 @@ import AddIcon from '@mui/icons-material/Add';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
 import SidebarOptions from "./SidebarOptions";
 import AddSocialDialog from "./AddSocialDialog"
@@ -73,16 +71,20 @@ export const Profile = ()=> {
     const submitAffliliationHandler = async (event) => {
       if (event.key === "Enter" && affiliation) {
         const url = `http://localhost:3001/user/update/college/${user.id}`
-        const response = await axios.patch(url, {
+        const data = { affiliation: affiliation }
+        const response = await axios.patch(url, data, {
           headers:{
             "authorization": localStorage.getItem("Token")
-          },
-          data: affiliation
-      })
+          }
+        })
       if (response) {
         setViewedUser(response.data)
         setClicked(false)
         setAffiliation('')
+        const localUserInfo = JSON.parse(localStorage.getItem("User"))
+        localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
+        console.log(localUserInfo)
+        localStorage.setItem("User", JSON.stringify(localUserInfo))
       }
     }
     }
@@ -90,16 +92,20 @@ export const Profile = ()=> {
       console.log(e.target.value)
       if (affiliation) {
         const url = `http://localhost:3001/user/update/college/${user.id}`
-        const response = await axios.patch(url, {
+        const data ={ affiliation: affiliation }
+        const response = await axios.patch(url, data, {
           headers:{
             "authorization": localStorage.getItem("Token")
           },
-          data: affiliation
       })
       if (response) {
         setViewedUser(response.data)
         setClicked(false)
         setAffiliation('')
+        const localUserInfo = JSON.parse(localStorage.getItem("User"))
+        localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
+        console.log(localUserInfo)
+        localStorage.setItem("User", JSON.stringify(localUserInfo))
       }
     }
     }
@@ -166,11 +172,12 @@ export const Profile = ()=> {
                             <div>
                                 <h1 className = "profile_username">
                                     {
-                                      viewedUser._id !== user.id ?
+                                      viewedUser._id !== user.id && viewedUser.username ?
                                       viewedUser.username.charAt(0).toUpperCase() + viewedUser.username.slice(1)
                                       :"Dashboard" 
                                     }
                                 </h1>
+                                <AnimatePresence>
                                 <div style = {{display:"flex", alignItems:"center", margin:"10px 0", gap:"5%"}}>
                                   {
                                   viewedUser._id === user.id && clicked ?
@@ -178,26 +185,42 @@ export const Profile = ()=> {
                                     <h4 style = {{marginBottom:"5%"}}>You can press enter on the keyboard or hit the check to change or edit your college.
                                     </h4>
                                     <div style = {{display:"flex"}}>
+                                      <motion.div
+                                      initial={{ opacity: 0}}
+                                      animate={{ opacity: 1}}
+                                      exit={{ opacity: 0 }}
+                                      transition = {{duration: 1}}
+                                      >
                                       <input
                                       value={clicked ? affiliation : viewedUser.collegeAffiliation}
-                                      onChange = {(e) => setAffiliation(e.target.value)}
+                                      onChange = {e => setAffiliation(e.target.value)}
                                       style = {{caretColor:"black"}}
                                       autoFocus 
                                       onKeyDown={e => submitAffliliationHandler(e)}
                                       />
-                                      <CheckCircleIcon sx = {{color:"green", cursor:"pointer"}} onClick =   {e  => submitButtonAffliliationHandler(e)}/>
+                                      </motion.div>
+                                      <CheckCircleIcon sx = {{color:"green", cursor:"pointer"}} 
+                                      onClick = {e  => submitButtonAffliliationHandler(e)}/>
                                       <CancelIcon sx = {{color:"gray", cursor:"pointer"}} onClick = {()=> setClicked(prevState => !prevState)}/>
                                     </div>
                                   </div>
                                   :
-                                  <h1 onClick={handleClick}>
-                                    {viewedUser.collegeAffiliation ? viewedUser.collegeAffiliation :"UCSC"}
-                                  </h1>
+                                  <motion.div
+                                  initial={{ opacity: 0}}
+                                  animate={{ opacity: 1}}
+                                  exit={{ opacity: 0 }}
+                                  transition = {{duration: 1}}>
+                                  <h3 onClick={handleClick} style = {{textTransform:"uppercase", color:"gray"}}>
+                                    {viewedUser.collegeAffiliation ? '@'+viewedUser.collegeAffiliation :"@UCSC"}
+                                  </h3>
+                                  </motion.div>
                                   }
                                 </div>
+                                </AnimatePresence>
                                 {
                                   viewedUser._id !== user.id &&
                                   <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon/>}>
+                                    {console.log(viewedUser._id, user.id)}
                                     Send Message
                                   </Button>
                                 }

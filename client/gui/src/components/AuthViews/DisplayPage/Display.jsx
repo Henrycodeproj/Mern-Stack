@@ -195,9 +195,13 @@ export const Display = () =>{
                                                         />
                                                         </Tooltip>
                                                     </motion.button>
-                                                }
+                                                }   
+                                                    <Tooltip title = "Disabled (Add the date of event)">
                                                     <CalendarMonthIcon sx = {{color:"gray"}}/>
+                                                    </Tooltip>
+                                                    <Tooltip title = "Disabled (Add event to your phone calendar)">
                                                     <AddToHomeScreenIcon sx = {{color:"gray"}}/>
+                                                    </Tooltip>
                                             </div>
 
                                             <motion.div 

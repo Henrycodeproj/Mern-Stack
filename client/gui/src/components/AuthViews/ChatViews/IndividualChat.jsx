@@ -4,7 +4,6 @@ import Tooltip from "@mui/material/Tooltip";
 import ChatIcon from '@mui/icons-material/Chat';
 import {useState, useContext, useEffect, useRef} from "react"
 import { accountContext } from '../../Contexts/appContext';
-import { Emojis } from '../../ReusablesComponents/Emojis';
 import CircularProgress from '@mui/material/CircularProgress'
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -42,7 +41,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     useEffect(()=> {
         socket.on(`${convoId}`, recievedMessageData => {
-            console.log(recievedMessageData)
             setNewMessages(true)
             setChatHistory(newMessage => [...newMessage, recievedMessageData]);
             if (chatOpen.current === false) setNotification(prevNotifications => prevNotifications + 1)
@@ -55,7 +53,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     },[])
 
     useEffect(()=>{
-        console.log(chatClicked)
         if (chatContainer.current && chatClicked.current){
             chatContainer.current.scrollIntoView()
             chatClicked.current = false
@@ -79,7 +76,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             "authorization":localStorage.getItem("Token")
           }
         })
-        console.log(response)
     }
 
     const handleClick = async (event) => {
@@ -88,7 +84,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         chatClicked.current = true
         setChatAnchor(event.currentTarget);
         const Url = `http://localhost:3001/message/conversation/${convoId}`
-        const response = await axios.post(Url, {
+        const response = await axios.get(Url, {
             headers:{
                 "authorization":localStorage.getItem("Token")
             },
@@ -187,7 +183,8 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             onScroll={ e => {handleChatScroll(e); setContainerMaxHeight(e.target.scrollHeight) }}
             >
                 <div className='Message_container'>
-                    {chatHistory.map((message, index) =>
+                    {console.log(chatHistory)}
+                    {chatHistory.length > 0 && chatHistory.map((message, index) =>
                         message.senderId === user.id ?
                         <div className = "currentUser_message_wrapper">
                             <div className='currentUser_messsage_container'>
