@@ -5,6 +5,7 @@ import { SocialMediaBar } from "./SocialMediaBar"
 import { Avatar, Tooltip } from "@mui/material"
 import { accountContext } from "../../Contexts/appContext"
 import { AnimatePresence, motion } from "framer-motion"
+import { SendMessageProfile } from "./SendMessageProfile"
 import axios from "axios"
 import "./profile.css"
 import SendIcon from '@mui/icons-material/Send';
@@ -41,6 +42,7 @@ export const Profile = ()=> {
     const [deleteMedia, setDeleteMedia] = useState(false)
     const [clicked, setClicked] = useState(false)
     const [affiliation, setAffiliation] = useState('')
+    const [sendMessage, setSendMessage] = useState(false)
 
     useEffect(()=>{
         const URL = `http://localhost:3001/user/information/${userId}`
@@ -127,6 +129,9 @@ export const Profile = ()=> {
       setClicked(prevState => !prevState)
     }
 
+    const sendMessageHandler = () => {
+      setSendMessage(true)
+    }
     const [state, setState] = useState({bottom: false});
 
     const toggleDrawer = (anchor, open) => (event) => {  
@@ -219,10 +224,18 @@ export const Profile = ()=> {
                                 </AnimatePresence>
                                 {
                                   viewedUser._id !== user.id &&
-                                  <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon/>}>
+                                  <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon/>} onClick = {sendMessageHandler}>
                                     {console.log(viewedUser._id, user.id)}
                                     Send Message
                                   </Button>
+                                }
+                                {
+                                  viewedUser._id !== user.id && sendMessage && 
+                                  <SendMessageProfile 
+                                  viewedUser = {viewedUser}
+                                  sendMessage ={sendMessage}
+                                  setSendMessage = {setSendMessage}
+                                  />
                                 }
                             </div>
                         </div>
