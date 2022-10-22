@@ -79,10 +79,6 @@ main{
   border-radius: 15px;
   font-family: 'Mulish', sans-serif;
 }
-img{
-  /* background:rgba(128, 0, 128, 0.11); */
-  max-width: 100%;
-}
 .unplug_logo{
   max-height: 100%;
   cursor: pointer;

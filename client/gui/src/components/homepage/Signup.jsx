@@ -8,6 +8,7 @@ import { accountContext } from '../Contexts/appContext';
 import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import "./Signup.css"
+import landing from "../../images/landing.png"
 
 export const Signup = () =>{
 
@@ -270,7 +271,7 @@ export const Signup = () =>{
             />
             }
           </div>
-        <SideImage/>
+          <img className = "signup_sideimage_logo"src={landing} alt='landing-pic'/>
       </div>
     </main>
   )

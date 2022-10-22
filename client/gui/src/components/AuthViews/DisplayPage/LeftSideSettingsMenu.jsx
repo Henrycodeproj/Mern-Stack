@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export const LeftSideSettingsMenu = () => {
 
-    const [checked, setChecked] = useState(true);  
+    const [checked, setChecked] = useState(false);  
     const [accessiblity, setAccessibility] = useState(false); 
 
     const handleChange = (event) => {

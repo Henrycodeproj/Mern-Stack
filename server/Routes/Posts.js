@@ -20,8 +20,8 @@ router.post('/', isAuthenticated, async (req,res) =>{
     .sort({createdAt:-1})
     .populate('posterId', ['username','email', 'createdAt'])
     
-    if (newPosts) return res.status(200).send({message:'Posted', newestPost:newestPost})
-    return res.status(500).send({message:'error'})
+    if (newPosts) return res.status(400).send({message:'Posted', newestPost:newestPost})
+    return res.status(500).send({message:'Error your post failed.'})
 })
 
 router.get('/all', isAuthenticated, async (req, res) =>{
@@ -146,30 +146,34 @@ router.post('/report/:postId', isAuthenticated, async (req, res) =>{
 
 
 router.get('/popular', isAuthenticated, async (req, res) => {
-    const results = await PostModel.aggregate([
-        {
-            $addFields: {
-              attendingLength: {
-                $size: "$attending"
-              }
-            }
-        },
-        {
-            $sort: {
-                attendingLength: -1
-            }
-        },
-        {
-            $limit:3
-        },
-        {
-            $lookup: {
-                from: "users",
-                localField: "posterId",
-                foreignField: "_id",
-                as: "original_poster"
-            }
-        },
-    ])
-    return res.status(200).send(results)
+    try{
+        const results = await PostModel.aggregate([
+            {
+                $addFields: {
+                  attendingLength: {
+                    $size: "$attending"
+                  }
+                }
+            },
+            {
+                $sort: {
+                    attendingLength: -1
+                }
+            },
+            {
+                $limit:3
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "posterId",
+                    foreignField: "_id",
+                    as: "original_poster"
+                }
+            },
+        ])
+        return res.status(200).send(results)
+    } catch(error) {
+        console.log(error)
+    }
 })

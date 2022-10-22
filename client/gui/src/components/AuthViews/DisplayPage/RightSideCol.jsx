@@ -127,7 +127,14 @@ export const RightSideCol = () => {
                     <div style = {{display:"flex", alignItems:"center", justifyContent:"space-between", height:"100%", marginBottom:"10px"}}>
                         <div className="profile_image_name_container">
                             <div className = "recent_chatMessages_container">
-                                <Avatar sx = {{marginRight:"10px"}} src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&     ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"/>
+                                <Avatar sx = {{ marginRight:"10px", cursor:"pointer" }} src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&   ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"
+                                onClick = {
+                                    queryInfo.recieverInfo[0].username === user.username ?
+                                     ()=> navigateTo(`/profile/${queryInfo.senderInfo[0]._id}`) 
+                                     :
+                                     ()=> navigateTo(`/profile/${queryInfo.recieverInfo[0]._id}`)
+                                    }
+                                />
                                 {
                                 queryInfo.recieverInfo[0]._id === user.id ?
                                     queryInfo.senderInfo[0]._id in activeUsers && 
