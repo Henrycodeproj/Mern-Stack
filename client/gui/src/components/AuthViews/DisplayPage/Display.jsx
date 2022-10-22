@@ -57,7 +57,6 @@ export const Display = () =>{
                     "authorization":localStorage.getItem("Token")
                 }
             })
-            console.log(posts.includes(newResults.data[0].posterId._id))
             const filteredPosts = newResults.data.filter(newPosts => !posts.includes(newPosts.posterId._id))
             setPosts(posts.concat(filteredPosts))
             setLastPostIndex(lastPostIndex + 5)
@@ -104,7 +103,8 @@ export const Display = () =>{
                             posts.length > 0 ? posts.map((post)=>
 
                                 <li key = {post._id} className = "posts_articles">
-                                    <>  
+                                    <>
+                                    {console.log(post)}  
                                         <Tooltip 
                                             title ={
                                                 `${post.posterId.username.charAt(0).toUpperCase() + post.posterId.username.slice(1)}'s  Profile`

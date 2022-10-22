@@ -20,17 +20,25 @@ export const Posts = ({lastPostIndex, setLastPostIndex})=>{
 
     const formHandler = (e) => {
         e.preventDefault()
-        axios.post("http://localhost:3001/posts",{
+        const data = {
             user:user.id,
             post:status,
+        }
+        const url = "http://localhost:3001/posts/"
+        axios.post(url, data, {
+            headers:{
+                "authorization": localStorage.getItem("Token")
+            }
         })
         .then(res => {
-            ref.current.value = ''
-            setPosts(prevPosts => [res.data.newestPost, ...prevPosts])
-            setLastPostIndex(lastPostIndex + 1)
-            setStatus('')
+            if (res.status){
+                ref.current.value = ''
+                setPosts(prevPosts => [res.data.newestPost, ...prevPosts])
+                setLastPostIndex(lastPostIndex + 1)
+                setStatus('')
+            } else throw Error
         })
-        .catch(err=>console.log(err))
+        .catch(err=>alert(err.response.data.message))
     }
 
     if (user === null) return(

@@ -146,13 +146,13 @@ export const Navbar = () =>{
                 <motion.div
                 whileHover= {{ scale:1.1, }}
                 >
-                <img className ="unplug_logo" src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
+                <img className ="unplug_logo" style = {{maxWidth:"100%"}} src ={logo} alt ="logo" onClick={()=>navigateTo("/")}/>
                 </motion.div> 
                 :
                 <img className ="unplug_logo" src ={logo} alt ="logo" onClick = {()=>navigateTo("/display")}/>
             }
             <div className="profile_section">
-                <div><Button variant = "contained" color ="secondary">Contact</Button></div>
+                <div><Button variant = "contained" color ="secondary"><a href = "mailto:lihenryhl.work@gmail.com" style = {{color:"white", textDecoration:"none"}}>Contact</a></Button></div>
             </div>
         </nav>
     )

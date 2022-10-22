@@ -7,40 +7,40 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { accountContext } from '../../Contexts/appContext';
+import axios from "axios";
+import { TextAreaEmojis } from '../../ReusablesComponents/TextAreaEmojis';
 
 
-export const SendMessageProfile = ({viewedUser, sendMessage, setSendMessage}) =>  {
+export const SendMessageProfile = ({viewedUser, sendMessage, setSendMessage, message, setMessage, currentPostConvoID,setCurrentPostConvoID}) =>  {
+        const {socket, user} = useContext(accountContext)
         const ref = useRef()
-        const [message, setMessage] = useState("")
-        const {socket} = useContext(accountContext)
-        const handleClickOpen = () => {
-          setSendMessage(true);
-        };
+
+        const [anchor, setAnchor] = useState(false)
 
         const handleClose = () => {
           setSendMessage(false);
         };  
-        const sendMessageHandler = () => {
+        const sendMessageHandler = async () => {
             handleClose()
-            //const Url = "http://localhost:3001/message/send"
-            //const data = {
-            //  chatId: currentPostConvoID,
-            //  message: message,
-            //  senderId: user.id,
-            //  senderUsername: user.username,
-            //  recipientId: post.posterId._id,
-            //  recipientUsername: post.posterId.username
-            //}
-            //const res = await axios.post(Url, data, {
-            //  headers:{
-            //    "authorization":localStorage.getItem("Token")
-            //  }
-            //})
-            //setMessage("")
-            //saveNewMessage(data)
-            //socket.emit("messages", data)
-            //socket.emit("sendUserId", data)
+            const Url = "http://localhost:3001/message/send"
+            const data = {
+              chatId: currentPostConvoID,
+              message: message,
+              senderId: user.id,
+              senderUsername: user.username,
+              recipientId: viewedUser._id,
+              recipientUsername: viewedUser.username
+            }
+            const res = await axios.post(Url, data, {
+              headers:{
+                "authorization":localStorage.getItem("Token")
+              }
+            })
+            setMessage("")
+            socket.emit("messages", data)
+            socket.emit("sendUserId", data)
         }
+
         return (
           <div>
           <Dialog
@@ -54,7 +54,7 @@ export const SendMessageProfile = ({viewedUser, sendMessage, setSendMessage}) =>
                   borderBottomStyle:"solid",
                   borderWidth:".5px"
               }}>
-                  {/* To: {post.posterId.username.charAt(0).toUpperCase() + post.posterId.username.slice(1)} */}
+                  To: {viewedUser.username.charAt(0).toUpperCase() + viewedUser.username.slice(1)}
               </div>
             </DialogTitle>
             <DialogContent>
@@ -67,11 +67,11 @@ export const SendMessageProfile = ({viewedUser, sendMessage, setSendMessage}) =>
                 onChange = { (e)=> setMessage(e.target.value) }
                 ref = {ref}
               />
-              {/* <TextAreaEmojis
+              <TextAreaEmojis
               input = {ref.current}
-              anchor = {anchorEl}
-              setAnchor = {setAnchorEl}
-              /> */}
+              anchor = {anchor}
+              setAnchor = {setAnchor}
+              /> 
             </DialogContent>
             <DialogActions sx = {{padding:"0 24px 20px"}}>
               <Button 
@@ -86,4 +86,4 @@ export const SendMessageProfile = ({viewedUser, sendMessage, setSendMessage}) =>
           </Dialog>
           </div>
         );
-    }    
+    }   

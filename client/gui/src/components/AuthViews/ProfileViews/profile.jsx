@@ -43,6 +43,8 @@ export const Profile = ()=> {
     const [clicked, setClicked] = useState(false)
     const [affiliation, setAffiliation] = useState('')
     const [sendMessage, setSendMessage] = useState(false)
+    const [message, setMessage] = useState("")
+    const [currentPostConvoID, setCurrentPostConvoID] = useState(null)
 
     useEffect(()=>{
         const URL = `http://localhost:3001/user/information/${userId}`
@@ -87,9 +89,10 @@ export const Profile = ()=> {
         localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
         console.log(localUserInfo)
         localStorage.setItem("User", JSON.stringify(localUserInfo))
+        }
       }
     }
-    }
+    
     const submitButtonAffliliationHandler = async (e) => {
       console.log(e.target.value)
       if (affiliation) {
@@ -129,8 +132,16 @@ export const Profile = ()=> {
       setClicked(prevState => !prevState)
     }
 
-    const sendMessageHandler = () => {
+    const sendMessageHandler = async () => {
       setSendMessage(true)
+      const Url = "http://localhost:3001/conversation/create"
+      const data = {user1:user.id, user2:viewedUser._id}
+      const newConvoId = await axios.post(Url, data, {
+        headers:{
+            "authorization": localStorage.getItem("Token")
+        }
+      })
+      if (newConvoId) setCurrentPostConvoID(newConvoId.data._id)
     }
     const [state, setState] = useState({bottom: false});
 
@@ -225,7 +236,6 @@ export const Profile = ()=> {
                                 {
                                   viewedUser._id !== user.id &&
                                   <Button sx={{margin:"10px 0"}} variant="contained" endIcon={<SendIcon/>} onClick = {sendMessageHandler}>
-                                    {console.log(viewedUser._id, user.id)}
                                     Send Message
                                   </Button>
                                 }
@@ -235,6 +245,10 @@ export const Profile = ()=> {
                                   viewedUser = {viewedUser}
                                   sendMessage ={sendMessage}
                                   setSendMessage = {setSendMessage}
+                                  message = {message}
+                                  setMessage = {setMessage}
+                                  currentPostConvoID = {currentPostConvoID}
+                                  setCurrentPostConvoID = {setCurrentPostConvoID}
                                   />
                                 }
                             </div>
