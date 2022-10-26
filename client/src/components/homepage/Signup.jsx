@@ -34,7 +34,6 @@ export const Signup = () =>{
     const [confirm, setConfirm] = useState({})
     const [valid, setValid] = useState({})
     const [passwordError, setPasswordError] = useState(false)
-    const [demoMessage, setDemoMessage] = useState(true)
 
     //helps to clear error alerts on signup
     useEffect(()=>{
@@ -175,9 +174,6 @@ export const Signup = () =>{
       <main>
         <div className='landing-wrapper'>
           <div className='signup-container'>
-
-          {demoMessage && <Alert variant ="filled" severity="error" onClose={()=> setDemoMessage(false)}>Since this is my demo site you may type a random .edu email and it will be automatically verify. Every post expires in 3 days.</Alert>}
-
             {option ?
             <motion.div
               initial={{ opacity:0.25 }}
