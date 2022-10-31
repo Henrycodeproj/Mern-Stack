@@ -41,8 +41,11 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     useEffect(()=> {
         socket.on(`${convoId}`, recievedMessageData => {
-            setNewMessages(true)
-            setChatHistory(newMessage => [...newMessage, recievedMessageData]);
+            console.log(recievedMessageData)
+            if (recievedMessageData.senderId !== user.id){
+                setNewMessages(true)
+                setChatHistory(newMessage => [...newMessage, recievedMessageData]);
+            }
             if (chatOpen.current === false) setNotification(prevNotifications => prevNotifications + 1)
         })
     },[])
