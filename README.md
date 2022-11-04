@@ -20,5 +20,5 @@
 -Socket Io\
 -Emoji Picker
 
-**Getting Started**
+**Getting Started**\
 ```npm run start```
