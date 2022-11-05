@@ -11,6 +11,16 @@ import FireplaceIcon from '@mui/icons-material/Fireplace';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 
 export const SidebarOptions = ({viewedUser, user}) => {
+  const joinDate = new Date(viewedUser.createdAt)
+  const lastActive = new Date(viewedUser.lastActiveDate)
+
+  function getMonthName(monthNumber) {
+    const date = new Date();
+    date.setMonth(monthNumber + 1);
+  
+    // Using the browser's default locale.
+    return date.toLocaleString([], { month: 'long' });
+  }
   return (
         <div 
         className = "profile_sidebox_container"
@@ -31,7 +41,7 @@ export const SidebarOptions = ({viewedUser, user}) => {
                       <ImageIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={ viewedUser._id === user.id ? 'Upload Photos': 'Photos'} secondary="Jan 9, 2014" />
+                  <ListItemText primary={ viewedUser._id === user.id ? 'Upload Photos': 'Photos'}  />
                 </ListItem >
                 </motion.div>
 
@@ -45,7 +55,7 @@ export const SidebarOptions = ({viewedUser, user}) => {
                       <FireplaceIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="First Joined" secondary="Jan 7, 2014" />
+                  <ListItemText primary="First Joined" secondary= {`${getMonthName(joinDate.getMonth())}  ${joinDate.getDate()}  ${joinDate.getFullYear()}`} />
                 </ListItem>
                 </motion.div>
 
@@ -59,7 +69,7 @@ export const SidebarOptions = ({viewedUser, user}) => {
                       <TravelExploreIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="Last Seen Online" secondary="July 20, 2014" />
+                  <ListItemText primary="Last Seen Online" secondary= {`${getMonthName(lastActive.getMonth())}  ${lastActive.getDate()}  ${lastActive.getFullYear()}`} />
                 </ListItem>
                 </motion.div>
             </List>

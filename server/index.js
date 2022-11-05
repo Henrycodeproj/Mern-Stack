@@ -125,16 +125,17 @@ app.post("/createUser", async (req,res) => {
 let activeUsers = {}
 
 io.on("connection", (socket) => {
-
     socket.on("status", (userInfo) => {
-        if (userInfo.userId)
+        if (userInfo.userId) {
             activeUsers[userInfo.userId] = socket.id
-        socket.emit("activeUsers", activeUsers)
+            socket[socket.id] = userInfo.userId
+        }
+        io.emit("activeUsers", userInfo.userId)
     })
 
     socket.on("logout", (data) => {
         delete activeUsers[data.userID]
-        socket.emit("activeUsers", activeUsers)
+        socket.broadcast.emit("inActiveUsers", data.userID)
     })
 
     // new chats socket handler
@@ -163,10 +164,13 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
+        console.log(activeUsers[socket[socket.id]])
+        socket.broadcast.emit("inActiveUsers", activeUsers[socket[socket.id]])
+        console.log(socket)
+        //delete activeUsers[socket[socket.id]]
         console.log(activeUsers, 'remaining active users')
     });
 })
-
 
 httpServer.listen(PORT, () => {
     console.log('Server is hosted on port 3001');

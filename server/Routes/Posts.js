@@ -20,7 +20,7 @@ router.post('/', isAuthenticated, async (req,res) =>{
     .sort({createdAt:-1})
     .populate('posterId', ['username','email', 'createdAt'])
     
-    if (newPosts) return res.status(400).send({message:'Posted', newestPost:newestPost})
+    if (newPosts) return res.status(200).send({message:'Posted', newestPost:newestPost})
     return res.status(500).send({message:'Error your post failed.'})
 })
 
@@ -38,6 +38,16 @@ router.get('/all', isAuthenticated, async (req, res) =>{
 })
 
 router.get('/amount/:postAmount/', isAuthenticated, async (req, res) =>{
+    const date = new Date()
+    try {
+        const filter = { _id : req.results.id };
+        const update = { lastActiveDate: date };
+        await UserModel.findOneAndUpdate(filter, update, {
+            new:true
+        })
+    } catch (error) {
+        console.log(error)
+    }
     try{
         const posts = await PostModel.find({})
         .sort({createdAt: -1})

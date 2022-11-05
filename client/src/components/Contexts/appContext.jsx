@@ -4,12 +4,11 @@ import io from "socket.io-client"
 export const accountContext = createContext()
 
 export const AppContext = ({children}) =>{
-    const socket = io.connect("http://localhost:3001")
+    const socket = io.connect("http://localhost:3001", { transports: ["websocket"] })
     
     const navigateTo = useNavigate()
 
     const logoutHandler = () => {
-        socket.disconnect()
         localStorage.removeItem("userStatus")
         localStorage.removeItem("Token")
         localStorage.removeItem("User")

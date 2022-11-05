@@ -54,6 +54,7 @@ export const Profile = ()=> {
             }
         })
         .then(res => {
+          console.log(res.data)
           setViewedUser(res.data)
           setUserDescription(res.data.selfDescription)
         })

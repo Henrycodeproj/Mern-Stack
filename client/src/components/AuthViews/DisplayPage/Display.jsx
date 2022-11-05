@@ -19,6 +19,7 @@ import { MoreOptions } from '../Posts/MoreOptions';
 import { Truncating } from '../../ReusablesComponents/Truncating.jsx';
 import { SendMessage } from '../Posts/SendMessage';
 import { LoadingCircle } from '../../ReusablesComponents/LoadingCircle';
+import { display } from '@mui/system';
 
 export const Display = () =>{
 
@@ -30,8 +31,18 @@ export const Display = () =>{
 
     useEffect(()=>{
         socket.emit("status", {userId:user.id})
-        socket.on("activeUsers", (usersStatus) => {
-            setActiveUsers(usersStatus)
+        socket.on("activeUsers", (user) => {
+            console.log(user, 'user from active')
+            if (!activeUsers.includes(user))
+            setActiveUsers(onlineUsers => [...onlineUsers, user])
+        })
+    },[])
+
+    useEffect(() => {
+        socket.on("inactiveUsers", (user) => {
+            console.log(user, 'user for inactive/logout')
+            const newActiveUsers = activeUsers.filter(users => users.toString() !== user.toString())
+            setActiveUsers(newActiveUsers)
         })
     },[])
 
@@ -114,8 +125,7 @@ export const Display = () =>{
                                             </Avatar>
                                         </Tooltip>
                                         {
-                                            post.posterId._id in activeUsers
-                                            &&
+                                            activeUsers.includes(post.posterId._id) &&
                                             <Tooltip title="Online">
                                                 <span className='online'/>
                                             </Tooltip>
