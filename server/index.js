@@ -129,12 +129,12 @@ io.on("connection", (socket) => {
     socket.on("status", (userInfo) => {
         if (userInfo.userId)
             activeUsers[userInfo.userId] = socket.id
-        socket.emit("activeUsers", activeUsers)
+        io.emit("activeUsers", activeUsers)
     })
 
     socket.on("logout", (data) => {
         delete activeUsers[data.userID]
-        socket.emit("activeUsers", activeUsers)
+        io.emit("activeUsers", activeUsers)
     })
 
     // new chats socket handler
