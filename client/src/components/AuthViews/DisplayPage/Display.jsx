@@ -121,11 +121,7 @@ export const Display = () =>{
                                             </Avatar>
                                         </Tooltip>
                                         {
-<<<<<<< HEAD
-                                            activeUsers.includes(post.posterId._id) &&
-=======
                                             post.posterId._id in activeUsers &&
->>>>>>> cc4f26e1af27aad1b2924342bb243516e2c4cb95
                                             <Tooltip title="Online">
                                                 <span className='online'/>
                                             </Tooltip>
