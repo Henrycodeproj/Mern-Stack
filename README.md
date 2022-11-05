@@ -19,3 +19,6 @@
 -Jsonwebtokens\
 -Socket Io\
 -Emoji Picker
+
+**Getting Started**\
+```npm run start```
