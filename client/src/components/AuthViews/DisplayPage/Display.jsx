@@ -19,6 +19,7 @@ import { MoreOptions } from '../Posts/MoreOptions';
 import { Truncating } from '../../ReusablesComponents/Truncating.jsx';
 import { SendMessage } from '../Posts/SendMessage';
 import { LoadingCircle } from '../../ReusablesComponents/LoadingCircle';
+import { display } from '@mui/system';
 
 export const Display = () =>{
 
@@ -30,8 +31,14 @@ export const Display = () =>{
 
     useEffect(()=>{
         socket.emit("status", {userId:user.id})
-        socket.on("activeUsers", (usersStatus) => {
-            setActiveUsers(usersStatus)
+        socket.on("activeUsers", (user) => {
+            setActiveUsers(user)
+        })
+    },[])
+
+    useEffect(() => {
+        socket.on("inactiveUsers", (user) => {
+            setActiveUsers(user)
         })
     },[])
 
@@ -114,8 +121,7 @@ export const Display = () =>{
                                             </Avatar>
                                         </Tooltip>
                                         {
-                                            post.posterId._id in activeUsers
-                                            &&
+                                            post.posterId._id in activeUsers &&
                                             <Tooltip title="Online">
                                                 <span className='online'/>
                                             </Tooltip>
