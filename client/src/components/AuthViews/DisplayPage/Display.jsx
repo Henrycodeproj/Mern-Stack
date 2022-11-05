@@ -32,17 +32,13 @@ export const Display = () =>{
     useEffect(()=>{
         socket.emit("status", {userId:user.id})
         socket.on("activeUsers", (user) => {
-            console.log(user, 'user from active')
-            if (!activeUsers.includes(user))
-            setActiveUsers(onlineUsers => [...onlineUsers, user])
+            setActiveUsers(user)
         })
     },[])
 
     useEffect(() => {
         socket.on("inactiveUsers", (user) => {
-            console.log(user, 'user for inactive/logout')
-            const newActiveUsers = activeUsers.filter(users => users.toString() !== user.toString())
-            setActiveUsers(newActiveUsers)
+            setActiveUsers(user)
         })
     },[])
 
@@ -125,7 +121,11 @@ export const Display = () =>{
                                             </Avatar>
                                         </Tooltip>
                                         {
+<<<<<<< HEAD
                                             activeUsers.includes(post.posterId._id) &&
+=======
+                                            post.posterId._id in activeUsers &&
+>>>>>>> cc4f26e1af27aad1b2924342bb243516e2c4cb95
                                             <Tooltip title="Online">
                                                 <span className='online'/>
                                             </Tooltip>
