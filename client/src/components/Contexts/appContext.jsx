@@ -4,7 +4,7 @@ import io from "socket.io-client"
 export const accountContext = createContext()
 
 export const AppContext = ({children}) =>{
-    const socket = io.connect("http://localhost:3001", { transports: ["websocket"] })
+    const socket = io.connect("http://localhost:3001", { transports: ["websocket", "polling"] })
     
     const navigateTo = useNavigate()
 
