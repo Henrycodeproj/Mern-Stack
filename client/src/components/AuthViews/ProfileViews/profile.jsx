@@ -21,6 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import FaceIcon from '@mui/icons-material/Face';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -182,7 +183,10 @@ export const Profile = ()=> {
                 <div className="outer_profile_container">
                     <div className = "top_profile_container">
                         <div className="Profile_picture_section">
+                            <div>
                             <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white", borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
+                            <div>size</div>
+                            </div>
                             <div>
                                 <h1 className = "profile_username">
                                     {

@@ -128,13 +128,14 @@ io.on("connection", (socket) => {
     socket.on("status", (userInfo) => {
         if (userInfo.userId) {
             activeUsers[userInfo.userId] = socket.id
+            socket[socket.id] = userInfo.userId
         }
         io.emit("activeUsers", activeUsers)
     })
 
     socket.on("logout", (data) => {
         delete activeUsers[data.userID]
-        io.emit("activeUsers", activeUsers)
+        io.emit("inactiveUsers", activeUsers)
     })
 
     // new chats socket handler
@@ -163,10 +164,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log(activeUsers[socket[socket.id]])
-        socket.broadcast.emit("inActiveUsers", activeUsers[socket[socket.id]])
-        console.log(socket)
-        //delete activeUsers[socket[socket.id]]
+        delete activeUsers[socket[socket.id]]
+        io.emit("inactiveUsers", activeUsers)
         console.log(activeUsers, 'remaining active users')
     });
 })
