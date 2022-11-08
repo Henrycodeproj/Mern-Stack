@@ -6,6 +6,7 @@ import { Avatar, Tooltip } from "@mui/material"
 import { accountContext } from "../../Contexts/appContext"
 import { AnimatePresence, motion } from "framer-motion"
 import { SendMessageProfile } from "./SendMessageProfile"
+import { ImageUploader } from "./ImageUploader"
 import axios from "axios"
 import "./profile.css"
 import SendIcon from '@mui/icons-material/Send';
@@ -21,7 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import FaceIcon from '@mui/icons-material/Face';
+import { SubmitProfile } from "./SubmitProfile"
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -185,7 +186,7 @@ export const Profile = ()=> {
                         <div className="Profile_picture_section">
                             <div>
                             <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white", borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
-                            <div>size</div>
+                            <ImageUploader/>
                             </div>
                             <div>
                                 <h1 className = "profile_username">
