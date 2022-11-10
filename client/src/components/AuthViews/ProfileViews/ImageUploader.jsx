@@ -17,11 +17,7 @@ export const ImageUploader = ({widgetApi, viewedUser, user, setViewedUser}) => {
       console.log(response)
       if (response.status === 200 && response.data.new._id === user.id) {
         setViewedUser(response.data.new)
-        const res = await axios.delete(`https://ucarecdn.com/files/${response.data.prev.profilePicture}/`,{
-          headers:{
-            'apiKeyAuth' : '82efe8e1794afced30ba'
-          }
-        })
+        const res = await axios.delete(`https://ucarecdn.com/files/${response.data.prev.profilePicture}/`)
         console.log(res)
       }
     }
