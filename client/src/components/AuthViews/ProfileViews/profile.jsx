@@ -6,7 +6,6 @@ import { Avatar, Tooltip } from "@mui/material"
 import { accountContext } from "../../Contexts/appContext"
 import { AnimatePresence, motion } from "framer-motion"
 import { SendMessageProfile } from "./SendMessageProfile"
-import { ImageUploader } from "./ImageUploader"
 import axios from "axios"
 import "./profile.css"
 import SendIcon from '@mui/icons-material/Send';
@@ -32,6 +31,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import * as React from 'react';
 import SidebarOptions from "./SidebarOptions";
 import AddSocialDialog from "./AddSocialDialog"
+
+
+import { Widget } from "@uploadcare/react-widget";
+import { ImageUploader } from "./ImageUploader"
 
 export const Profile = ()=> {
     const { user } = useContext(accountContext) 
@@ -96,23 +99,23 @@ export const Profile = ()=> {
     }
     
     const submitButtonAffliliationHandler = async (e) => {
-      if (affiliation) {
-        const url = `http://localhost:3001/user/update/college/${user.id}`
-        const data ={ affiliation: affiliation }
-        const response = await axios.patch(url, data, {
-          headers:{
-            "authorization": localStorage.getItem("Token")
-          },
-      })
-      if (response) {
-        setViewedUser(response.data)
-        setClicked(false)
-        setAffiliation('')
-        const localUserInfo = JSON.parse(localStorage.getItem("User"))
-        localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
-        localStorage.setItem("User", JSON.stringify(localUserInfo))
+        if (affiliation) {
+          const url = `http://localhost:3001/user/update/college/${user.id}`
+          const data = { affiliation: affiliation }
+          const response = await axios.patch(url, data, {
+            headers:{
+              "authorization": localStorage.getItem("Token")
+            }
+        })
+        if (response) {
+          setViewedUser(response.data)
+          setClicked(false)
+          setAffiliation('')
+          const localUserInfo = JSON.parse(localStorage.getItem("User"))
+          localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
+          localStorage.setItem("User", JSON.stringify(localUserInfo))
+        }
       }
-    }
     }
 
     const expandDescription = () => {
@@ -175,8 +178,13 @@ export const Profile = ()=> {
             </ListItem>
         </List>
       </Box>
-    );       
+    );
+    const widgetApi = useRef();
 
+    const profileImagehandler = () => {
+      const dialog = widgetApi.current.openDialog();
+      dialog.switchTab("url");
+    }       
     return(
         <>
         {viewedUser &&
@@ -185,15 +193,36 @@ export const Profile = ()=> {
                     <div className = "top_profile_container">
                         <div className="Profile_picture_section">
                             <div>
-                            <Avatar sx = {{width:'250px', height:'250px', borderStyle:"solid", borderColor:"white", borderRadius:"50%", borderWidth:'5px'}} src = "https://cdn.mos.cms.futurecdn.net/3kZ3hc2YMB6LXiPohtyfKa.jpg"/>
-                            <ImageUploader/>
+                              <Avatar 
+                              sx = {{
+                                width:'250px', 
+                                height:'250px', 
+                                borderStyle:"solid", 
+                                borderColor:"white", 
+                                borderRadius:"50%", 
+                                borderWidth:'5px', 
+                                cursor: viewedUser._id === user.id ? "pointer": "initial" 
+                              }} 
+                              src = {`https://ucarecdn.com/${viewedUser.profilePicture}/`}
+                              onClick = { viewedUser._id === user.id ? 
+                                () => profileImagehandler() : null 
+                              }
+                              />
+                              <ImageUploader 
+                              widgetApi = {widgetApi}
+                              viewedUser = {viewedUser}
+                              setViewedUser = {setViewedUser}
+                              user = {user}
+                              
+                              />
                             </div>
                             <div>
                                 <h1 className = "profile_username">
                                     {
                                       viewedUser._id !== user.id && viewedUser.username ?
                                       viewedUser.username.charAt(0).toUpperCase() + viewedUser.username.slice(1)
-                                      :"Dashboard" 
+                                      :
+                                      "Dashboard" 
                                     }
                                 </h1>
                                 <AnimatePresence>

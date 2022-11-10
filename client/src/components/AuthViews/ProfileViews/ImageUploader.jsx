@@ -1,35 +1,41 @@
-import React, { useRef } from "react";
 import { Widget } from "@uploadcare/react-widget";
 import "./ImageUploader.css"
+import axios from "axios"
 
-export const ImageUploader = () => {
-  const widgetApi = useRef();
+export const ImageUploader = ({widgetApi, viewedUser, user, setViewedUser}) => {
+  const uploadHandler = async (file) => {
+    const results = await file
+
+    if (results.isStored){
+      const data = { data: results.uuid}
+      const url = `http://localhost:3001/user/update/profileImage/${viewedUser._id}`
+      const response = await axios.patch(url, data, {
+        headers:{
+          "authorization": localStorage.getItem("Token")
+        }
+      })
+      console.log(response)
+      if (response.status === 200 && response.data.new._id === user.id) {
+        setViewedUser(response.data.new)
+        const res = await axios.delete(`https://ucarecdn.com/files/${response.data.prev.profilePicture}/`,{
+          headers:{
+            'apiKeyAuth' : '82efe8e1794afced30ba'
+          }
+        })
+        console.log(res)
+      }
+    }
+  }
 
   return (
-    <div>
-      <button
-        onClick={() => {
-          const dialog = widgetApi.current.openDialog();
-          console.log(Object.getOwnPropertyNames(widgetApi.current));
-          console.log(widgetApi.current.value())
-          dialog.switchTab("url");
-        }}
-      >
-        Click me
-      </button>
-
+    <div className="profile_upload_button">
       <Widget ref={widgetApi}
-      previewStep = "true"
       imagesOnly = "true"
-      data-effects="flip, crop, enhance, rotate, blur, grayscale, sharp, mirror, invert"
-      publicKey="82efe8e1794afced30ba" preloader={null} />
-    <input
-    type="hidden"
-    role="uploadcare-uploader"
-    data-public-key="demopublickey"
-    data-tabs="file gphotos"
-    data-effects="flip, crop, enhance, rotate, blur, grayscale, sharp, mirror, invert"
-    />
+      publicKey="82efe8e1794afced30ba" 
+      preloader={null}
+      onChange = {e => uploadHandler(e)}
+      imageShrink = "640x480"
+      />
     </div>
   );
 };

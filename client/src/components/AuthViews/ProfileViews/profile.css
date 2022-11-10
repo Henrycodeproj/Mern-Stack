@@ -54,6 +54,12 @@
     color:green;
     cursor:pointer;
 }
+.uploadcare--widget__button,
+.uploadcare--widget__dragndrop-area,
+.uploadcare--progress,
+.uploadcare--widget__text {
+  display: none;
+}
 @media(min-width:1675px) {
     .profile_page_description{
         width:65%;
