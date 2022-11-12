@@ -24,7 +24,12 @@ router.post('/', async (req,res) =>{
                     {
                         message:'Logging In...',
                         accessToken: accessToken, 
-                        user: {id: user.id, username: user.username, collegeAffiliation:user.collegeAffiliation}
+                        user: {
+                            id: user.id, 
+                            username: user.username, 
+                            collegeAffiliation: user.collegeAffiliation, 
+                            profilePicture: user.profilePicture
+                        }
                     }
                 )
 

@@ -18,7 +18,7 @@ router.post('/', isAuthenticated, async (req,res) =>{
 
     const newestPost = await PostModel.findOne({posterId:user, Description:post})
     .sort({createdAt:-1})
-    .populate('posterId', ['username','email', 'createdAt'])
+    .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
     
     if (newPosts) return res.status(200).send({message:'Posted', newestPost:newestPost})
     return res.status(500).send({message:'Error your post failed.'})
@@ -29,8 +29,8 @@ router.get('/all', isAuthenticated, async (req, res) =>{
     try {
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
-        .populate('posterId', ['username','email', 'createdAt'])
-        .populate('attending', 'username')
+        .populate('posterId', ['username','email', 'createdAt','profilePicture'])
+        .populate('attending', ['username','profilePicture'])
         return res.status(200).send(posts)
     } catch(err){
         return res.status(500).send("Internal Server error")
@@ -52,8 +52,8 @@ router.get('/amount/:postAmount/', isAuthenticated, async (req, res) =>{
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
         .limit(req.params.postAmount)
-        .populate('posterId', ['username','email', 'createdAt'])
-        .populate('attending', 'username')
+        .populate('posterId', ['username','email', 'createdAt','profilePicture'])
+        .populate('attending', ['username','profilePicture'])
 
         return res.status(200).send(posts)
     } catch(err){
@@ -68,8 +68,8 @@ router.get('/getamount/:skip', isAuthenticated, async (req, res) =>{
         .sort({createdAt: -1})
         .skip(req.params.skip)
         .limit(5)
-        .populate('posterId', ['username','email', 'createdAt'])
-        .populate('attending', 'username')
+        .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
+        .populate('attending', ['username','profilePicture'])
 
         return res.send(posts)
     } catch(err){
@@ -106,8 +106,8 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     const updatedPosts = await PostModel.find({})
     .sort({createdAt: -1})
     .limit(req.params.postIndex)
-    .populate('posterId', ['username','email', 'createdAt'])
-    .populate('attending', 'username')
+    .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
+    .populate('attending', ['username','profilePicture'])
 
     res.status(200).send(updatedPosts)
 })
@@ -122,8 +122,8 @@ router.patch('/edit/:postId', isAuthenticated, async (req, res) => {
     await PostModel.findOneAndUpdate(filter, update)
 
     const changedPosts = await PostModel.findOne({_id:postID})
-    .populate('posterId', ['username','email', 'createdAt'])
-    .populate('attending', 'username')
+    .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
+    .populate('attending', ['username','profilePicture'])
 
     res.status(200).send(changedPosts)
 })

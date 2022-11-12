@@ -9,14 +9,17 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { TextAreaEmojis } from "../../ReusablesComponents/TextAreaEmojis";
 import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
+import Avatar from '@mui/material/Avatar';
 
 export const Posts = ({lastPostIndex, setLastPostIndex})=>{
+
+    const {user, setPosts} = useContext(accountContext)
+    const ref = useRef()
 
     const [status, setStatus] = useState('')
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const {user, setPosts} = useContext(accountContext)
-    const ref = useRef()
+    const [userInfo] = useState(JSON.parse(localStorage.getItem("User")))
 
     const formHandler = (e) => {
         e.preventDefault()
@@ -50,8 +53,11 @@ export const Posts = ({lastPostIndex, setLastPostIndex})=>{
 
     return (
         <div className="add_post_container">
-            <img className ="input_picture" src = "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=1600" >
-            </img>
+            <Avatar 
+            className ="input_picture" 
+            src = {`https://ucarecdn.com/${userInfo.profilePicture}/`}
+            />
+            {console.log(user.profilePicture)}
             <div className = "post_form_container">
                 <div className="post_form">
                     <TextareaAutosize

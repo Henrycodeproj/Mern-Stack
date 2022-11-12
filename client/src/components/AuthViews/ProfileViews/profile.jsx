@@ -33,7 +33,7 @@ import SidebarOptions from "./SidebarOptions";
 import AddSocialDialog from "./AddSocialDialog"
 
 
-import { Widget } from "@uploadcare/react-widget";
+//import { Widget } from "@uploadcare/react-widget";
 import { ImageUploader } from "./ImageUploader"
 
 export const Profile = ()=> {

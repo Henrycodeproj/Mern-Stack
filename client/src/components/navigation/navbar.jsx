@@ -1,7 +1,7 @@
 import logo from '../../images/logo.png'
 import {Button} from "@mui/material"
 import { useNavigate } from 'react-router-dom'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect} from 'react'
 import { accountContext } from '../Contexts/appContext'
 import { motion } from "framer-motion";
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -29,12 +29,17 @@ export const Navbar = () =>{
 
     const [profile, setProfile] = useState(null)
     const [notification, setNotification] = useState(null)
+    const [userInfo, setUserInfo] = useState()
     
     const navlogoutHandler = () => {
         socket.emit("logout", {userID:user.id})
         logoutHandler()
         setProfile(false)
     }
+
+    useEffect(() => {
+        setUserInfo(user)
+    },[user])
 
     const test = [1,2]
     const open = Boolean(profile)
@@ -84,7 +89,7 @@ export const Navbar = () =>{
                     {test.map((item)=>
                     <div>
                     <MenuItem sx={{ minWidth:"200px", justifyContent:"space-around" }}>
-                        <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh4moBSRCeyvWaJI8pPsFRCczpc9rB-f53ew&usqp=CAU"/>
+                        <Avatar src = {userInfo ? `https://ucarecdn.com/${userInfo.profilePicture}/`: ""}/>
                         <p>Hello liked your post</p>
                     </MenuItem>
                     <Divider/>

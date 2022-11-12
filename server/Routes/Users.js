@@ -82,7 +82,6 @@ router.patch("/update/college/:userId", isAuthenticated, async (req, res) => {
 })
 
 router.patch("/update/profileImage/:userId", isAuthenticated, async (req, res) => {
-
     try {
         const filter = { _id : req.params.userId }
         const update = { profilePicture : req.body.data}

@@ -19,7 +19,6 @@ import { MoreOptions } from '../Posts/MoreOptions';
 import { Truncating } from '../../ReusablesComponents/Truncating.jsx';
 import { SendMessage } from '../Posts/SendMessage';
 import { LoadingCircle } from '../../ReusablesComponents/LoadingCircle';
-import { display } from '@mui/system';
 
 export const Display = () =>{
 
@@ -109,6 +108,7 @@ export const Display = () =>{
                             posts.length > 0 ? posts.map((post)=>
 
                                 <li key = {post._id} className = "posts_articles">
+                                    {console.log(post, 'posterid')}
                                     <>
                                         <Tooltip 
                                             title ={
@@ -116,10 +116,11 @@ export const Display = () =>{
                                             }
                                         >
                                             <Avatar onClick = {() => navigateTo(`/profile/${post.posterId._id}`)}
-                                                src ="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1& ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80"  className='faker'
-                                            >
-                                            </Avatar>
+                                                src = {`https://ucarecdn.com/${post.posterId.profilePicture}/`} 
+                                                className='posts_image'
+                                            />
                                         </Tooltip>
+                                        {console.log(post.posterId, 'posterid')}
                                         {
                                             post.posterId._id in activeUsers &&
                                             <Tooltip title="Online">

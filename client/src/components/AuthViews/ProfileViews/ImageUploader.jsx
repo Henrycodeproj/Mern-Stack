@@ -3,6 +3,12 @@ import "./ImageUploader.css"
 import axios from "axios"
 
 export const ImageUploader = ({widgetApi, viewedUser, user, setViewedUser}) => {
+  const changeProfileImageHandler = (response) => {
+    const userInfo = JSON.parse(localStorage.getItem("User"))
+    userInfo.profilePicture = response.profilePicture
+    console.log(userInfo, userInfo.profilePicture, 'tteesster')
+    localStorage.setItem("User", JSON.stringify(userInfo))
+  }
   const uploadHandler = async (file) => {
     const results = await file
 
@@ -14,11 +20,15 @@ export const ImageUploader = ({widgetApi, viewedUser, user, setViewedUser}) => {
           "authorization": localStorage.getItem("Token")
         }
       })
-      console.log(response)
       if (response.status === 200 && response.data.new._id === user.id) {
         setViewedUser(response.data.new)
-        const res = await axios.delete(`https://ucarecdn.com/files/${response.data.prev.profilePicture}/`)
-        console.log(res)
+        changeProfileImageHandler(response.data.new)
+        await axios.delete(`https://api.uploadcare.com/files/${response.data.prev.profilePicture}/storage/`, {
+          headers: {
+            Accept: 'application/vnd.uploadcare-v0.7+json',
+            Authorization: 'Uploadcare.Simple 82efe8e1794afced30ba:afa55846bad933aa30ff'
+          }
+        })
       }
     }
   }

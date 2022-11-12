@@ -88,9 +88,10 @@ export const RightSideCol = () => {
                         <div style = {{display:"flex"}}>
                         <Avatar 
                         sx = {{ marginRight:"10px", cursor:"pointer" }} 
-                        src = "https://dvyvvujm9h0uq.cloudfront.net/com/articles/1525891879-379720-warren-wong-242286-unsplashjpg.jpg" 
+                        src = {`https://ucarecdn.com/${post.original_poster[0].profilePicture}/`}
                         onClick = {()=> navigateTo(`/profile/${post.original_poster[0]._id}`)}
                         />
+                        {console.log(post, 'right post obj')}
                             <div>
                                 <h3 style = {{textTransform:"capitalize", color:"black", margin:0, fontWeight:"600"}}>{post.original_poster[0].username}</h3>
                                     {
