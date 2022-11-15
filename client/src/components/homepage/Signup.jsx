@@ -173,6 +173,8 @@ export const Signup = () =>{
     return (
       <main>
         <div className='landing-wrapper'>
+        <div style = {{display:"flex", flexDirection:"column", gap:"1em"}}>
+        <h1>A Revolutionary way to connect with your peers.</h1>
           <div className='signup-container'>
             {option ?
             <motion.div
@@ -270,6 +272,7 @@ export const Signup = () =>{
             inactive = {inactive}
             />
             }
+          </div>
           </div>
           <img className = "signup_sideimage_logo"src={landing} alt='landing-pic'/>
       </div>
