@@ -142,7 +142,15 @@ export const Display = () => {
 
                     <div className="inner_post_container">
                       <div className="title_wrapper">
-                        <h4 style={{ textTransform: "capitalize" }}>
+                        <h4 
+                        style={{ 
+                          textTransform: "capitalize", 
+                          cursor: "pointer" 
+                        }}
+                        onClick={() =>
+                          navigateTo(`/profile/${post.posterId._id}`)
+                        }
+                        >
                           {post.posterId.username}
                         </h4>
                         <div style={{ display: "flex" }}>
