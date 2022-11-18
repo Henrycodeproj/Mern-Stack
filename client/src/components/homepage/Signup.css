@@ -12,6 +12,9 @@
 .signup_sideimage_logo {
     max-width: 50%;
 }
+.signup_action_buttons {
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px !important;
+}
 .signup-container{
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
@@ -22,6 +25,10 @@
     border-style: solid;
     border-radius: 15px;
     font-family: 'Mulish', sans-serif;
+}
+.tools {
+    font-size: 2rem !important;
+    color:black !important;
 }
 @media (max-width:999px) {
     .signup_sideimage_logo {
