@@ -1,5 +1,5 @@
 import { useState , useEffect, useContext} from 'react'
-import { Button, Alert, CircularProgress } from '@mui/material/';
+import { Button, Alert, CircularProgress, Avatar, Tooltip } from '@mui/material/';
 import { motion, AnimatePresence,} from "framer-motion"
 import { Login } from './Login';
 import { SideImage } from './SideImage';
@@ -9,6 +9,8 @@ import axios from 'axios'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import "./Signup.css"
 import landing from "../../images/landing.png"
+import Zoom from '@mui/material/Zoom';
+import { HeroSection } from './HeroSection';
 
 export const Signup = () =>{
 
@@ -19,10 +21,11 @@ export const Signup = () =>{
       email:''
     })
     //login and signup toggle state
-    const [option, setOption] = useState(true)
+    const [option, setOption] = useState()
     
     const [createdAccount, setCreatedAccount] = useState(false)
     const [signLoading, setSignLoading] = useState(false)
+    const [clicked, setClicked] = useState(false)
 
     //state errors
     const [formErrors, setformErrors] = useState({})
@@ -173,9 +176,13 @@ export const Signup = () =>{
     return (
       <main>
         <div className='landing-wrapper'>
-        <div style = {{display:"flex", flexDirection:"column", gap:"1em"}}>
-        <h1>A Revolutionary way to connect with your peers.</h1>
-          <div className='signup-container'>
+          { !clicked 
+          ? 
+          <HeroSection
+          setClicked={setClicked}
+          setOption = {setOption}
+          />
+          :<div className='signup-container'>
             {option ?
             <motion.div
               initial={{ opacity:0.25 }}
@@ -190,7 +197,7 @@ export const Signup = () =>{
               className='signup-title' style= {option ? active: inactive} onClick={()=> setOption(true)}>
                 Sign Up
               </motion.h1>
-              <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(false)}>Sign In</h1>
+              <h1 className='signup-title' style= {option ? inactive: active} onClick={()=> setOption(false)}>Login</h1>
               </div>
               {/* Alerts */}
               {passwordError && <Alert variant="filled" severity="error" color="secondary" onClose={()=>setPasswordError(false)}>Your password is missing requirements.</Alert>}
@@ -273,8 +280,8 @@ export const Signup = () =>{
             />
             }
           </div>
-          </div>
-          <img className = "signup_sideimage_logo"src={landing} alt='landing-pic'/>
+          }
+            <img className = "signup_sideimage_logo"src={landing} alt='landing-pic'/>
       </div>
     </main>
   )
