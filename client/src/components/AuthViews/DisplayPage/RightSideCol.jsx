@@ -91,7 +91,6 @@ export const RightSideCol = () => {
                         src = {`https://ucarecdn.com/${post.original_poster[0].profilePicture}/`}
                         onClick = {()=> navigateTo(`/profile/${post.original_poster[0]._id}`)}
                         />
-                        {console.log(post, 'right post obj')}
                             <div>
                                 <h3 style = {{textTransform:"capitalize", color:"black", margin:0, fontWeight:"600"}}>{post.original_poster[0].username}</h3>
                                     {

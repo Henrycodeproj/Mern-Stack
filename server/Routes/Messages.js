@@ -84,6 +84,16 @@ router.get('/conversation/:convoID', isAuthenticated, async (req, res) =>{
     const currentConvoMessages = 
     await MessageModel.find({conversationId:req.params.convoID})
     .sort({ createdAt: -1 })
-    .limit(50)
+    .limit(10)
+    res.send(currentConvoMessages.reverse())
+})
+
+router.get('/conversation/prev/:convoID/:currentNumber', isAuthenticated, async (req, res) =>{
+    console.log("prev hit")
+    const currentConvoMessages = 
+    await MessageModel.find({ conversationId:req.params.convoID })
+    .sort({ createdAt: -1 })
+    .skip(req.params.currentNumber)
+    .limit(5)
     res.send(currentConvoMessages.reverse())
 })

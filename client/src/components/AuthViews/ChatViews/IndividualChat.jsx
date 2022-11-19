@@ -38,7 +38,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         senderId:user.id,
         recipientId:recievingUserInfo._id
     }
-
     useEffect(()=> {
         socket.on(`${convoId}`, recievedMessageData => {
             console.log(recievedMessageData)
@@ -56,7 +55,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     },[])
 
     useEffect(()=>{
-        if (chatContainer.current && chatClicked.current){
+        if (chatContainer.current && chatClicked.current) {
             chatContainer.current.scrollIntoView()
             chatClicked.current = false
         }
@@ -67,7 +66,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         setOwnMessage(false)
     }, [ownMessage])
 
-    const handleNewMessageScroll = () =>{
+    const handleNewMessageScroll = () => {
         if (chatContainer.current) chatContainer.current.scrollIntoView({behavior: "smooth"})
         setNewMessages(false)
     }
@@ -114,6 +113,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             }
         }
     }
+    
     const handleReplySubmit = (event) =>{
         if (message){
             textAreaRef.current.value = ''
@@ -126,9 +126,19 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     }
     
 
-    const handleChatScroll = (event) => {
+    const handleChatScroll = async (event) => {
         setScrollPosition(event.target.clientHeight + event.target.scrollTop + 1)
         if (scrollPosition >= containerMaxHeight) setNewMessages(false)
+        else if (event.target.scrollTop === 0) {
+            const Url = `http://localhost:3001/message/conversation/prev/${convoId}/${chatHistory.length}`
+            const response = await axios.get(Url, {
+                headers:{
+                    "authorization":localStorage.getItem("Token")
+                },
+            })
+            setChatHistory(prev => [...response.data, ...prev])
+            if (response.data.length !== 0) event.target.scrollTop = 200
+        }
     }
     
     return (
