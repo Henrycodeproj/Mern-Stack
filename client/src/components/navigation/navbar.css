@@ -30,6 +30,15 @@ nav{
     background-color: rgba(128, 128, 128, 0.32);
     border-radius: 50%;
 }
+#input-with-icon-textfield[type="text"]{
+  color: white !important;
+}
+.MuiInput-root:hover::before  {
+  border-bottom-color: gray !important;
+}
+#input-with-icon-textfield::placeholder{
+  color: white !important;
+}
 .notification_bell {
     font-size: 2em !important;
     cursor:pointer;

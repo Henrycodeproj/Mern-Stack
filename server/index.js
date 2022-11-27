@@ -23,7 +23,7 @@ const app = express()
 dotenv.config();
 
 const corsOptions ={
-    origin:'http://localhost:3000',
+    origin:'*',
     credentials:true,           
     optionSuccessStatus:200,
 }
@@ -78,6 +78,8 @@ app.get("/verify/:token", async (req, res)=>{
 
 app.post("/createUser", async (req,res) => {
     const {username, password, email} = req.body
+
+    console.log(username, password, email)
 
     const newUser = new UserModel({
         username:username.charAt(0).toUpperCase() + username.slice(1).toLowerCase(),

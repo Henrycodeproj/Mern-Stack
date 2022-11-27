@@ -1,7 +1,7 @@
 import logo from "../../images/logo.png";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { accountContext } from "../Contexts/appContext";
 import { motion } from "framer-motion";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -16,18 +16,30 @@ import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
 import Popover from "@mui/material/Popover";
 import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+import axios from "axios";
 import "../navigation/navbar.css";
+import {SearchBarModal} from "./SearchBarModal";
 
 export const Navbar = () => {
   const navigateTo = useNavigate();
-  const { userStatus, user, logoutHandler, socket } =
-    useContext(accountContext);
+  const ref = useRef()
+  const { 
+    userStatus, 
+    user, 
+    logoutHandler, 
+    socket 
+  } = useContext(accountContext);
 
   const [profile, setProfile] = useState(null);
   const [notification, setNotification] = useState(null);
   const [userInfo, setUserInfo] = useState();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [search, setSearch] = useState('')
+  const [searchResults, setSearchResults] = useState()
 
   const navlogoutHandler = () => {
     socket.emit("logout", { userID: user.id });
@@ -35,6 +47,29 @@ export const Navbar = () => {
     setProfile(false);
   };
 
+  const searchBarHandler = async (word) => {
+    setSearch(word)
+    const data = {
+      "word": word 
+    }
+    const url = 'http://localhost:3001/posts/search'
+    const searchResponse = await axios.post(url, data, {
+      headers:{
+        "authorization": localStorage.getItem("Token")
+      }
+    })
+
+    if (searchResponse.data && searchResponse.data.length >= 1) {
+      setSearchResults(searchResponse.data)
+      setAnchorEl(ref.current)
+    } else {
+      setAnchorEl(null)
+    }
+  }
+  const searchInputCheck = () => {
+    if (search) setAnchorEl(ref.current)
+    else setSearchResults([])
+  }
   useEffect(() => {
     setUserInfo(user);
   }, [user]);
@@ -72,6 +107,36 @@ export const Navbar = () => {
         />
 
         <div className="profile_section">
+        <TextField
+        ref = {ref}
+        id="input-with-icon-textfield"
+        placeholder="Search Unplug"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start" sx = {{color:"white"}} className = "navy_search">
+              <TravelExploreIcon sx = {{fontSize:"1.85rem"}}/>
+            </InputAdornment>
+          ),
+        }}
+        onChange = {(e) => searchBarHandler(e.target.value)}
+        variant="standard"
+        color = "secondary"
+        sx={{
+          '& .MuiInput-underline:before': { borderBottomColor: 'gray', borderBottomWidth:"2px" },
+          '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+          width:"250px",
+        }}
+        className = "search_bar"
+        onClick = {() => searchInputCheck()}
+        />
+        <SearchBarModal
+        anchorEl = {anchorEl}
+        setAnchorEl = {setAnchorEl}
+        searchResults = {searchResults}
+        setSearchResults = {setSearchResults}
+        />
+
+
           <Badge badgeContent={4} color="error">
             <NotificationsIcon
               className="notification_bell"
@@ -114,7 +179,7 @@ export const Navbar = () => {
                             : ""
                         }
                       />
-                      <p>Hello liked your post</p>
+                      <p>User liked your post</p>
                     </MenuItem>
                     <Divider />
                   </div>

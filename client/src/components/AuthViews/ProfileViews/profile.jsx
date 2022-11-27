@@ -21,7 +21,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { SubmitProfile } from "./SubmitProfile"
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
