@@ -104,19 +104,18 @@ export const Display = () => {
           <LeftColumn />
         </div>
 
-        <div className="newsfeed_container" onScroll={(e) => handleScroll(e)}>
+        <div className="newsfeed_container">
           <div className="outer_posts_container">
             <Posts
               lastPostIndex={lastPostIndex}
               setLastPostIndex={setLastPostIndex}
             />
           </div>
-          <div>
+          <div className="post_container_section" onScroll={(e) => handleScroll(e)}>
             <ul>
               {posts.length > 0 ? (
                 posts.map((post) => (
                   <li key={post._id} className="posts_articles">
-                    {console.log(post, "posterid")}
                     <>
                       <Tooltip
                         title={`${

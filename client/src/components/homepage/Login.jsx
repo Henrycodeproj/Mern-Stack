@@ -6,6 +6,7 @@ import { accountContext } from "../Contexts/appContext";
 import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
+import "./Login.css"
 
 export const Login = ({ setOption, option, active, inactive }) => {
   const { setUser } = useContext(accountContext);
@@ -94,6 +95,7 @@ export const Login = ({ setOption, option, active, inactive }) => {
                 name="login_username"
                 onChange={handleInfo}
                 style={{ width: "100%" }}
+                placeholder = "guest"
               />
               <PersonIcon
                 style={{
@@ -112,7 +114,8 @@ export const Login = ({ setOption, option, active, inactive }) => {
                 type="password"
                 name="login_password"
                 onChange={handleInfo}
-                style={{ width: "100%" }}
+                style={{ width: "100%"}}
+                placeholder = "guest"
               />
               <LockIcon
                 style={{
