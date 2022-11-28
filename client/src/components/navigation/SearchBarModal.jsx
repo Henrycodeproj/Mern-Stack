@@ -13,6 +13,10 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import "./SearchBarModal.css"
 import { accountContext } from '../Contexts/appContext';
 import axios from "axios"
+import { motion } from "framer-motion";
+import Tooltip from "@mui/material/Tooltip";
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -21,7 +25,8 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popper' : undefined;
     const ref = useRef()
-    const {user} = useContext(accountContext)
+    const navigateTo = useNavigate()
+    const {user, setPosts, lastPostIndex} = useContext(accountContext)
 
     useEffect(() => {
       function handleClickOutside(event) {
@@ -53,6 +58,14 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
         }
       })
       if (response.status === 200) {
+        const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`;
+        axios.get(URL, {
+            headers: {
+              authorization: localStorage.getItem("Token"),
+            },
+          })
+          .then((res) => setPosts(res.data))
+          .catch((err) => console.log(err));
         setSearchResults(response.data)
       }
     }
@@ -91,9 +104,38 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
                       {postInfo.attending.some(attending => attending._id === user.id) ? <FavoriteIcon sx = {{color:"red", cursor:"pointer"}} onClick = {()=> searchLikeHandler(postInfo._id)}/> : <FavoriteBorderIcon onClick = {()=> searchLikeHandler(postInfo._id)} sx = {{color:"red", cursor:"pointer"}}/>}
                       {console.log(searchResults)}
                       <div style = {{display:"flex"}}>
-                        <Avatar src = "" sx = {{width:"24px",height:"24px"}}/>
-                        <Avatar src = "" sx = {{width:"24px",height:"24px"}}/>
-                        <Avatar src = "" sx = {{width:"24px",height:"24px"}}/>
+                        {console.log(postInfo)}
+                        {postInfo.attending.map((attending, index) => index <= 2 ?
+                          <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1}}
+                          whileHover = {{ y: -10, scale: 1.3}}
+                          exit={{ opacity: 0 }}
+                          >
+                              <Tooltip title = {postInfo._id !== user.id && postInfo.username?
+                                   `${postInfo.username.charAt(0). toUpperCase() + postInfo.username.slice(1)} is attending`
+                                   :'You are attending this event'}
+                              >
+                                  <Avatar
+                                  onClick = {()=> navigateTo(`/profile/${postInfo._id}`)} 
+                                  className = "attending_avatars" 
+                                  alt="Trevor Henderson" 
+                                  src={
+                                      postInfo._id !== user.id 
+                                      ? (postInfo.profilePicture 
+                                          ? `https://ucarecdn.com/${user.profilePicture}/`
+                                          : null
+                                        )
+                                      : (user.profilePicture 
+                                          ? `https://ucarecdn.com/${user.profilePicture}/`
+                                          : null
+                                        )
+                                  }
+                                  />
+                              </Tooltip>
+                          </motion.div>
+                           : <Avatar src = {`${attending.profilePicture}`} sx = {{width:"24px",height:"24px"}}/> 
+                        )}
                       </div>
                     </div>
                   </div>

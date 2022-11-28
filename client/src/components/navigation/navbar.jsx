@@ -31,7 +31,8 @@ export const Navbar = () => {
     userStatus, 
     user, 
     logoutHandler, 
-    socket 
+    socket,
+    posts 
   } = useContext(accountContext);
 
   const [profile, setProfile] = useState(null);
@@ -46,11 +47,16 @@ export const Navbar = () => {
     logoutHandler();
     setProfile(false);
   };
-
-  const searchBarHandler = async (word) => {
+  const searchwordHandler = (word) => {
     setSearch(word)
+  }
+  useEffect(() => {
+    searchBarHandler()
+  },[search, posts])
+
+  const searchBarHandler = async () => {
     const data = {
-      "word": word 
+      "word": search 
     }
     const url = 'http://localhost:3001/posts/search'
     const searchResponse = await axios.post(url, data, {
@@ -66,10 +72,12 @@ export const Navbar = () => {
       setAnchorEl(null)
     }
   }
+
   const searchInputCheck = () => {
     if (search) setAnchorEl(ref.current)
     else setSearchResults([])
   }
+
   useEffect(() => {
     setUserInfo(user);
   }, [user]);
@@ -118,7 +126,7 @@ export const Navbar = () => {
             </InputAdornment>
           ),
         }}
-        onChange = {(e) => searchBarHandler(e.target.value)}
+        onChange = {(e) => searchwordHandler(e.target.value)}
         variant="standard"
         color = "secondary"
         sx={{
