@@ -21,4 +21,4 @@
 -Emoji Picker
 
 **Getting Started**\
-```npm run start```
+```npm run start for each separate directory with cd server/cd client```
