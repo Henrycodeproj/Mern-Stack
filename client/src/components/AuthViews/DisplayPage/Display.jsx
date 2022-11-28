@@ -30,9 +30,10 @@ export const Display = () => {
     socket,
     dark,
     setDark,
+    lastPostIndex, 
+    setLastPostIndex
   } = useContext(accountContext);
 
-  const [lastPostIndex, setLastPostIndex] = useState(15);
   const [loadingState, setLoadingState] = useState(true);
   const navigateTo = useNavigate();
 
@@ -51,8 +52,7 @@ export const Display = () => {
 
   useEffect(() => {
     const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`;
-    axios
-      .get(URL, {
+    axios.get(URL, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
