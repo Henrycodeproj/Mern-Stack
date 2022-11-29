@@ -13,7 +13,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import "./SearchBarModal.css"
 import { accountContext } from '../Contexts/appContext';
 import axios from "axios"
-import { motion } from "framer-motion";
+import { motion, AnimatePresence} from 'framer-motion';
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from 'react-router-dom';
 
@@ -75,14 +75,12 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
         <Popper id={id} open={open} anchorEl={anchorEl}>
           <Box sx={{ 
             border: 1,
-            p: 1, 
-            bgcolor: 'background.paper', 
-            width:"250px", 
+            bgcolor: 'var(--white-background)', 
+            width:"350px", 
             borderRadius:"5px", 
             boxShadow:"rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px", 
-            overflowY:"scroll", 
-            height:"210px", 
-            boxSizing:"border-box"
+            overflowY:"scroll",  
+            boxSizing:"border-box",
             }}
           >
             <ul ref = {ref}>
@@ -90,11 +88,26 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
             searchResults && searchResults.map(
               (postInfo) =>
                 <div>
-                <ListItem sx = {{alignItems:"flex-start", marginTop:"0"}}>
+                <ListItem 
+                sx = {{
+                  alignItems:"flex-start", 
+                  marginTop:"0", 
+                  padding:"16px"
+                }} 
+                className = "search_boxes">
                   <ListItemAvatar>
-                    <Avatar src = {null}/>
+                    <Avatar 
+                    src = {`https://ucarecdn.com/${postInfo.posterId.profilePicture}/`}
+                    onClick = {()=> navigateTo(`/profile/${postInfo.posterId._id}`)} 
+                    sx = {{cursor:"pointer"}}
+                    />
                   </ListItemAvatar>
-                  <div style = {{flexGrow:1}}>
+                  <div style = {{flexGrow:1, 
+                    display:"flex", 
+                    flexDirection:"column", 
+                    gap:".5rem"
+                    }}
+                  >
                   <ListItemText 
                   primary={postInfo.posterId.username}
                   secondary={postInfo.Description}
@@ -104,38 +117,61 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
                       {postInfo.attending.some(attending => attending._id === user.id) ? <FavoriteIcon sx = {{color:"red", cursor:"pointer"}} onClick = {()=> searchLikeHandler(postInfo._id)}/> : <FavoriteBorderIcon onClick = {()=> searchLikeHandler(postInfo._id)} sx = {{color:"red", cursor:"pointer"}}/>}
                       {console.log(searchResults)}
                       <div style = {{display:"flex"}}>
-                        {console.log(postInfo)}
-                        {postInfo.attending.map((attending, index) => index <= 2 ?
-                          <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1}}
-                          whileHover = {{ y: -10, scale: 1.3}}
-                          exit={{ opacity: 0 }}
-                          >
-                              <Tooltip title = {postInfo._id !== user.id && postInfo.username?
-                                   `${postInfo.username.charAt(0). toUpperCase() + postInfo.username.slice(1)} is attending`
-                                   :'You are attending this event'}
+                      <AnimatePresence>
+                        {
+                        postInfo.attending.map(
+                          (attending, index) => index <= 1
+                            ? <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1}}
+                              whileHover = {{ y: -3, scale: 1.05}}
+                              exit={{ opacity: 0 }}
                               >
-                                  <Avatar
-                                  onClick = {()=> navigateTo(`/profile/${postInfo._id}`)} 
-                                  className = "attending_avatars" 
-                                  alt="Trevor Henderson" 
-                                  src={
-                                      postInfo._id !== user.id 
-                                      ? (postInfo.profilePicture 
-                                          ? `https://ucarecdn.com/${user.profilePicture}/`
-                                          : null
-                                        )
-                                      : (user.profilePicture 
-                                          ? `https://ucarecdn.com/${user.profilePicture}/`
-                                          : null
-                                        )
-                                  }
-                                  />
-                              </Tooltip>
-                          </motion.div>
-                           : <Avatar src = {`${attending.profilePicture}`} sx = {{width:"24px",height:"24px"}}/> 
-                        )}
+                                  <Tooltip 
+                                  title = {
+                                    attending._id !== user.id && postInfo
+                                      ?`${attending.username.charAt(0). toUpperCase() + attending.username.slice(1)} is attending`
+                                      :'You are attending this event'
+                                    }
+                                  >
+                                      <Avatar
+                                      onClick = {()=> navigateTo(`/profile/${attending._id}`)} 
+                                      className = "search_attending_avatars"
+                                      alt="Trevor Henderson" 
+                                      src={
+                                          attending._id !== user.id 
+                                          ? (attending.profilePicture 
+                                              ? `https://ucarecdn.com/${attending.profilePicture}/`
+                                              : null
+                                            )
+                                          : (user.profilePicture 
+                                              ? `https://ucarecdn.com/${user.profilePicture}/`
+                                              : null
+                                            )
+                                      }
+                                      />
+                                  </Tooltip>
+                                </motion.div>
+                            : 
+                            <div>
+                            {
+                            postInfo.attending.length - index === 1 &&
+                            <motion.div
+                            whileHover={{scale:1.15}}
+                            >   
+                                <Tooltip title = {postInfo.attending.length - 2 + " more"}>
+                                    <Avatar
+                                    className='search_attending_avatars'
+                                    > 
+                                    +{postInfo.attending.length - 2} 
+                                    </Avatar>
+                                </Tooltip>
+                            </motion.div>
+                            }
+                            </div>
+                          )
+                        }
+                        </AnimatePresence>
                       </div>
                     </div>
                   </div>
@@ -149,5 +185,4 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
       </div>
     )
 }
-
 

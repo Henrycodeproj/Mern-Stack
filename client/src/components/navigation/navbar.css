@@ -31,7 +31,8 @@ nav{
     border-radius: 50%;
 }
 #input-with-icon-textfield[type="text"]{
-  color: white !important;
+  color: rgb(255, 255, 255) !important;
+  color: rgb(199, 195, 195)
 }
 .MuiInput-root:hover::before  {
   border-bottom-color: gray !important;

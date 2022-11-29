@@ -1,14 +1,20 @@
 import { Widget } from "@uploadcare/react-widget";
 import "./ImageUploader.css"
 import axios from "axios"
+import { accountContext } from "../../Contexts/appContext";
+import { useContext } from "react"; 
 
 export const ImageUploader = ({widgetApi, viewedUser, user, setViewedUser}) => {
+
+  const {setUser} = useContext(accountContext)
+
   const changeProfileImageHandler = (response) => {
     const userInfo = JSON.parse(localStorage.getItem("User"))
     userInfo.profilePicture = response.profilePicture
-    console.log(userInfo, userInfo.profilePicture, 'tteesster')
     localStorage.setItem("User", JSON.stringify(userInfo))
-  }
+    setUser(userInfo)
+}
+
   const uploadHandler = async (file) => {
     const results = await file
 
