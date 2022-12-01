@@ -2,6 +2,7 @@ import express from "express"
 import isAuthenticated from '../Middleware/auth.js';
 import ConversationModel from "../Models/Conversations.js";
 import MessageModel from "../Models/messages.js";
+import UserModel from "../Models/Users.js";
 import mongoose from "mongoose";
 
 export const router = express.Router()
@@ -96,4 +97,14 @@ router.get('/conversation/prev/:convoID/:currentNumber', isAuthenticated, async 
     .skip(req.params.currentNumber)
     .limit(5)
     res.send(currentConvoMessages.reverse())
+})
+
+router.get('/unread/:convoID/:userID', isAuthenticated, async (req, res) => {
+    try {
+        const user = await UserModel.findOne({_id: req.params.userID})
+        console.log(user)
+        res.status(200).send(user)
+    } catch(error) {
+        console.log(error)
+    }
 })

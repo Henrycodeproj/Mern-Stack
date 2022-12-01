@@ -16,6 +16,7 @@ import axios from "axios"
 import { motion, AnimatePresence} from 'framer-motion';
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from 'react-router-dom';
+import { Truncating } from '../ReusablesComponents/Truncating';
 
 
 
@@ -76,12 +77,13 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
           <Box sx={{ 
             border: 1,
             bgcolor: 'var(--white-background)', 
-            width:"350px", 
+            width:"325px", 
             borderRadius:"5px", 
             boxShadow:"rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px", 
             overflowY:"scroll",  
             boxSizing:"border-box",
             }}
+            className = "search-box-container"
           >
             <ul ref = {ref}>
             {
@@ -110,11 +112,42 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
                   >
                   <ListItemText 
                   primary={postInfo.posterId.username}
-                  secondary={postInfo.Description}
+                  secondary = {
+                    <Truncating
+                    postDescription={postInfo.Description}
+                    truncateNumber = {50}
+                    />
+                  }
                   sx = {{marginTop:"0"}}
                   />
                     <div style = {{display:"flex", justifyContent:"space-between"}}>
-                      {postInfo.attending.some(attending => attending._id === user.id) ? <FavoriteIcon sx = {{color:"red", cursor:"pointer"}} onClick = {()=> searchLikeHandler(postInfo._id)}/> : <FavoriteBorderIcon onClick = {()=> searchLikeHandler(postInfo._id)} sx = {{color:"red", cursor:"pointer"}}/>}
+                      {
+                      postInfo.attending.some(attending => attending._id === user.id) 
+                      ? 
+                      <motion.div
+                      whileHover={{scale: 1.1}}
+                      whileTap={{
+                        scale: 1.3,
+                      }}
+                      >
+                      <FavoriteIcon 
+                        sx = {{color:"red", cursor:"pointer"}} 
+                        onClick = {()=> searchLikeHandler(postInfo._id)}
+                        />
+                      </motion.div> 
+                      : 
+                      <motion.div
+                      whileHover={{scale: 1.1}}
+                      whileTap={{
+                        scale: 1.3,
+                      }}
+                      >
+                      <FavoriteBorderIcon 
+                        onClick = {()=> searchLikeHandler(postInfo._id)} 
+                        sx = {{color:"red", cursor:"pointer"}}
+                        />
+                      </motion.div>
+                      }
                       {console.log(searchResults)}
                       <div style = {{display:"flex"}}>
                       <AnimatePresence>
