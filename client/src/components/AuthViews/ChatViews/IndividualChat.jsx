@@ -49,6 +49,19 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         })
     },[])
 
+    useEffect(() => {
+        async function getUnreadMessages (){
+            const url = `http://localhost:3001/message/unread/${convoId}/${user.id}`
+            await axios.get(url, {
+                headers:{
+                    "authorization":localStorage.getItem("Token")
+                }
+            })
+        }
+      const response = getUnreadMessages()
+      console.log(response.data)
+    },[])
+
     useEffect(()=>{
         chatOpen.current = false
         if (isNewMessage) setNotification(prevNotifications => prevNotifications + 1)
@@ -144,7 +157,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     return (
       <>
         <Tooltip title ="Chat">
-            <Badge badgeContent={notification} color="primary" style = {{minWidth:'15px', height:"15px"}}>
+            <Badge badgeContent={notification} color="primary" style = {{minWidth:'15px', height:"15px"}} overlap="circular" variant="dot">
                 <ChatIcon onClick = { handleClick } sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}/>
             </Badge>
         </Tooltip>
