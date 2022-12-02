@@ -131,7 +131,6 @@ export const Display = () => {
                           className="posts_image"
                         />
                       </Tooltip>
-                      {console.log(post.posterId, "posterid")}
                       {post.posterId._id in activeUsers && (
                         <Tooltip title="Online">
                           <span className="online" />

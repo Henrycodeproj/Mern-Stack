@@ -48,18 +48,18 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             if (chatOpen.current === false) setNotification(prevNotifications => prevNotifications + 1)
         })
     },[])
-
+    
     useEffect(() => {
         async function getUnreadMessages (){
             const url = `http://localhost:3001/message/unread/${convoId}/${user.id}`
-            await axios.get(url, {
+            const response = await axios.get(url, {
                 headers:{
                     "authorization":localStorage.getItem("Token")
                 }
             })
+            if (response.data.results >= 1) setNotification(response.data.results)
         }
-      const response = getUnreadMessages()
-      console.log(response.data)
+      getUnreadMessages()
     },[])
 
     useEffect(()=>{
@@ -157,7 +157,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     return (
       <>
         <Tooltip title ="Chat">
-            <Badge badgeContent={notification} color="primary" style = {{minWidth:'15px', height:"15px"}} overlap="circular" variant="dot">
+            <Badge badgeContent={notification} color="primary" style = {{minWidth:'15px', height:"15px"}}>
                 <ChatIcon onClick = { handleClick } sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}/>
             </Badge>
         </Tooltip>
