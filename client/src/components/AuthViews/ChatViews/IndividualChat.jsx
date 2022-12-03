@@ -57,6 +57,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                     "authorization":localStorage.getItem("Token")
                 }
             })
+            console.log(response.data)
             if (response.data.results >= 1) setNotification(response.data.results)
         }
       getUnreadMessages()
