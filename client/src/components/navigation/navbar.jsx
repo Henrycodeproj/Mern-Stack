@@ -41,7 +41,6 @@ export const Navbar = () => {
 
   useEffect(() => {
     function getCurrentWidth() {
-      console.log(window.innerWidth);
       setWidth(window.innerWidth);
     }
     window.addEventListener("resize", getCurrentWidth);

@@ -2,6 +2,7 @@ import express from 'express';
 import isAuthenticated from '../Middleware/auth.js';
 import UserModel from '../Models/Users.js';
 import ConversationModel from '../Models/Conversations.js';
+import NotificationModel from '../Models/Notifications.js';
 
 export const router = express.Router()
 
@@ -94,4 +95,14 @@ router.patch("/update/profileImage/:userId", isAuthenticated, async (req, res) =
     } catch (error) {
         console.log(error)
     }
+})
+
+router.post("/:userId/notifications", isAuthenticated, async (req, res) => {
+    console.log(req.params.userId, req.body)
+    const notification = new NotificationModel({
+        notifiedUser: "637006051cc69b448ad1f065",
+        postId: "63773470a8a07271809b80a5",
+        attendId: "637eabf1a73b3d9992892f28",
+    })
+    await notification.save()
 })
