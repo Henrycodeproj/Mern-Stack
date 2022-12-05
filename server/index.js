@@ -134,12 +134,14 @@ io.on("connection", (socket) => {
         }
         io.emit("activeUsers", activeUsers)
     })
-
     socket.on("logout", (data) => {
         delete activeUsers[data.userID]
         io.emit("inactiveUsers", activeUsers)
     })
-
+    socket.on("notification", (data) => {
+        console.log(data.post.Description)
+        socket.broadcast.emit(`${data.posterID}notification`, {number: 1})
+    })
     // new chats socket handler
     socket.on("messages", (newChatInfo) => {
         const newMessage = {

@@ -169,7 +169,7 @@ export const Signup = () =>{
 
     const {userStatus} = useContext(accountContext)
 
-    if (userStatus) return <Navigate to="/display"/>
+    if (userStatus) return <Navigate to="/display" replace={true}/>
 
     return (
       <main>
