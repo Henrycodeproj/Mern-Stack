@@ -28,6 +28,8 @@ export const AppContext = ({children}) =>{
 
     const [dark, setDark] = useState(false)
 
+    const [userNotification, setUserNotification] = useState([])
+
     const [isNewChat, setIsNewChat] = useState([])
 
     const [lastPostIndex, setLastPostIndex] = useState(15);
@@ -50,7 +52,9 @@ export const AppContext = ({children}) =>{
             isNewChat,
             setIsNewChat,
             lastPostIndex,
-            setLastPostIndex
+            setLastPostIndex,
+            userNotification,
+            setUserNotification
         }}>
             {children}
         </accountContext.Provider>    

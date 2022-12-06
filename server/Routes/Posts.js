@@ -95,6 +95,7 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     const post = await PostModel.findById(postID)
 
     if (post.attending.includes(userID)) 
+    
         post.attending = post.attending.filter(
         (users)=> users.toString() !== userID.toString()
         )

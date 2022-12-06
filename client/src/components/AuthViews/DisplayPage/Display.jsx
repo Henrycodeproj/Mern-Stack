@@ -1,15 +1,9 @@
 import axios from "axios";
 import "./Display.css";
-import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { Posts } from "../Posts/Posting.jsx";
-import { accountContext } from "../../Contexts/appContext";
-import { LeftColumn } from "./LeftSideCol";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AddToHomeScreenIcon from "@mui/icons-material/AddToHomeScreen";
-import { motion } from "framer-motion";
 import Zoom from "@mui/material/Zoom";
 import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
@@ -19,6 +13,12 @@ import { MoreOptions } from "../Posts/MoreOptions";
 import { Truncating } from "../../ReusablesComponents/Truncating.jsx";
 import { SendMessage } from "../Posts/SendMessage";
 import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
+import { motion } from "framer-motion";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Posts } from "../Posts/Posting.jsx";
+import { accountContext } from "../../Contexts/appContext";
+import { LeftColumn } from "./LeftSideCol";
 
 export const Display = () => {
   const {
@@ -86,10 +86,10 @@ export const Display = () => {
     }
   };
 
-  const likeHandler = (postID, posterID) => {
-    console.log(posterID, 'posterID')
+  const likeHandler = (post) => {
+    console.log(post, 'posterID')
     const data = { user: user.id };
-    const URL = `http://localhost:3001/posts/likes/${postID}/${lastPostIndex}`;
+    const URL = `http://localhost:3001/posts/likes/${post._id}/${lastPostIndex}`;
     axios
       .patch(URL, data, {
         headers: {
@@ -100,17 +100,22 @@ export const Display = () => {
         setPosts(res.data);
         socket.emit("notification",
           {
-            postID: postID, 
-            posterID: posterID
+            postID: post._id, 
+            posterID: post.posterId._id
           }
         )
+        createNotificaction(post)
       })
       .catch((error) => console.log(error));
   };
 
-  const test = async () => {
-    const url = `http://localhost:3001/user/${user.id}/notifications/`
-    const data = {data: "test"}
+  const createNotificaction = async (post) => {
+    const url = `http://localhost:3001/user/create/notifications/`
+    const data = {
+      postId: post._id,
+      notifiedUser: post.posterId._id,
+      attendId: user.id
+    }
     const response = await axios.post(url, data, {
       headers: {
         authorization: localStorage.getItem("Token")
@@ -136,7 +141,6 @@ export const Display = () => {
             />
           </div>
           <div className="post_container_section" onScroll={(e) => handleScroll(e)}>
-            <button onClick={test}>test</button>
             <ul>
               {posts.length > 0 ? (
                 posts.map((post) => (
@@ -188,7 +192,7 @@ export const Display = () => {
                         postDescription={post.Description}
                         truncateNumber={150}
                       />
-
+                  
                       <div className="posts_icon_wrapper">
                         <div className="posts_icon_bar">
                           {post.attending.some(
@@ -211,7 +215,7 @@ export const Display = () => {
                               >
                                 <FavoriteIcon
                                   sx={{ color: "red" }}
-                                  onClick={() => likeHandler(post._id, post.posterId._id)}
+                                  onClick={() => likeHandler(post)}
                                   style={{ cursor: "pointer" }}
                                 />
                               </Tooltip>
@@ -236,7 +240,7 @@ export const Display = () => {
                               >
                                 <VolunteerActivismIcon
                                   className="heart_button_outline"
-                                  onClick={() => likeHandler(post._id, post.posterId._id)}
+                                  onClick={() => likeHandler(post)}
                                   style={{ cursor: "pointer" }}
                                 />
                               </Tooltip>
