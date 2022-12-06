@@ -139,7 +139,7 @@ io.on("connection", (socket) => {
         io.emit("inactiveUsers", activeUsers)
     })
     socket.on("notification", (data) => {
-        console.log(data.post.Description)
+        console.log(data)
         socket.broadcast.emit(`${data.posterID}notification`, {number: 1})
     })
     // new chats socket handler

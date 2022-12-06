@@ -23,6 +23,7 @@ import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import axios from "axios";
 import "../navigation/navbar.css";
 import { SearchBarModal } from "./SearchBarModal";
+import { Notification } from "../AuthViews/DisplayPage/Notification";
 
 export const Navbar = () => {
   const navigateTo = useNavigate();
@@ -91,7 +92,6 @@ export const Navbar = () => {
     setUserInfo(user);
   }, [user]);
 
-  const test = [1, 2];
   const open = Boolean(profile);
 
   const openProfile = (e) => {
@@ -217,27 +217,7 @@ export const Navbar = () => {
                     </span>
                   </MenuItem>
                   <Divider />
-                  {test.map((item) => (
-                    <div>
-                      <MenuItem
-                        sx={{
-                          minWidth: "200px",
-                          justifyContent: "space-around",
-                        }}
-                      >
-                        <Avatar
-                          src={
-                            userInfo
-                              ? `https://ucarecdn.com/${userInfo.profilePicture}/`
-                              : ""
-                          }
-                          sx={{ width: "45px", height: "45px" }}
-                        />
-                        <p>User liked your post</p>
-                      </MenuItem>
-                      <Divider />
-                    </div>
-                  ))}
+                  <Notification/>
                 </div>
               </Popover>
             </Badge>

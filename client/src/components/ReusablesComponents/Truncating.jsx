@@ -18,7 +18,7 @@ export const Truncating = ({postDescription, truncateNumber}) => {
   return (
     <>
     {!truncate ?
-        <p style={{whiteSpace:"pre-line"}}>
+        <p style={{whiteSpace:"pre-line",}}>
             {postDescription.substring(0, truncateNumber)}
             {
             postDescription.length > truncateNumber ?
