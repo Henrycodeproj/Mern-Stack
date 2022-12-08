@@ -87,7 +87,6 @@ export const Display = () => {
   };
 
   const likeHandler = (post) => {
-    console.log(post, 'posterID')
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/likes/${post._id}/${lastPostIndex}`;
     axios
@@ -98,13 +97,34 @@ export const Display = () => {
       })
       .then((res) => {
         setPosts(res.data);
-        socket.emit("notification",
-          {
-            postID: post._id, 
-            posterID: post.posterId._id
-          }
-        )
+        //socket.emit("notification",
+        //  {
+        //    postID: post._id, 
+        //    posterID: post.posterId._id
+        //  }
+        //)
         createNotificaction(post)
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const unlikeHandler = (post) => {
+    const data = { user: user.id };
+    const URL = `http://localhost:3001/posts/unlikes/${post._id}/${lastPostIndex}`;
+    axios
+      .patch(URL, data, {
+        headers: {
+          authorization: localStorage.getItem("Token"),
+        },
+      })
+      .then((res) => {
+        setPosts(res.data);
+        //socket.emit("notification",
+        //  {
+        //    postID: post._id, 
+        //    posterID: post.posterId._id
+        //  }
+        //)
       })
       .catch((error) => console.log(error));
   };
@@ -215,7 +235,7 @@ export const Display = () => {
                               >
                                 <FavoriteIcon
                                   sx={{ color: "red" }}
-                                  onClick={() => likeHandler(post)}
+                                  onClick={() => unlikeHandler(post)}
                                   style={{ cursor: "pointer" }}
                                 />
                               </Tooltip>
