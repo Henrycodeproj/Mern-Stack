@@ -105,11 +105,15 @@ router.post("/create/notifications", isAuthenticated, async (req, res) => {
         postId: req.body.postId,
         attendId: req.body.attendId
     })
-    await notification.save()
+    //await notification.save()
+    
 })
 
 router.get("/:user/notifications", isAuthenticated, async (req, res) => {
+    console.log(req.params.user)
     const userNotifications = await NotificationModel.find({notifiedUser: req.params.user})
     .sort({ createdAt: -1 })
-    res.send(userNotifications)
+    .populate('notifiedUser', ['username','email', 'createdAt', 'profilePicture'])
+    console.log(userNotifications)
+    res.status(200).send(userNotifications)
 })

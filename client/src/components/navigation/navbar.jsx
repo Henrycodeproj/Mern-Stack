@@ -24,11 +24,12 @@ import axios from "axios";
 import "../navigation/navbar.css";
 import { SearchBarModal } from "./SearchBarModal";
 import { Notification } from "../AuthViews/DisplayPage/Notification";
+import Box from '@mui/material/Box';
 
 export const Navbar = () => {
   const navigateTo = useNavigate();
   const ref = useRef();
-  const { userStatus, user, logoutHandler, socket, posts } =
+  const { userStatus, user, logoutHandler, socket, posts, userNotification, setUserNotification } =
     useContext(accountContext);
 
   const [profile, setProfile] = useState(null);
@@ -103,8 +104,8 @@ export const Navbar = () => {
 
   const notificationOpen = Boolean(notification);
 
-  const handleClick = (event) => {
-    setNotification(event.currentTarget);
+  const handleClick = async (event) => {
+    setNotification(event.currentTarget)
   };
 
   const handleClose = () => {
@@ -123,7 +124,6 @@ export const Navbar = () => {
               !userStatus ? navigateTo("/") : navigateTo("/display")
             }
           />
-
           <div className="profile_section">
             {width <= 500 && !searchClicked ? (
               <TravelExploreIcon
@@ -202,7 +202,8 @@ export const Navbar = () => {
                 }}
               >
                 <div className="Notifications_container">
-                  <MenuItem
+                
+                  <Box
                     sx={{
                       minWidth: "200px",
                       display: "flex",
@@ -215,7 +216,7 @@ export const Navbar = () => {
                     <span>
                       <RecordVoiceOverIcon />
                     </span>
-                  </MenuItem>
+                  </Box>
                   <Divider />
                   <Notification/>
                 </div>

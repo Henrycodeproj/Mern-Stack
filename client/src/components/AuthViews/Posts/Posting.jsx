@@ -52,7 +52,6 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
         className="input_picture"
         src={`https://ucarecdn.com/${userInfo.profilePicture}/`}
       />
-      {console.log(user.profilePicture)}
       <div className="post_form_container">
         <div className="post_form">
           <TextareaAutosize

@@ -94,12 +94,33 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     const userID = req.body.user
     const post = await PostModel.findById(postID)
 
+    if (!post.attending.includes(userID)){
+        post.attending.push(userID)
+        await post.save()
+    } 
+
+    const updatedPosts = await PostModel.find({})
+    .sort({createdAt: -1})
+    .limit(req.params.postIndex)
+    .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
+    .populate('attending', ['username','profilePicture'])
+
+    res.status(200).send(updatedPosts)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.patch('/unlikes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
+    try {
+    const postID = req.params.postID
+    const userID = req.body.user
+    const post = await PostModel.findById(postID)
+
     if (post.attending.includes(userID)) 
-    
         post.attending = post.attending.filter(
         (users)=> users.toString() !== userID.toString()
-        )
-    else post.attending.push(userID)
+    )
 
     await post.save()
 
