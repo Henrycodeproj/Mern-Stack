@@ -3,6 +3,7 @@ import {useEffect, useContext} from 'react'
 import { accountContext } from '../../Contexts/appContext'
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
 
 export const Notification = () => {
     const {user, userNotification, setUserNotification} = useContext(accountContext)
@@ -15,16 +16,21 @@ export const Notification = () => {
                 }
             })
             console.log(response)
-            if (response) setUserNotification(prev => [...prev, response.data[0]])
+            if (response.data.length > 0) setUserNotification(prev => [...prev, response.data[0]])
         }
         getNotifications()
     },[])
- 
     return(
         <>
-        {userNotification.map(entry => 
-        <MenuItem>{entry._id}</MenuItem>
-        )}
+        {console.log(userNotification)}
+        {userNotification.length > 0 ? userNotification.map(entry => 
+        <MenuItem>
+            {entry._id}
+            <Avatar src = {`https://ucarecdn.com/${entry.attendId.profilePicture}/`}/>
+        </MenuItem>
+        )
+        :null
+        }
         </>
     )
 }
