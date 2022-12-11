@@ -25,6 +25,8 @@ import "../navigation/navbar.css";
 import { SearchBarModal } from "./SearchBarModal";
 import { Notification } from "../AuthViews/DisplayPage/Notification";
 import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+
 
 export const Navbar = () => {
   const navigateTo = useNavigate();
@@ -203,7 +205,7 @@ export const Navbar = () => {
               >
                 <div className="Notifications_container">
                 
-                  <Box
+                  <List
                     sx={{
                       minWidth: "200px",
                       display: "flex",
@@ -216,7 +218,7 @@ export const Navbar = () => {
                     <span>
                       <RecordVoiceOverIcon />
                     </span>
-                  </Box>
+                  </List>
                   <Divider />
                   <Notification/>
                 </div>
