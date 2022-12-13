@@ -14,7 +14,8 @@ import { router as MessageRouter } from './Routes/Messages.js'
 import { router as ConversationRouter } from "./Routes/Conversations.js"
 import { router as LoginRouter } from "./Routes/Login.js"
 import { Server } from 'socket.io';
-import { createServer } from "http"; 
+import { createServer } from "http";
+import NotificationModel from './Models/Notifications.js';
 
 
 const app = express()
@@ -139,8 +140,15 @@ io.on("connection", (socket) => {
         io.emit("inactiveUsers", activeUsers)
     })
     socket.on("notification", (data) => {
-        console.log(data)
-        socket.broadcast.emit(`${data.posterID}notification`, {number: 1})
+        const {posterID, postID} = data
+        //change time to 2000 ms for production
+        setTimeout(async () => {
+            const response = await NotificationModel.find({notifiedUser: posterID, postId:postID})
+            .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
+            .populate('postId', ['_id'])
+            console.log(response)
+            socket.broadcast.emit(`${data.posterID}-notification`, response)
+        }, 2000);
     })
     // new chats socket handler
     socket.on("messages", (newChatInfo) => {

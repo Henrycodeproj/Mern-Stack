@@ -99,22 +99,31 @@ router.patch("/update/profileImage/:userId", isAuthenticated, async (req, res) =
 })
 
 router.post("/create/notifications", isAuthenticated, async (req, res) => {
-    console.log(req.body)
-    const notification = new NotificationModel({
+    console.log(req.body.postId)
+    const checkExisting = await NotificationModel.findOne({
         notifiedUser: req.body.notifiedUser,
         postId: req.body.postId,
         attendId: req.body.attendId
     })
-    await notification.save()
+    console.log(checkExisting, 'existing nei')
+    if (!checkExisting){
+        const notification = new NotificationModel({
+            notifiedUser: req.body.notifiedUser,
+            postId: req.body.postId,
+            attendId: req.body.attendId
+        })
+        await notification.save()
+    }
 })
 
 router.get("/:user/notifications", isAuthenticated, async (req, res) => {
-    //console.log(req.params.user)
+    console.log(req.params.user,'1')
     try {
         const userNotifications = await NotificationModel.find({notifiedUser: req.params.user})
         .sort({ createdAt: -1 })
         .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
-        console.log(userNotifications)
+        .populate('postId', ['_id'])
+        console.log(userNotifications, 'notifications')
         res.status(200).send(userNotifications)
     } catch(error) {
         console.log(error)

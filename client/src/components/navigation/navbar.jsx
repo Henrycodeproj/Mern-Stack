@@ -31,7 +31,17 @@ import List from '@mui/material/List';
 export const Navbar = () => {
   const navigateTo = useNavigate();
   const ref = useRef();
-  const { userStatus, user, logoutHandler, socket, posts, userNotification, setUserNotification } =
+  const { 
+     userStatus,
+     user, 
+     logoutHandler, 
+     socket, 
+     posts, 
+     userNotification, 
+     setUserNotification, 
+     activeNotification, 
+     setActiveNotification 
+    } =
     useContext(accountContext);
 
   const [profile, setProfile] = useState(null);
@@ -42,6 +52,11 @@ export const Navbar = () => {
   const [searchResults, setSearchResults] = useState();
   const [width, setWidth] = useState(window.innerWidth);
   const [searchClicked, setSearchClicked] = useState(false);
+  const [numb, setNumb] = useState();
+
+  useEffect(() => {
+    setNumb(userNotification.length)
+  }, [userNotification])
 
   useEffect(() => {
     function getCurrentWidth() {
@@ -112,6 +127,7 @@ export const Navbar = () => {
 
   const handleClose = () => {
     setNotification(null);
+    setActiveNotification(false)
   };
 
   if (userStatus) {
@@ -189,7 +205,7 @@ export const Navbar = () => {
               setSearchResults={setSearchResults}
             />
 
-            <Badge badgeContent={4} color="error">
+            <Badge badgeContent={activeNotification ? numb : null} color="error">
               <NotificationsIcon
                 className="notification_bell"
                 onClick={(e) => handleClick(e)}

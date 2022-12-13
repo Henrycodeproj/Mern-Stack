@@ -31,7 +31,11 @@ export const Display = () => {
     dark,
     setDark,
     lastPostIndex, 
-    setLastPostIndex
+    setLastPostIndex,
+    setUserNotification,
+    userNotification,
+    activeNotification, 
+    setActiveNotification
   } = useContext(accountContext);
 
   const [loadingState, setLoadingState] = useState(true);
@@ -49,12 +53,6 @@ export const Display = () => {
       setActiveUsers(user);
     });
   }, []);
-
-  useEffect(() => {
-    socket.on(`${user.id}notification`, (data) => {
-      console.log(data)
-    })
-  },[])
 
   useEffect(() => {
     const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`;
@@ -97,13 +95,13 @@ export const Display = () => {
       })
       .then((res) => {
         setPosts(res.data);
-        //socket.emit("notification",
-        //  {
-        //    postID: post._id, 
-        //    posterID: post.posterId._id
-        //  }
-        //)
         createNotificaction(post)
+        socket.emit("notification",
+          {
+            postID: post._id, 
+            posterID: post.posterId._id
+          }
+        )
       })
       .catch((error) => console.log(error));
   };
