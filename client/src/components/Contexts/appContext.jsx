@@ -1,6 +1,8 @@
-import {createContext, useState} from "react";
+import {createContext, useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client"
+import axios from "axios";
+
 export const accountContext = createContext()
 
 export const AppContext = ({children}) =>{
@@ -8,7 +10,38 @@ export const AppContext = ({children}) =>{
     
     const navigateTo = useNavigate()
 
+    useEffect(() => {
+        const getNotifications = async () => {
+          const url = `http://localhost:3001/user/${user.id}/notifications`;
+          const response = await axios.get(url, {
+            headers: {
+              authorization: localStorage.getItem("Token"),
+            },
+          });
+          console.log(response.data)
+          //if (
+          //  response.data.length > 0 &&
+          //  !userNotification.some(
+          //    (notification) =>
+          //      notification.postId._id === response.data[0].postId._id &&
+          //      notification.attendId._id === response.data[0].attendId._id
+          //  )
+          //)
+          setUserNotification((prev) => prev.concat(response.data));
+          setActiveNotification(true)
+        };
+        getNotifications();
+    }, []);
+
+    useEffect(() => {
+        socket.on(`${user.id}-notification`, (data) => {
+          setUserNotification(prev => [...prev, data[0]])
+          setActiveNotification(true)
+        })
+    },[])
+
     const logoutHandler = () => {
+        setUserNotification([])
         socket.disconnect()
         localStorage.removeItem("userStatus")
         localStorage.removeItem("Token")
@@ -34,6 +67,8 @@ export const AppContext = ({children}) =>{
 
     const [lastPostIndex, setLastPostIndex] = useState(15);
 
+    const [activeNotification, setActiveNotification] = useState(true);
+
     return(
         <accountContext.Provider 
         value = {{
@@ -55,6 +90,8 @@ export const AppContext = ({children}) =>{
             setUserNotification,
             lastPostIndex,
             setLastPostIndex,
+            activeNotification, 
+            setActiveNotification
         }}>
             {children}
         </accountContext.Provider>    
