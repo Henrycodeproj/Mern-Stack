@@ -40,7 +40,9 @@ export const Navbar = () => {
      userNotification, 
      setUserNotification, 
      activeNotification, 
-     setActiveNotification 
+     setActiveNotification,
+     numb,
+     setNumb 
     } =
     useContext(accountContext);
 
@@ -52,12 +54,11 @@ export const Navbar = () => {
   const [searchResults, setSearchResults] = useState();
   const [width, setWidth] = useState(window.innerWidth);
   const [searchClicked, setSearchClicked] = useState(false);
-  const [numb, setNumb] = useState();
 
   useEffect(() => {
-    setNumb(userNotification.length)
+    setNumb(prev => prev + 1)
   }, [userNotification])
-
+  
   useEffect(() => {
     function getCurrentWidth() {
       setWidth(window.innerWidth);
@@ -128,6 +129,7 @@ export const Navbar = () => {
   const handleClose = () => {
     setNotification(null);
     setActiveNotification(false)
+    setNumb(0)
   };
 
   if (userStatus) {
@@ -205,7 +207,7 @@ export const Navbar = () => {
               setSearchResults={setSearchResults}
             />
 
-            <Badge badgeContent={activeNotification ? numb : null} color="error">
+            <Badge badgeContent={activeNotification ? userNotification.length : numb} color="error">
               <NotificationsIcon
                 className="notification_bell"
                 onClick={(e) => handleClick(e)}

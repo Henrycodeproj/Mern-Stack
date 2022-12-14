@@ -11,34 +11,27 @@ export const AppContext = ({children}) =>{
     const navigateTo = useNavigate()
 
     useEffect(() => {
-        const getNotifications = async () => {
-          const url = `http://localhost:3001/user/${user.id}/notifications`;
-          const response = await axios.get(url, {
-            headers: {
-              authorization: localStorage.getItem("Token"),
-            },
-          });
-          console.log(response.data)
-          //if (
-          //  response.data.length > 0 &&
-          //  !userNotification.some(
-          //    (notification) =>
-          //      notification.postId._id === response.data[0].postId._id &&
-          //      notification.attendId._id === response.data[0].attendId._id
-          //  )
-          //)
-          setUserNotification((prev) => prev.concat(response.data));
-          setActiveNotification(true)
-        };
-        getNotifications();
+      const getNotifications = async () => {
+        const url = `http://localhost:3001/user/${user.id}/notifications`;
+        const response = await axios.get(url, {
+          headers: {
+            authorization: localStorage.getItem("Token"),
+          },
+        });
+        console.log(response.data)
+        //if (
+        //  response.data.length > 0 &&
+        //  !userNotification.some(
+        //    (notification) =>
+        //      notification.postId._id === response.data[0].postId._id &&
+        //      notification.attendId._id === response.data[0].attendId._id
+        //  )
+        //)
+        setUserNotification((prev) => prev.concat(response.data));
+        setActiveNotification(true)
+      };
+      if (user) getNotifications();
     }, []);
-
-    useEffect(() => {
-        socket.on(`${user.id}-notification`, (data) => {
-          setUserNotification(prev => [...prev, data[0]])
-          setActiveNotification(true)
-        })
-    },[])
 
     const logoutHandler = () => {
         setUserNotification([])
@@ -69,6 +62,8 @@ export const AppContext = ({children}) =>{
 
     const [activeNotification, setActiveNotification] = useState(true);
 
+    const [numb, setNumb] = useState(0);
+
     return(
         <accountContext.Provider 
         value = {{
@@ -91,7 +86,9 @@ export const AppContext = ({children}) =>{
             lastPostIndex,
             setLastPostIndex,
             activeNotification, 
-            setActiveNotification
+            setActiveNotification,
+            numb, 
+            setNumb
         }}>
             {children}
         </accountContext.Provider>    
