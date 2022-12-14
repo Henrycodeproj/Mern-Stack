@@ -41,6 +41,13 @@ export const Display = () => {
   const [loadingState, setLoadingState] = useState(true);
   const navigateTo = useNavigate();
 
+useEffect(() => {
+    socket.on(`${user.id}-notification`, (data) => {
+      console.log(userNotification.some(notifications => notifications._id === data[0]._id), userNotification)
+      setUserNotification(prev =>[...prev, data[0]])
+    })
+},[])
+
   useEffect(() => {
     socket.emit("status", { userId: user.id });
     socket.on("activeUsers", (user) => {
