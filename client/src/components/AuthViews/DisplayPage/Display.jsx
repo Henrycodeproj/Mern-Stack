@@ -41,12 +41,15 @@ export const Display = () => {
   const [loadingState, setLoadingState] = useState(true);
   const navigateTo = useNavigate();
 
-useEffect(() => {
-    socket.on(`${user.id}-notification`, (data) => {
-      console.log(userNotification.some(notifications => notifications._id === data[0]._id), userNotification)
-      setUserNotification(prev =>[...prev, data[0]])
-    })
-},[])
+  useEffect(() => {
+     //prev.some(notifications => notifications._id === data[0]._id) 
+      socket.on(`${user.id}-notification`, (data) => {
+        console.log(data,'data called')
+        setUserNotification(prev => prev.some(notifications => notifications._id === data[0]._id) 
+        ? prev
+        : [...prev, data[0]])
+      })
+  },[])
 
   useEffect(() => {
     socket.emit("status", { userId: user.id });
@@ -106,7 +109,8 @@ useEffect(() => {
         socket.emit("notification",
           {
             postID: post._id, 
-            posterID: post.posterId._id
+            posterID: post.posterId._id,
+            currentUser: user.id
           }
         )
       })

@@ -18,15 +18,7 @@ export const AppContext = ({children}) =>{
             authorization: localStorage.getItem("Token"),
           },
         });
-        console.log(response.data)
-        //if (
-        //  response.data.length > 0 &&
-        //  !userNotification.some(
-        //    (notification) =>
-        //      notification.postId._id === response.data[0].postId._id &&
-        //      notification.attendId._id === response.data[0].attendId._id
-        //  )
-        //)
+        console.log(response.data,'data called')
         setUserNotification((prev) => prev.concat(response.data));
         setActiveNotification(true)
       };
