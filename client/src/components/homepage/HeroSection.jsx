@@ -33,7 +33,7 @@ export const HeroSection = ({ setOption, setClicked }) => {
       <div className="avatar_container_wrapper">
         <motion.div whileHover={{ scale: 1.3, y: -10 }}>
           <Tooltip
-            title="Boardgame night in my dorm tonight!"
+            title = {<h6 style={{ fontSize:"1rem" }}>Boardgame night in my dorm tonight!</h6>}
             TransitionComponent={Zoom}
             placement="top"
             arrow
@@ -46,7 +46,7 @@ export const HeroSection = ({ setOption, setClicked }) => {
         </motion.div>
         <motion.div whileHover={{ scale: 1.3, y: -10 }}>
           <Tooltip
-            title="Looking for a buddy to study Physics 1A with!"
+            title = {<h6 style={{ fontSize:"1rem" }}>Looking for a buddy to study Physics 1A with!</h6>}
             TransitionComponent={Zoom}
             placement="top"
             arrow
@@ -59,7 +59,7 @@ export const HeroSection = ({ setOption, setClicked }) => {
         </motion.div>
         <motion.div whileHover={{ scale: 1.3, y: -10 }}>
           <Tooltip
-            title="Grabbing lunch tomorrow if anyone wants join me!"
+            title = {<h6 style={{ fontSize:"1rem" }}>Grabbing lunch tomorrow if anyone wants join me!</h6>}
             TransitionComponent={Zoom}
             placement="top"
             arrow
@@ -72,7 +72,7 @@ export const HeroSection = ({ setOption, setClicked }) => {
         </motion.div>
         <motion.div whileHover={{ scale: 1.3, y: -10 }}>
           <Tooltip
-            title="Playing Pool at 5:30 on the east of campus today!"
+            title = {<h6 style={{ fontSize:"1rem" }}>Playing Pool at 5:30 on the east of campus today!</h6>}
             TransitionComponent={Zoom}
             placement="top"
             arrow

@@ -100,11 +100,14 @@ router.patch("/update/profileImage/:userId", isAuthenticated, async (req, res) =
 
 router.post("/create/notifications", isAuthenticated, async (req, res) => {
     console.log(req.body.postId)
+    if (req.body.notifiedUser === req.body.attendId) return
+
     const checkExisting = await NotificationModel.findOne({
         notifiedUser: req.body.notifiedUser,
         postId: req.body.postId,
         attendId: req.body.attendId
     })
+    
     console.log(checkExisting, 'existing nei')
     if (!checkExisting){
         const notification = new NotificationModel({
