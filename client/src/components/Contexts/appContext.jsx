@@ -1,5 +1,5 @@
 import {createContext, useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import io from "socket.io-client"
 import axios from "axios";
 
@@ -10,21 +10,6 @@ export const AppContext = ({children}) =>{
     
     const navigateTo = useNavigate()
 
-    useEffect(() => {
-      const getNotifications = async () => {
-        const url = `http://localhost:3001/user/${user.id}/notifications`;
-        const response = await axios.get(url, {
-          headers: {
-            authorization: localStorage.getItem("Token"),
-          },
-        });
-        console.log(response.data,'data called')
-        setUserNotification((prev) => prev.concat(response.data));
-        setActiveNotification(true)
-      };
-      if (user) getNotifications();
-    }, []);
-
     const logoutHandler = () => {
         setUserNotification([])
         socket.disconnect()
@@ -33,7 +18,7 @@ export const AppContext = ({children}) =>{
         localStorage.removeItem("User")
         navigateTo("/")
     }
-
+    const [lastActive, setLastActive] = useState()
     const [userStatus, setUserStatus] = useState(localStorage.getItem("userStatus"))
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")))
@@ -55,6 +40,10 @@ export const AppContext = ({children}) =>{
     const [activeNotification, setActiveNotification] = useState(true);
 
     const [numb, setNumb] = useState(0);
+
+    const [time, setTime] = useState()
+
+    const [unreadNotifications, setUnreadNotifications] = useState(0)
 
     return(
         <accountContext.Provider 
@@ -80,7 +69,13 @@ export const AppContext = ({children}) =>{
             activeNotification, 
             setActiveNotification,
             numb, 
-            setNumb
+            setNumb,
+            time,
+            setTime,
+            lastActive, 
+            setLastActive,
+            unreadNotifications,
+            setUnreadNotifications,
         }}>
             {children}
         </accountContext.Provider>    
