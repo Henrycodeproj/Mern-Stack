@@ -170,7 +170,7 @@ export const Signup = () =>{
     const {userStatus} = useContext(accountContext)
 
     if (userStatus) return <Navigate to="/display" replace={true}/>
-
+    
     return (
       <main>
         <div className='landing-wrapper'>
