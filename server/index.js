@@ -141,16 +141,18 @@ io.on("connection", (socket) => {
     })
     socket.on("notification", async (data) => {
         const {posterID, postID, currentUser} = data
+        console.log(data, 'checking data')
         //change time to 2000 ms for production
         const checkNotification = await NotificationModel.findOne({notifiedUser: posterID, postId:postID})
-        if (posterID !== currentUser) {
+        console.log(checkNotification)
             setTimeout(async () => {
+                if (posterID !== currentUser && !checkNotification) {
                 const response = await NotificationModel.find({notifiedUser: posterID, postId:postID})
                 .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
                 .populate('postId', ['_id'])
                 socket.broadcast.emit(`${data.posterID}-notification`, response)
+                }
             }, 2000);
-        }
     })
     // new chats socket handler
     socket.on("messages", (newChatInfo) => {

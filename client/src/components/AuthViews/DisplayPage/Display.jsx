@@ -39,29 +39,14 @@ export const Display = () => {
     setUnreadNotifications,
     time,
     setTime,
+    setNumb
   } = useContext(accountContext);
 
   const [loadingState, setLoadingState] = useState(true);
+
   const navigateTo = useNavigate();
 
   useEffect(() => {
-    const getNotifications = async () => {
-      const url = `http://localhost:3001/user/${user.id}/notifications`;
-      const response = await axios.get(url, {
-        headers: {
-          authorization: localStorage.getItem("Token"),
-        },
-      });
-      setUserNotification((prev) => prev.concat(response.data.notifications))
-      setTime(response.data.date)
-      setUnreadNotifications(response.data.new)
-      setActiveNotification(true)
-    };
-    if (user) getNotifications();
-  }, []);
-
-  useEffect(() => {
-     //prev.some(notifications => notifications._id === data[0]._id) 
       socket.on(`${user.id}-notification`, (data) => {
         console.log(data,'data called')
         setUserNotification(prev => prev.some(notifications => notifications._id === data[0]._id) 
@@ -69,10 +54,11 @@ export const Display = () => {
         : [...prev, data[0]])
       })
   },[])
+
   useEffect(() => {
     let count = 0
     userNotification.forEach(notification => notification.createdAt > time ? count += 1: null)
-    setUnreadNotifications(count)
+    setNumb(prev => prev + count)
   },[])
 
   useEffect(() => {

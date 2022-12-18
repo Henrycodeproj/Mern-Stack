@@ -48,7 +48,7 @@ export const Navbar = () => {
      lastActive, 
      setLastActive,
      unreadNotifications,
-     setUnreadNotifications  
+     setUnreadNotifications,  
     } =
     useContext(accountContext);
 
@@ -134,7 +134,7 @@ export const Navbar = () => {
 
   const handleClose = () => {
     setNotification(null);
-    setActiveNotification(false)
+    //setActiveNotification(false)
     setNumb(0)
     setTime(new Date().toISOString())
   };
@@ -214,7 +214,7 @@ export const Navbar = () => {
               setSearchResults={setSearchResults}
             />
 
-            <Badge badgeContent={activeNotification ? unreadNotifications : numb} color="error">
+            <Badge badgeContent={numb} color="error">
               <NotificationsIcon
                 className="notification_bell"
                 onClick={(e) => handleClick(e)}
