@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useContext } from "react";
 import { Button, Alert, CircularProgress } from "@mui/material";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { accountContext } from "../Contexts/appContext";
 import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
@@ -9,7 +9,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import "./Login.css"
 
 export const Login = ({ setOption, option, active, inactive }) => {
-  const { setUser } = useContext(accountContext);
+  const { setUser, loginState, setLoginState, setActiveNotification} = useContext(accountContext);
 
   const [loginInfo, setLoginInfo] = useState({
     login_username: "",
@@ -41,8 +41,9 @@ export const Login = ({ setOption, option, active, inactive }) => {
           localStorage.setItem("userStatus", true);
           localStorage.setItem("User", JSON.stringify(res.data.user));
           setUser(JSON.parse(localStorage.getItem("User")));
-          setLoginLoading(false);
-          navigateTo("/display");
+          setLoginLoading(true);
+          setActiveNotification(true)
+          navigateTo("/display", {replace:true});
         }
       })
       .catch((error) => {

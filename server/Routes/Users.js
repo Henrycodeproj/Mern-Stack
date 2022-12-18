@@ -120,6 +120,7 @@ router.post("/create/notifications", isAuthenticated, async (req, res) => {
 })
 
 router.get("/:user/notifications", isAuthenticated, async (req, res) => {
+    console.log("notifications called")
     try {
         const user = await UserModel.findOne({_id: req.params.user})
         if (user.id !== req.results.id) return res.status(400).send({message:"Invalid user"})

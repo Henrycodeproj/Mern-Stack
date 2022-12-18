@@ -10,14 +10,6 @@ export const AppContext = ({children}) =>{
     
     const navigateTo = useNavigate()
 
-    const logoutHandler = () => {
-        setUserNotification([])
-        socket.disconnect()
-        localStorage.removeItem("userStatus")
-        localStorage.removeItem("Token")
-        localStorage.removeItem("User")
-        navigateTo("/")
-    }
     const [lastActive, setLastActive] = useState()
     const [userStatus, setUserStatus] = useState(localStorage.getItem("userStatus"))
 
@@ -44,6 +36,32 @@ export const AppContext = ({children}) =>{
     const [time, setTime] = useState()
 
     const [unreadNotifications, setUnreadNotifications] = useState(0)
+
+    useEffect(() => {
+      console.log("called")
+      const getNotifications = async () => {
+        const url = `http://localhost:3001/user/${user.id}/notifications`;
+        const response = await axios.get(url, {
+          headers: {
+            authorization: localStorage.getItem("Token"),
+          },
+        });
+        setUserNotification((prev) => prev.concat(response.data.notifications))
+        setTime(response.data.date)
+        setUnreadNotifications(response.data.new)
+        setActiveNotification(true)
+      };
+      if (user) getNotifications();
+    }, [user]);
+
+    const logoutHandler = () => {
+      setUserNotification([])
+      socket.disconnect()
+      localStorage.removeItem("userStatus")
+      localStorage.removeItem("Token")
+      localStorage.removeItem("User")
+      navigateTo("/")
+    }
 
     return(
         <accountContext.Provider 

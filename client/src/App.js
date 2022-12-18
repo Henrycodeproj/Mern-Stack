@@ -10,6 +10,7 @@ import { UserAuthentication } from './components/config/userAuth';
 import { Profile } from "./components/AuthViews/ProfileViews/profile";
 import { Display } from './components/AuthViews/DisplayPage/Display';
 import { NotFound } from "./components/config/NotFound";
+import * as React from 'react';
 
 function App() {
   return (
