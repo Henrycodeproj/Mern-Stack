@@ -31,28 +31,9 @@ export const AppContext = ({children}) =>{
 
     const [activeNotification, setActiveNotification] = useState(true);
 
-    const [numb, setNumb] = useState(0);
-
     const [time, setTime] = useState()
 
     const [unreadNotifications, setUnreadNotifications] = useState(0)
-
-    useEffect(() => {
-      console.log("called")
-      const getNotifications = async () => {
-        const url = `http://localhost:3001/user/${user.id}/notifications`;
-        const response = await axios.get(url, {
-          headers: {
-            authorization: localStorage.getItem("Token"),
-          },
-        });
-        setUserNotification((prev) => prev.concat(response.data.notifications))
-        setTime(response.data.date)
-        setUnreadNotifications(response.data.new)
-        setActiveNotification(true)
-      };
-      if (user) getNotifications();
-    }, [user]);
 
     const logoutHandler = () => {
       setUserNotification([])
@@ -86,8 +67,6 @@ export const AppContext = ({children}) =>{
             setLastPostIndex,
             activeNotification, 
             setActiveNotification,
-            numb, 
-            setNumb,
             time,
             setTime,
             lastActive, 

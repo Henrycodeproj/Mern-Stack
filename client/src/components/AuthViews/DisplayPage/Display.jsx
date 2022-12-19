@@ -51,14 +51,9 @@ export const Display = () => {
         console.log(data,'data called')
         setUserNotification(prev => prev.some(notifications => notifications._id === data[0]._id) 
         ? prev
-        : [...prev, data[0]])
+        : ([...prev, data[0]]), setUnreadNotifications(prev => prev + 1)
+        )
       })
-  },[])
-
-  useEffect(() => {
-    let count = 0
-    userNotification.forEach(notification => notification.createdAt > time ? count += 1: null)
-    setNumb(prev => prev + count)
   },[])
 
   useEffect(() => {
@@ -108,27 +103,23 @@ export const Display = () => {
     }
   };
 
-  const likeHandler = (post) => {
+  const likeHandler = async (post) => {
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/likes/${post._id}/${lastPostIndex}`;
-    axios
-      .patch(URL, data, {
+    const response = await axios.patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
       })
-      .then((res) => {
-        setPosts(res.data);
-        createNotificaction(post)
-        socket.emit("notification",
-          {
-            postID: post._id, 
-            posterID: post.posterId._id,
-            currentUser: user.id
-          }
-        )
-      })
-      .catch((error) => console.log(error));
+      setPosts(response.data)
+      createNotificaction(post)
+      socket.emit("notification",
+        {
+          postID: post._id, 
+          posterID: post.posterId._id,
+          currentUser: user.id
+        }
+      )
   };
 
   const unlikeHandler = (post) => {

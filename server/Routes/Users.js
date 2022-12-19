@@ -108,7 +108,6 @@ router.post("/create/notifications", isAuthenticated, async (req, res) => {
         attendId: req.body.attendId
     })
     
-    console.log(checkExisting, 'existing nei')
     if (!checkExisting){
         const notification = new NotificationModel({
             notifiedUser: req.body.notifiedUser,
@@ -120,7 +119,6 @@ router.post("/create/notifications", isAuthenticated, async (req, res) => {
 })
 
 router.get("/:user/notifications", isAuthenticated, async (req, res) => {
-    console.log("notifications called")
     try {
         const user = await UserModel.findOne({_id: req.params.user})
         if (user.id !== req.results.id) return res.status(400).send({message:"Invalid user"})
@@ -129,7 +127,6 @@ router.get("/:user/notifications", isAuthenticated, async (req, res) => {
         .sort({ createdAt: -1 })
         .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
         .populate('postId', ['_id'])
-        console.log(userNotifications, 'notifications')
         const newNotifications = await NotificationModel.find({
             notifiedUser: req.params.user,
             createdAt:{$gt: user.lastActiveDate}

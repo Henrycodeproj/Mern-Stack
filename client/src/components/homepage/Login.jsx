@@ -9,7 +9,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import "./Login.css"
 
 export const Login = ({ setOption, option, active, inactive }) => {
-  const { setUser, loginState, setLoginState, setActiveNotification} = useContext(accountContext);
+  const { setUser, loginState, setLoginState, setActiveNotification, socket} = useContext(accountContext);
 
   const [loginInfo, setLoginInfo] = useState({
     login_username: "",
@@ -43,7 +43,7 @@ export const Login = ({ setOption, option, active, inactive }) => {
           setUser(JSON.parse(localStorage.getItem("User")));
           setLoginLoading(true);
           setActiveNotification(true)
-          navigateTo("/display", {replace:true});
+          navigateTo("/display");
         }
       })
       .catch((error) => {
