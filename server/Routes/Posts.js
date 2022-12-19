@@ -112,6 +112,7 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
 })
 
 router.patch('/unlikes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
+    console.log("unlike called")
     try {
     const postID = req.params.postID
     const userID = req.body.user

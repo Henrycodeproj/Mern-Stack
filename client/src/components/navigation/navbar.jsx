@@ -61,9 +61,27 @@ export const Navbar = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [searchClicked, setSearchClicked] = useState(false);
 
-  useEffect(() => {
-    setNumb(prev => prev + 1)
-  }, [userNotification])
+  //useEffect(() => {
+  //  console.log("called useeffect prev")
+  //  setNumb(prev => prev + 1)
+  //}, [userNotification])
+
+  //useEffect(() => {
+  //  const getNotifications = async () => {
+  //    const url = `http://localhost:3001/user/${user.id}/notifications`;
+  //    const response = await axios.get(url, {
+  //      headers: {
+  //        authorization: localStorage.getItem("Token"),
+  //      },
+  //    });
+  //    console.log(response.data,' pew')
+  //    setUserNotification((prev) => prev.concat(response.data.notifications))
+  //    setTime(response.data.date)
+  //    setUnreadNotifications(response.data.new)
+  //    setActiveNotification(true)
+  //  };
+  //  if (user) getNotifications();
+  //}, []);
   
   useEffect(() => {
     function getCurrentWidth() {
@@ -119,6 +137,18 @@ export const Navbar = () => {
 
   const open = Boolean(profile);
 
+  const getUserNotifications = async () => {
+    console.log("caller")
+    const url = `http://localhost:3001/user/${user.id}/notifications`;
+    const response = await axios.get(url, {
+      headers: {
+        authorization: localStorage.getItem("Token"),
+      }
+    });
+    setUserNotification(response.data.notifications)
+    //setUnreadNotifications(prev => prev + response.data.new)
+  }
+
   const openProfile = (e) => {
     setProfile(e.currentTarget);
   };
@@ -130,12 +160,13 @@ export const Navbar = () => {
 
   const handleClick = async (event) => {
     setNotification(event.currentTarget)
+    getUserNotifications()
   };
 
   const handleClose = () => {
     setNotification(null);
     //setActiveNotification(false)
-    setNumb(0)
+    setUnreadNotifications(0)
     setTime(new Date().toISOString())
   };
 
@@ -214,7 +245,7 @@ export const Navbar = () => {
               setSearchResults={setSearchResults}
             />
 
-            <Badge badgeContent={numb} color="error">
+            <Badge badgeContent={unreadNotifications} color="error">
               <NotificationsIcon
                 className="notification_bell"
                 onClick={(e) => handleClick(e)}

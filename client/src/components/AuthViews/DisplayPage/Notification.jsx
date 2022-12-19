@@ -22,7 +22,8 @@ export const Notification = () => {
   const { 
     user,
     userNotification,
-    setUserNotification, 
+    setUserNotification,
+    unreadNotifications,
     time, 
     } =
     useContext(accountContext);
@@ -36,7 +37,7 @@ export const Notification = () => {
     <>
       {userNotification.length > 0
         ? userNotification.map((entry) => (
-            <MenuItem sx = {{background:entry.createdAt > time ? "gray" : "white"}}>
+            <MenuItem sx = {{background: entry.createdAt > time ? "gray" : "white"}}>
               <Avatar
                 src={`https://ucarecdn.com/${entry.attendId.profilePicture}/`}
               />
