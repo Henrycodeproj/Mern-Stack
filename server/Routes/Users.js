@@ -126,12 +126,33 @@ router.get("/:user/notifications", isAuthenticated, async (req, res) => {
         )
         .sort({ createdAt: -1 })
         .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
-        .populate('postId', ['_id'])
+        .populate('postId', ['_id', 'Description'])
+        res.status(200).send({notifications: userNotifications, date: user.lastActiveDate})
+    } catch(error) {
+        console.log(error)
+    }
+})
+
+router.get("/:user/newnotifications", isAuthenticated, async (req, res) => {
+    try {
+        const user = await UserModel.findOne({_id: req.params.user})
         const newNotifications = await NotificationModel.find({
             notifiedUser: req.params.user,
             createdAt:{$gt: user.lastActiveDate}
         })
-        res.status(200).send({notifications: userNotifications, date: user.lastActiveDate, new: newNotifications.length})
+        if (newNotifications) console.log(newNotifications)
+        if (newNotifications) res.status(200).send({new : newNotifications.length, lastActive: user.lastActiveDate})
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.post("/update/activity", isAuthenticated, async (req, res) => {
+    const date = new Date()
+    try { 
+        const filter = { _id : req.results.id };
+        const update = { lastActiveDate: date };
+        await UserModel.findOneAndUpdate(filter, update, {new:true})
     } catch(error) {
         console.log(error)
     }

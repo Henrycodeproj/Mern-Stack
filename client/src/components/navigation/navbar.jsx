@@ -61,28 +61,6 @@ export const Navbar = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [searchClicked, setSearchClicked] = useState(false);
 
-  //useEffect(() => {
-  //  console.log("called useeffect prev")
-  //  setNumb(prev => prev + 1)
-  //}, [userNotification])
-
-  //useEffect(() => {
-  //  const getNotifications = async () => {
-  //    const url = `http://localhost:3001/user/${user.id}/notifications`;
-  //    const response = await axios.get(url, {
-  //      headers: {
-  //        authorization: localStorage.getItem("Token"),
-  //      },
-  //    });
-  //    console.log(response.data,' pew')
-  //    setUserNotification((prev) => prev.concat(response.data.notifications))
-  //    setTime(response.data.date)
-  //    setUnreadNotifications(response.data.new)
-  //    setActiveNotification(true)
-  //  };
-  //  if (user) getNotifications();
-  //}, []);
-  
   useEffect(() => {
     function getCurrentWidth() {
       setWidth(window.innerWidth);
@@ -146,8 +124,21 @@ export const Navbar = () => {
       }
     });
     setUserNotification(response.data.notifications)
-    //setUnreadNotifications(prev => prev + response.data.new)
+    //setUnreadNotifications(prev => prev + respo)
   }
+
+  useEffect(() => {
+    socket.on(`${user.id}-notification`, (data) => {
+      console.log(data)
+      if (!(userNotification.some(notifications => notifications._id === data[0]._id))){
+        setUserNotification(prev => [data[0], ...prev])
+        setUnreadNotifications(count => count + 1)
+      } 
+    })
+    return () => { 
+      socket.removeListener(`${user.id}-notification`);
+    }
+  },[])
 
   const openProfile = (e) => {
     setProfile(e.currentTarget);
@@ -157,16 +148,26 @@ export const Navbar = () => {
   };
 
   const notificationOpen = Boolean(notification);
+  const updateLastActive = async () => {
+    const data = {user: user}
+    const url = `http://localhost:3001/user/update/activity`;
+    const response = await axios.post(url, data, {
+          headers: {
+            authorization: localStorage.getItem("Token")
+          }
+      })
+    if (response.data) setTime(response.data)
+  }
 
   const handleClick = async (event) => {
     setNotification(event.currentTarget)
+    setUnreadNotifications(0)
     getUserNotifications()
+    updateLastActive()
   };
 
   const handleClose = () => {
     setNotification(null);
-    //setActiveNotification(false)
-    setUnreadNotifications(0)
     setTime(new Date().toISOString())
   };
 
