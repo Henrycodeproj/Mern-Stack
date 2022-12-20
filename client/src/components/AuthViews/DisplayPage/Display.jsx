@@ -47,31 +47,32 @@ export const Display = () => {
   const navigateTo = useNavigate();
 
   useEffect(() => {
-      socket.on(`${user.id}-notification`, (data) => {
-        console.log(data,'data called')
-        setUserNotification(prev => prev.some(notifications => notifications._id === data[0]._id) 
-        ? prev
-        : ([...prev, data[0]]), setUnreadNotifications(prev => prev + 1)
-        )
+    const getNewNotifications = async () => {
+      const url = `http://localhost:3001/user/${user.id}/newnotifications`;
+      const response = await axios.get(url, {
+        headers: {
+          authorization: localStorage.getItem("Token")
+        }
       })
-  },[])
-
-  useEffect(() => {
-    setTime(new Date().toISOString())
-  },[])
+      console.log(response.data)
+      if (response.data.new > 0) {
+        setUnreadNotifications(response.data.new)
+        setTime(response.data.lastActive)
+      }
+    }
+    getNewNotifications()
+  }, [])
 
   useEffect(() => {
     socket.emit("status", { userId: user.id });
     socket.on("activeUsers", (user) => {
       setActiveUsers(user);
     });
-  }, []);
-
-  useEffect(() => {
     socket.on("inactiveUsers", (user) => {
       setActiveUsers(user);
     });
   }, []);
+
 
   useEffect(() => {
     const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`;
@@ -103,26 +104,29 @@ export const Display = () => {
     }
   };
 
-  const likeHandler = async (post) => {
+  const likeHandler = (post) => {
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/likes/${post._id}/${lastPostIndex}`;
-    const response = await axios.patch(URL, data, {
+    axios.patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
+      }).then(response => {
+        setPosts(response.data)
+        createNotificaction(post)
+        if (response)
+        socket.emit("notification",
+          {
+            postID: post._id, 
+            posterID: post.posterId._id,
+            currentUser: user.id
+          }
+        )
       })
-      setPosts(response.data)
-      createNotificaction(post)
-      socket.emit("notification",
-        {
-          postID: post._id, 
-          posterID: post.posterId._id,
-          currentUser: user.id
-        }
-      )
-  };
+    }
 
   const unlikeHandler = (post) => {
+    console.log(post)
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/unlikes/${post._id}/${lastPostIndex}`;
     axios

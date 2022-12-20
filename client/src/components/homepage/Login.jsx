@@ -7,6 +7,7 @@ import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import "./Login.css"
+import io from "socket.io-client"
 
 export const Login = ({ setOption, option, active, inactive }) => {
   const { setUser, loginState, setLoginState, setActiveNotification, socket} = useContext(accountContext);

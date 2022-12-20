@@ -42,6 +42,8 @@ export const Notification = () => {
                 src={`https://ucarecdn.com/${entry.attendId.profilePicture}/`}
               />
               {`${entry.attendId.username} is now attending your event`}
+              {console.log(entry.postId.Description)}
+              <h2>{entry.postId.Description}</h2>
             </MenuItem>
           ))
         : null}

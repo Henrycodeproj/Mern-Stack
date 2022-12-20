@@ -40,13 +40,7 @@ router.get('/all', isAuthenticated, async (req, res) =>{
 
 router.get('/amount/:postAmount/', isAuthenticated, async (req, res) =>{
     const date = new Date()
-    try{
-        setTimeout(async () => {
-            const filter = { _id : req.results.id };
-            const update = { lastActiveDate: date };
-            await UserModel.findOneAndUpdate(filter, update, {new:true})
-        }, 3000);
-        
+    try {
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
         .limit(req.params.postAmount)
@@ -112,7 +106,6 @@ router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
 })
 
 router.patch('/unlikes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
-    console.log("unlike called")
     try {
     const postID = req.params.postID
     const userID = req.body.user
@@ -122,6 +115,7 @@ router.patch('/unlikes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
         post.attending = post.attending.filter(
         (users)=> users.toString() !== userID.toString()
     )
+    console.log("unlike called", post.attending.includes(userID))
 
     await post.save()
 
@@ -130,7 +124,7 @@ router.patch('/unlikes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     .limit(req.params.postIndex)
     .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
     .populate('attending', ['username','profilePicture'])
-
+    console.log(updatedPosts, "updated unlike sent")
     res.status(200).send(updatedPosts)
     } catch (error) {
         console.log(error)
