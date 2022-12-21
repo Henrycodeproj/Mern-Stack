@@ -29,11 +29,11 @@ export const AppContext = ({children}) =>{
 
     const [lastPostIndex, setLastPostIndex] = useState(15);
 
-    const [activeNotification, setActiveNotification] = useState(true);
-
-    const [time, setTime] = useState()
+    const [time, setTime] = useState(localStorage.getItem("User") ? user.lastActive : null)
 
     const [unreadNotifications, setUnreadNotifications] = useState(0)
+
+    const [notificationID, setNotificationID] = useState(localStorage.getItem("User") ? user.id : 0)
 
     const logoutHandler = () => {
       setUserNotification([])
@@ -65,8 +65,8 @@ export const AppContext = ({children}) =>{
             setUserNotification,
             lastPostIndex,
             setLastPostIndex,
-            activeNotification, 
-            setActiveNotification,
+            notificationID, 
+            setNotificationID,
             time,
             setTime,
             lastActive, 

@@ -140,7 +140,6 @@ router.get("/:user/newnotifications", isAuthenticated, async (req, res) => {
             notifiedUser: req.params.user,
             createdAt:{$gt: user.lastActiveDate}
         })
-        if (newNotifications) console.log(newNotifications)
         if (newNotifications) res.status(200).send({new : newNotifications.length, lastActive: user.lastActiveDate})
     } catch (error) {
         console.log(error)

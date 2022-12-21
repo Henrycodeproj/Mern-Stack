@@ -10,7 +10,12 @@ import "./Login.css"
 import io from "socket.io-client"
 
 export const Login = ({ setOption, option, active, inactive }) => {
-  const { setUser, loginState, setLoginState, setActiveNotification, socket} = useContext(accountContext);
+  const { 
+    setUser,
+    setActiveNotification,
+    setNotificationID,
+    setTime
+  } = useContext(accountContext);
 
   const [loginInfo, setLoginInfo] = useState({
     login_username: "",
@@ -37,13 +42,15 @@ export const Login = ({ setOption, option, active, inactive }) => {
         //withCredentials:true,
       })
       .then((res) => {
+        console.log(res)
         if (res.data.accessToken) {
           localStorage.setItem("Token", res.data.accessToken);
           localStorage.setItem("userStatus", true);
           localStorage.setItem("User", JSON.stringify(res.data.user));
           setUser(JSON.parse(localStorage.getItem("User")));
           setLoginLoading(true);
-          setActiveNotification(true)
+          setNotificationID(res.data.user.id);
+          setTime(res.data.user.lastActive);
           navigateTo("/display");
         }
       })
