@@ -115,7 +115,7 @@ export const Display = () => {
 
   const likeHandler = (post) => {
     const data = { user: user.id };
-    const URL = `http://localhost:3001/posts/likes/${post._id}/${lastPostIndex}`;
+    const URL = `http://localhost:3001/posts/like/${post._id}/${lastPostIndex}`;
     axios.patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
@@ -137,7 +137,7 @@ export const Display = () => {
   const unlikeHandler = (post) => {
     console.log(post)
     const data = { user: user.id };
-    const URL = `http://localhost:3001/posts/unlikes/${post._id}/${lastPostIndex}`;
+    const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;
     axios
       .patch(URL, data, {
         headers: {
