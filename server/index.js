@@ -129,10 +129,12 @@ let activeUsers = {}
 
 io.on("connection", (socket) => {
     socket.on("status", (userInfo) => {
+        console.log(userInfo)
         if (userInfo.userId) {
             activeUsers[userInfo.userId] = socket.id
             socket[socket.id] = userInfo.userId
         }
+        console.log(activeUsers, socket.id)
         io.emit("activeUsers", activeUsers)
     })
 
@@ -144,7 +146,7 @@ io.on("connection", (socket) => {
     socket.on("notification", async (data) => {
         console.log("notification calleds")
         const {posterID, postID, currentUser} = data
-        console.log(posterID, postID, currentUser)
+        console.log(posterID, postID, currentUser, 'curr etc')
         //change time to 2000 ms for production
         const checkNotification = await NotificationModel
         .findOne({
@@ -152,8 +154,9 @@ io.on("connection", (socket) => {
             postId:postID, 
             attendId: currentUser
         })
-        console.log(data.posterID in activeUsers)
+        console.log(data.posterID in activeUsers, 'in active check', activeUsers)
         if (data.posterID in activeUsers){
+            console.log(posterID !== currentUser, !checkNotification, 'sdsdsdsd')
             setTimeout(async () => {
                 if (posterID !== currentUser && !checkNotification) {
                 const response = await NotificationModel
@@ -163,7 +166,7 @@ io.on("connection", (socket) => {
                 })
                 .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
                 .populate('postId', ['_id', 'Description'])
-                if (response) socket.broadcast.emit(`${data.posterID}-notification`, response)
+                socket.broadcast.emit(`${data.posterID}-notification`, response)
                 }
             }, 2000);
         }

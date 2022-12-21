@@ -38,9 +38,8 @@ export const Navbar = () => {
      socket, 
      posts, 
      userNotification, 
-     setUserNotification, 
-     activeNotification, 
-     setActiveNotification,
+     setUserNotification,
+     notificationID,
      numb,
      setNumb,
      time,
@@ -124,21 +123,21 @@ export const Navbar = () => {
       }
     });
     setUserNotification(response.data.notifications)
-    //setUnreadNotifications(prev => prev + respo)
   }
 
   useEffect(() => {
-    socket.on(`${user.id}-notification`, (data) => {
-      console.log(data)
-      if (!(userNotification.some(notifications => notifications._id === data[0]._id))){
-        setUserNotification(prev => [data[0], ...prev])
-        setUnreadNotifications(count => count + 1)
-      } 
-    })
+    console.log(notificationID, 'notificationID')
+      socket.on(`${notificationID}-notification`, (data) => {
+        console.log(data)
+        if (!(userNotification.some(notifications => notifications._id === data[0]._id))){
+          setUserNotification(prev => [data[0], ...prev])
+          setUnreadNotifications(count => count + 1)
+        } 
+      })
     return () => { 
-      socket.removeListener(`${user.id}-notification`);
+      socket.removeListener(`${notificationID}-notification`);
     }
-  },[])
+  }, [notificationID])
 
   const openProfile = (e) => {
     setProfile(e.currentTarget);
@@ -148,15 +147,15 @@ export const Navbar = () => {
   };
 
   const notificationOpen = Boolean(notification);
+
   const updateLastActive = async () => {
     const data = {user: user}
     const url = `http://localhost:3001/user/update/activity`;
     const response = await axios.post(url, data, {
-          headers: {
-            authorization: localStorage.getItem("Token")
-          }
-      })
-    if (response.data) setTime(response.data)
+        headers: {
+          authorization: localStorage.getItem("Token")
+        }
+    })
   }
 
   const handleClick = async (event) => {
@@ -245,12 +244,11 @@ export const Navbar = () => {
               searchResults={searchResults}
               setSearchResults={setSearchResults}
             />
-
             <Badge badgeContent={unreadNotifications} color="error">
-              <NotificationsIcon
-                className="notification_bell"
-                onClick={(e) => handleClick(e)}
-              />
+                <NotificationsIcon
+                  className="notification_bell"
+                  onClick={(e) => handleClick(e)}
+                />
               <Popover
                 open={notificationOpen}
                 anchorEl={notification}

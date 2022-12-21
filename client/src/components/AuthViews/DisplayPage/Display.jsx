@@ -54,7 +54,7 @@ export const Display = () => {
           authorization: localStorage.getItem("Token")
         }
       })
-      console.log(response.data)
+      console.log(response.data, 'get new not section')
       if (response.data.new > 0) {
         setUnreadNotifications(response.data.new)
         setTime(response.data.lastActive)
@@ -68,10 +68,19 @@ export const Display = () => {
     socket.on("activeUsers", (user) => {
       setActiveUsers(user);
     });
+    return () => { 
+      socket.removeListener("activeUsers");
+    }
+  }, []);
+
+  useEffect(() => {
     socket.on("inactiveUsers", (user) => {
       setActiveUsers(user);
     });
-  }, []);
+    return () => { 
+      socket.removeListener("inactiveUsers");
+    }
+  },[])
 
 
   useEffect(() => {

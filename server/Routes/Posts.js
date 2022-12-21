@@ -124,7 +124,6 @@ router.patch('/unlikes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     .limit(req.params.postIndex)
     .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
     .populate('attending', ['username','profilePicture'])
-    console.log(updatedPosts, "updated unlike sent")
     res.status(200).send(updatedPosts)
     } catch (error) {
         console.log(error)

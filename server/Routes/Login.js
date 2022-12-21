@@ -28,7 +28,8 @@ router.post('/', async (req,res) =>{
                             id: user.id, 
                             username: user.username, 
                             collegeAffiliation: user.collegeAffiliation, 
-                            profilePicture: user.profilePicture
+                            profilePicture: user.profilePicture,
+                            lastActive : user.lastActiveDate
                         }
                     }
                 )
