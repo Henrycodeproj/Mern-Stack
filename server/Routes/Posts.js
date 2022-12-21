@@ -82,56 +82,57 @@ router.get('/:postID/attend/:currentShown', isAuthenticated, async (req, res) =>
     }
 })
 
-router.patch('/likes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
+router.patch('/like/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     try {
-    const postID = req.params.postID
-    const userID = req.body.user
-    const post = await PostModel.findById(postID)
+        const postID = req.params.postID
+        const userID = req.body.user
+        const post = await PostModel.findById(postID)
 
-    if (!post.attending.includes(userID)){
-        post.attending.push(userID)
-        await post.save()
-    } 
+        if (!post.attending.includes(userID)){
+            post.attending.push(userID)
+            await post.save()
+        } 
 
-    const updatedPosts = await PostModel.find({})
-    .sort({createdAt: -1})
-    .limit(req.params.postIndex)
-    .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
-    .populate('attending', ['username','profilePicture'])
+        const updatedPosts = await PostModel.find({})
+        .sort({createdAt: -1})
+        .limit(req.params.postIndex)
+        .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
+        .populate('attending', ['username','profilePicture'])
 
-    res.status(200).send(updatedPosts)
+        res.status(200).send(updatedPosts)
     } catch (error) {
         console.log(error)
     }
 })
 
-router.patch('/unlikes/:postID/:postIndex', isAuthenticated, async (req,res) =>{
+router.patch('/unlike/:postID/:postIndex', isAuthenticated, async (req,res) =>{
     try {
-    const postID = req.params.postID
-    const userID = req.body.user
-    const post = await PostModel.findById(postID)
+        const postID = req.params.postID
+        const userID = req.body.user
+        const post = await PostModel.findById(postID)
 
-    if (post.attending.includes(userID)) 
-        post.attending = post.attending.filter(
-        (users)=> users.toString() !== userID.toString()
-    )
-    console.log("unlike called", post.attending.includes(userID))
+        if (post.attending.includes(userID)) 
+            post.attending = post.attending.filter(
+            (users)=> users.toString() !== userID.toString()
+        )
+        console.log("unlike called", post.attending.includes(userID))
 
-    await post.save()
+        await post.save()
 
-    const updatedPosts = await PostModel.find({})
-    .sort({createdAt: -1})
-    .limit(req.params.postIndex)
-    .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
-    .populate('attending', ['username','profilePicture'])
-    res.status(200).send(updatedPosts)
+        const updatedPosts = await PostModel.find({})
+        .sort({createdAt: -1})
+        .limit(req.params.postIndex)
+        .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
+        .populate('attending', ['username','profilePicture'])
+        res.status(200).send(updatedPosts)
     } catch (error) {
         console.log(error)
     }
 })
 
 router.patch('/search/like/:postID', isAuthenticated, async (req, res) => {
-    if (req.results.id !== req.body.userID) return res.status(401).send({message:"You are not Authorized"})
+    if (req.results.id !== req.body.userID) 
+        return res.status(401).send({message:"You are not Authorized"})
 
     try {
         const post = await PostModel.findById(req.params.postID)
