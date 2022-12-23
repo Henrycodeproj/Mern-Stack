@@ -123,13 +123,14 @@ router.get("/:user/notifications", isAuthenticated, async (req, res) => {
         const user = await UserModel.findOne({_id: req.params.user})
         if (user.id !== req.results.id) return res.status(400).send({message:"Invalid user"})
         const userNotifications = await NotificationModel.find({
-            notifiedUser: req.params.user,
-            postId : {$not: null}
-        }
+                notifiedUser: req.params.user,
+                postId : {$ne: null}
+            }
         )
         .sort({ createdAt: -1 })
         .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
         .populate('postId', ['_id', 'Description'])
+        console.log(userNotifications, 'user notified')
         res.status(200).send({notifications: userNotifications, date: user.lastActiveDate})
     } catch(error) {
         console.log(error)

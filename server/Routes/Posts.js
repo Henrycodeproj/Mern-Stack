@@ -106,6 +106,7 @@ router.patch('/like/:postID/:postIndex', isAuthenticated, async (req,res) =>{
 })
 
 router.patch('/unlike/:postID/:postIndex', isAuthenticated, async (req,res) =>{
+    console.log(req.params.postIndex)
     try {
         const postID = req.params.postID
         const userID = req.body.user
@@ -115,7 +116,6 @@ router.patch('/unlike/:postID/:postIndex', isAuthenticated, async (req,res) =>{
             post.attending = post.attending.filter(
             (users)=> users.toString() !== userID.toString()
         )
-        console.log("unlike called", post.attending.includes(userID))
 
         await post.save()
 
