@@ -134,26 +134,25 @@ export const Display = () => {
       })
     }
 
-  const unlikeHandler = (post) => {
-    console.log(post)
+  const unlikeHandler = async (post) => {
+    console.log("unlinke handling", post)
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;
-    axios
+    const response = 
+     await axios
       .patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
       })
-      .then((res) => {
-        setPosts(res.data);
+      console.log(response)
+      if (response.data) setPosts(response.data)
         //socket.emit("notification",
         //  {
         //    postID: post._id, 
         //    posterID: post.posterId._id
         //  }
         //)
-      })
-      .catch((error) => console.log(error));
   };
 
   const createNotificaction = async (post) => {
@@ -242,6 +241,7 @@ export const Display = () => {
                   
                       <div className="posts_icon_wrapper">
                         <div className="posts_icon_bar">
+                          {console.log(post)}
                           {post.attending.some(
                             (attendUsers) => attendUsers._id === user.id
                           ) ? (
