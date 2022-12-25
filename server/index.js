@@ -154,7 +154,6 @@ io.on("connection", (socket) => {
             postId:postID, 
             attendId: currentUser
         })
-        console.log(data.posterID in activeUsers, 'in active check', activeUsers)
         if (data.posterID in activeUsers){
             console.log(posterID !== currentUser, !checkNotification, 'sdsdsdsd')
             setTimeout(async () => {
