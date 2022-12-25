@@ -146,7 +146,10 @@ export const Display = () => {
         },
       })
       console.log(response)
-      if (response.data) setPosts(response.data)
+      if (response.data) {
+        setPosts(response.data)
+        deleteNotification(post)
+      }
         //socket.emit("notification",
         //  {
         //    postID: post._id, 
@@ -157,6 +160,21 @@ export const Display = () => {
 
   const createNotificaction = async (post) => {
     const url = `http://localhost:3001/user/create/notifications/`
+    const data = {
+      postId: post._id,
+      notifiedUser: post.posterId._id,
+      attendId: user.id
+    }
+    const response = await axios.post(url, data, {
+      headers: {
+        authorization: localStorage.getItem("Token")
+      }
+    })
+    console.log(response)
+  }
+
+  const deleteNotification = async (post) => {
+    const url = `http://localhost:3001/user/delete/notifications/`
     const data = {
       postId: post._id,
       notifiedUser: post.posterId._id,
@@ -190,7 +208,7 @@ export const Display = () => {
             <ul>
               {posts.length > 0 ? (
                 posts.map((post) => (
-                  <li key={post._id} className="posts_articles">
+                  <li key={post._id} className="posts_articles" sx = {{background: dark ? "gray":"white"}}>
                     <>
                       <Tooltip
                         title={`${

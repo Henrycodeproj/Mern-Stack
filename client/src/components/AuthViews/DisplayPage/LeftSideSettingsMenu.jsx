@@ -1,16 +1,19 @@
 import Switch from '@mui/material/Switch';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { accountContext } from '../../Contexts/appContext';
 
 
 export const LeftSideSettingsMenu = () => {
-
-    const [checked, setChecked] = useState(false);  
+    const {dark, setDark} = useContext(accountContext)
+    //const [checked, setChecked] = useState(false);  
     const [accessiblity, setAccessibility] = useState(false); 
 
     const handleChange = (event) => {
-      setChecked(event.target.checked);
+      console.log(event.target.checked)
+      setDark(event.target.checked);
     };
     const handleAccessibilityChange = (event) => {
+      console.log(event.target.checked)
       setAccessibility(event.target.checked);
     };   
 
@@ -18,7 +21,7 @@ export const LeftSideSettingsMenu = () => {
       <div className='left_menu_options'>
         <div style = {{display:"flex", alignItems:"center", gap:"5%"}}>
         <Switch
-          checked={checked}
+          checked={dark}
           onChange={handleChange}
           inputProps={{ 'aria-label': 'controlled' }}
           label="Gilad Gray"

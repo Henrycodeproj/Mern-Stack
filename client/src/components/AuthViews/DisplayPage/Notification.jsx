@@ -5,6 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import { NotificationTabs } from "./NotificationTabs";
 
 import ListItem from '@mui/material/ListItem';
+import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
 
 export const Notification = () => {
   const { 
@@ -12,6 +13,10 @@ export const Notification = () => {
     } =
     useContext(accountContext);
 
+  if (!userNotification) {
+    return <LoadingCircle loadingState={userNotification}/>
+  }
+  
   return (
     <>
       {userNotification.length > 0
