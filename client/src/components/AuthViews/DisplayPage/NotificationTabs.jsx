@@ -21,6 +21,7 @@ export const NotificationTabs = ({entry}) => {
     useContext(accountContext);
 
   const [open, setOpen] = useState(false);
+  console.log(time)
   
   const handleClick = () => {
     setOpen(!open);

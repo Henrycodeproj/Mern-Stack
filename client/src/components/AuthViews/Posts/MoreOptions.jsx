@@ -19,7 +19,7 @@ import FeedbackIcon from '@mui/icons-material/Feedback';
 
 
 export const MoreOptions = ({post}) => {
-const {user} = useContext(accountContext)
+const {user, dark} = useContext(accountContext)
 
 const [optionsAnchor, setOptionsAnchor] = useState(null)
 
@@ -49,7 +49,7 @@ const [reportOpen, setReportOpen] = useState(false)
 
   return (
     <div>
-        <MoreHorizIcon className = "moreOptions_dots" onClick={handleOptionsClick} sx = {{cursor:"pointer"}}/>
+        <MoreHorizIcon className = "moreOptions_dots" onClick={handleOptionsClick} sx = {{cursor:"pointer", color : dark ? "white": "rgb(87, 86, 86)"}}/>
         <Popover
         open={openOptions}
         anchorEl={optionsAnchor}

@@ -43,6 +43,7 @@ export const Display = () => {
   } = useContext(accountContext);
 
   const [loadingState, setLoadingState] = useState(true);
+  const [currentDate, setCurrentDate] = useState(new Date())
 
   const navigateTo = useNavigate();
 
@@ -187,7 +188,13 @@ export const Display = () => {
     })
     console.log(response)
   }
-
+  const handlePastHours = (time) => {
+    const postDate = new Date(time)
+    console.log(currentDate, postDate)
+    //console.log(Math.abs(parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 3600000 ,' 231231')
+    const difference = Math.abs((parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 3600000)
+    return difference > 1 ? "- " + Math.round(difference)+ " hours ago" : difference * 360
+  }
   if (posts === null) return <LoadingCircle loadingState={loadingState} />;
 
   return (
@@ -208,7 +215,7 @@ export const Display = () => {
             <ul>
               {posts.length > 0 ? (
                 posts.map((post) => (
-                  <li key={post._id} className="posts_articles" sx = {{background: dark ? "gray":"white"}}>
+                  <li key={post._id} className="posts_articles" style = {{background: dark ? "rgb(100, 100, 100, .90)":"var(--white-background)"}}>
                     <>
                       <Tooltip
                         title={`${
@@ -233,10 +240,12 @@ export const Display = () => {
 
                     <div className="inner_post_container">
                       <div className="title_wrapper">
+                        <div style={{display:"flex", gap:"3%", width:"100%", alignItems:"center"}}>
                         <h4 
                         style={{ 
                           textTransform: "capitalize", 
-                          cursor: "pointer" 
+                          cursor: "pointer",
+                          color: dark ? "white" : "black" 
                         }}
                         onClick={() =>
                           navigateTo(`/profile/${post.posterId._id}`)
@@ -244,6 +253,8 @@ export const Display = () => {
                         >
                           {post.posterId.username}
                         </h4>
+                        <h6>{handlePastHours(post.createdAt)}</h6>
+                        </div>
                         <div style={{ display: "flex" }}>
                           {post.posterId._id !== user.id ? (
                             <SendMessage post={post} />
@@ -343,7 +354,7 @@ export const Display = () => {
           </div>
         </div>
 
-        <div className="right_sidebar">
+        <div className="right_sidebar" style = {{background: dark ? "gray" : "var(--white-background)"}}>
           <RightSideCol />
         </div>
       </div>
