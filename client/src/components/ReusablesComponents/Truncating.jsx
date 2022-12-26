@@ -1,11 +1,13 @@
-import {useState} from "react"
+import {useState, useContext} from "react"
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Tooltip from "@mui/material/Tooltip";
 import "./Truncating.css";
+import { accountContext } from "../Contexts/appContext";
 
 export const Truncating = ({postDescription, truncateNumber}) => {
 
     const [truncate, setTruncate] = useState(false)
+    const {dark} = useContext(accountContext)
 
     const showTruncate = () => {
         setTruncate(true)
@@ -18,7 +20,7 @@ export const Truncating = ({postDescription, truncateNumber}) => {
   return (
     <>
     {!truncate ?
-        <p style={{whiteSpace:"pre-line",}}>
+        <p style={{whiteSpace:"pre-line", color: dark ? "white":"black"}}>
             {postDescription.substring(0, truncateNumber)}
             {
             postDescription.length > truncateNumber ?
