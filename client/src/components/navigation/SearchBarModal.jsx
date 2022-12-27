@@ -31,7 +31,6 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
 
     useEffect(() => {
       function handleClickOutside(event) {
-        console.log(ref.current.offsetWidth, event.target.offsetWidth)
         if (
         ref.current 
         && !ref.current.contains(event.target) 

@@ -83,6 +83,7 @@ router.get('/:postID/attend/:currentShown', isAuthenticated, async (req, res) =>
 })
 
 router.patch('/like/:postID/:postIndex', isAuthenticated, async (req,res) =>{
+    console.log(req.body.user, 'likes')
     try {
         const postID = req.params.postID
         const userID = req.body.user
@@ -124,6 +125,7 @@ router.patch('/unlike/:postID/:postIndex', isAuthenticated, async (req,res) =>{
         .limit(req.params.postIndex)
         .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
         .populate('attending', ['username','profilePicture'])
+        console.log('updated post sending')
         res.status(200).send(updatedPosts)
     } catch (error) {
         console.log(error)

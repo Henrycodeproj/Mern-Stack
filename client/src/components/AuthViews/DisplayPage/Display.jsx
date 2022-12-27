@@ -113,30 +113,20 @@ export const Display = () => {
       setLastPostIndex(lastPostIndex + 5);
     }
   };
-
-  const likeHandler = (post) => {
+  const likeHandler = async (post) => {
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/like/${post._id}/${lastPostIndex}`;
-    axios.patch(URL, data, {
+    const response = await axios.patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
-      }).then(response => {
-        setPosts(response.data)
-        createNotificaction(post)
-        if (response)
-        socket.emit("notification",
-          {
-            postID: post._id, 
-            posterID: post.posterId._id,
-            currentUser: user.id
-          }
-        )
       })
-    }
+      if (response.data)
+      setPosts(response.data)
+      //createNotificaction(post)
+  }
 
   const unlikeHandler = async (post) => {
-    console.log("unlinke handling", post)
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;
     const response = 
@@ -146,18 +136,48 @@ export const Display = () => {
           authorization: localStorage.getItem("Token"),
         },
       })
-      console.log(response)
-      if (response.data) {
+      if (response.data)
         setPosts(response.data)
-        deleteNotification(post)
-      }
-        //socket.emit("notification",
-        //  {
-        //    postID: post._id, 
-        //    posterID: post.posterId._id
-        //  }
-        //)
-  };
+  }
+
+  //const likeHandler = async (post) => {
+  //const data = { user: user.id };
+  //const URL = `http://localhost:3001/posts/like/${post._id}/${lastPostIndex}`;
+  //const response = await axios.patch(URL, data, {
+  //    headers: {
+  //      authorization: localStorage.getItem("Token"),
+  //    },
+  //  })
+  //    setPosts(response.data)
+  //    createNotificaction(post)
+  //    console.log(response, 'like response')
+  //    if (response)
+  //    socket.emit("notification",
+  //      {
+  //        postID: post._id, 
+  //        posterID: post.posterId._id,
+  //        currentUser: user.id
+  //      }
+  //    )
+  //}
+
+  //const unlikeHandler = async (post) => {
+  //  console.log("inside unlike function", post)
+  //  const data = { user: user.id };
+  //  const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;
+  //  const response = 
+  //   await axios
+  //    .patch(URL, data, {
+  //      headers: {
+  //        authorization: localStorage.getItem("Token"),
+  //      },
+  //    })
+  //    console.log(response, 'unlike response')
+  //    if (response.data) {
+  //      setPosts(response.data)
+  //      deleteNotification(post)
+  //    }
+  //};
 
   const createNotificaction = async (post) => {
     const url = `http://localhost:3001/user/create/notifications/`
@@ -166,12 +186,11 @@ export const Display = () => {
       notifiedUser: post.posterId._id,
       attendId: user.id
     }
-    const response = await axios.post(url, data, {
+    axios.post(url, data, {
       headers: {
         authorization: localStorage.getItem("Token")
       }
     })
-    console.log(response)
   }
 
   const deleteNotification = async (post) => {
@@ -181,20 +200,20 @@ export const Display = () => {
       notifiedUser: post.posterId._id,
       attendId: user.id
     }
-    const response = await axios.post(url, data, {
+    axios.post(url, data, {
       headers: {
         authorization: localStorage.getItem("Token")
       }
     })
-    console.log(response)
   }
+  
   const handlePastHours = (time) => {
     const postDate = new Date(time)
-    console.log(currentDate, postDate)
-    //console.log(Math.abs(parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 3600000 ,' 231231')
     const difference = Math.abs((parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 3600000)
-    return difference > 1 ? "- " + Math.round(difference)+ " hours ago" : difference * 360
+    const minutes = Math.abs((parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 60000)
+    return difference > 1 ? Math.round(difference)+ " hours ago" : Math.trunc(minutes) + " Minutes Ago"
   }
+
   if (posts === null) return <LoadingCircle loadingState={loadingState} />;
 
   return (
@@ -253,7 +272,7 @@ export const Display = () => {
                         >
                           {post.posterId.username}
                         </h4>
-                        <h6>{handlePastHours(post.createdAt)}</h6>
+                        <h6 style = {{fontSize:".75rem"}}>{handlePastHours(post.createdAt)}</h6>
                         </div>
                         <div style={{ display: "flex" }}>
                           {post.posterId._id !== user.id ? (
@@ -270,7 +289,6 @@ export const Display = () => {
                   
                       <div className="posts_icon_wrapper">
                         <div className="posts_icon_bar">
-                          {console.log(post)}
                           {post.attending.some(
                             (attendUsers) => attendUsers._id === user.id
                           ) ? (
