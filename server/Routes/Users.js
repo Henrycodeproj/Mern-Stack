@@ -98,48 +98,24 @@ router.patch("/update/profileImage/:userId", isAuthenticated, async (req, res) =
     }
 })
 
-router.post("/create/notifications", isAuthenticated, async (req, res) => {
-    console.log(req.body.postId)
-    if (req.body.notifiedUser === req.body.attendId) return
-
-    const checkExisting = await NotificationModel.findOne({
-        notifiedUser: req.body.notifiedUser,
-        postId: req.body.postId,
-        attendId: req.body.attendId
-    })
-    
-    if (!checkExisting){
-        const notification = new NotificationModel({
-            notifiedUser: req.body.notifiedUser,
-            postId: req.body.postId,
-            attendId: req.body.attendId
-        })
-        await notification.save()
-    }
-})
-
-router.post("/delete/notifications", isAuthenticated, async (req, res) => {
-    if (req.body.notifiedUser === req.body.attendId) return
-    try {
-        await NotificationModel.findOneAndDelete({
-            notifiedUser: req.body.notifiedUser,
-            postId: req.body.postId,
-            attendId: req.body.attendId
-        })
-    } catch (error) {
-        console.log(error)
-    }
-})
-
 router.get("/:user/notifications", isAuthenticated, async (req, res) => {
     try {
         const user = await UserModel.findOne({_id: req.params.user})
+
         if (user.id !== req.results.id) return res.status(400).send({message:"Invalid user"})
+
         const userNotifications = await NotificationModel.find({notifiedUser: req.params.user})
         .sort({ createdAt: -1 })
         .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
         .populate('postId', ['_id', 'Description'])
-        const filtereduserNotifications = userNotifications.filter(notifications => notifications.postId !== null)
+
+        console.log(userNotifications)
+
+        const filtereduserNotifications = 
+            userNotifications.filter(
+            notifications => 
+                notifications.postId !== null
+        )
         res.status(200).send({notifications: filtereduserNotifications, date: user.lastActiveDate})
     } catch(error) {
         console.log(error)

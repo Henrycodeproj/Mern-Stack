@@ -89,7 +89,7 @@ export const HeroSection = ({ setOption, setClicked }) => {
           className="signup_action_buttons"
           variant="contained"
           sx={{
-            padding: "5px 1.5rem",
+            padding: "5px 2rem",
             borderRadius: "100px",
             fontSize: "1rem",
           }}
@@ -102,7 +102,7 @@ export const HeroSection = ({ setOption, setClicked }) => {
           className="signup_action_buttons"
           variant="contained"
           sx={{
-            padding: "5px 1.5rem",
+            padding: "5px 2rem",
             borderRadius: "100px",
             fontSize: "1rem",
           }}

@@ -144,30 +144,20 @@ io.on("connection", (socket) => {
     })
 
     socket.on("notification", async (data) => {
-        console.log("notification calleds")
         const {posterID, postID, currentUser} = data
-        console.log(posterID, postID, currentUser, 'curr etc')
+        console.log(posterID, postID, currentUser, 'info')
         //change time to 2000 ms for production
         const checkNotification = await NotificationModel
         .findOne({
             notifiedUser: posterID,
-            postId:postID, 
+            postId: postID, 
             attendId: currentUser
         })
-        if (data.posterID in activeUsers){
-            console.log(posterID !== currentUser, !checkNotification, 'sdsdsdsd')
-            setTimeout(async () => {
-                if (posterID !== currentUser && !checkNotification) {
-                const response = await NotificationModel
-                .find({
-                    notifiedUser: posterID, 
-                    postId:postID
-                })
-                .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
-                .populate('postId', ['_id', 'Description'])
-                socket.broadcast.emit(`${data.posterID}-notification`, response)
-                }
-            }, 2000);
+        .populate('attendId', ['username','email', 'createdAt', 'profilePicture'])
+        .populate('postId', ['_id', 'Description'])
+
+        if (posterID in activeUsers) {
+            socket.broadcast.emit(`${posterID}-notification`, checkNotification)
         }
     })
     // new chats socket handler

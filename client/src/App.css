@@ -48,11 +48,12 @@ ul{
 }
 h3{
   margin:5px 0px;
-  color:rgb(198, 196, 196);
+  color:rgb(255, 255, 255);
 }
 p{
   margin:0;
   padding:0;
+  color: black;
 }
 .form-errors{
   color:rgba(182, 0, 0, 0.719);
@@ -150,11 +151,6 @@ input[data-autocompleted] {
 /* input, select, textarea{
   color: white;
 } */
-.space{
-  display:flex;
-  justify-content: center;
-  align-items: center;
-}
 .submit-section{
   display:flex;
   justify-content: space-between;
