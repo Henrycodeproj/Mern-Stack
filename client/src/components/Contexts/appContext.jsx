@@ -25,7 +25,7 @@ export const AppContext = ({children}) =>{
 
     const [isNewChat, setIsNewChat] = useState([])
     
-    const [userNotification, setUserNotification] = useState(null)
+    const [userNotification, setUserNotification] = useState([])
 
     const [lastPostIndex, setLastPostIndex] = useState(15);
 
@@ -34,6 +34,10 @@ export const AppContext = ({children}) =>{
     const [unreadNotifications, setUnreadNotifications] = useState(0)
 
     const [notificationID, setNotificationID] = useState(localStorage.getItem("User") ? user.id : 0)
+
+    const [newNotification, setNewNotification] = useState()
+
+    const [clicked, setClicked] = useState(false)
 
     const logoutHandler = () => {
       setUserNotification([])
@@ -75,6 +79,10 @@ export const AppContext = ({children}) =>{
             setLastActive,
             unreadNotifications,
             setUnreadNotifications,
+            newNotification,
+            setNewNotification,
+            clicked, 
+            setClicked
         }}>
             {children}
         </accountContext.Provider>    

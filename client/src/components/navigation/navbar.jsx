@@ -47,7 +47,10 @@ export const Navbar = () => {
      lastActive, 
      setLastActive,
      unreadNotifications,
-     setUnreadNotifications,  
+     setUnreadNotifications,
+     newNotification,
+     setNewNotification,
+     setClicked  
     } =
     useContext(accountContext);
 
@@ -60,6 +63,7 @@ export const Navbar = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [searchClicked, setSearchClicked] = useState(false);
 
+  //used to keep track of window screen size
   useEffect(() => {
     function getCurrentWidth() {
       setWidth(window.innerWidth);
@@ -80,6 +84,7 @@ export const Navbar = () => {
   const searchwordHandler = (word) => {
     setSearch(word);
   };
+  
   useEffect(() => {
     searchBarHandler();
   }, [search, posts]);
@@ -122,22 +127,29 @@ export const Navbar = () => {
         authorization: localStorage.getItem("Token"),
       }
     });
+    console.log(response.data.notifications,'tess')
     setUserNotification(response.data.notifications)
   }
 
+
   useEffect(() => {
-    console.log(notificationID, 'notificationID')
       socket.on(`${notificationID}-notification`, (data) => {
-        console.log(data)
-        if (!(userNotification.some(notifications => notifications._id === data[0]._id))){
-          setUserNotification(prev => [data[0], ...prev])
-          setUnreadNotifications(count => count + 1)
-        } 
+        setNewNotification(data)
       })
     return () => { 
       socket.removeListener(`${notificationID}-notification`);
     }
   }, [notificationID])
+
+  useEffect(() => {
+    const checkNotificationInArray = () => {
+      if (!(userNotification.some(notification => notification.postId._id === newNotification.postId._id))) {
+        setUserNotification(prev => [newNotification, ...prev])
+        setUnreadNotifications(count => count + 1)
+      }
+    }
+    if (newNotification) checkNotificationInArray()
+  }, [newNotification])
 
   const openProfile = (e) => {
     setProfile(e.currentTarget);
@@ -344,15 +356,18 @@ export const Navbar = () => {
   return (
     <nav>
       {!userStatus ? (
+        <div style = {{display:"flex", alignItems:"center", gap:"5%"}}>
         <motion.div whileHover={{ scale: 1.1 }}>
           <img
             className="unplug_logo"
             style={{ maxWidth: "100%" }}
             src={logo}
             alt="logo"
-            onClick={() => navigateTo("/")}
+            onClick={() => setClicked(false)}
           />
         </motion.div>
+        <h1 style={{color:"white", fontSize:"2rem"}}>Unplug</h1>
+        </div>
       ) : (
         <div>
           <img

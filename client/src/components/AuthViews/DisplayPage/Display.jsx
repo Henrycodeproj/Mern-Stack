@@ -8,6 +8,7 @@ import Zoom from "@mui/material/Zoom";
 import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import Attending from "../Posts/Attending";
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import { RightSideCol } from "./RightSideCol";
 import { MoreOptions } from "../Posts/MoreOptions";
 import { Truncating } from "../../ReusablesComponents/Truncating.jsx";
@@ -19,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { Posts } from "../Posts/Posting.jsx";
 import { accountContext } from "../../Contexts/appContext";
 import { LeftColumn } from "./LeftSideCol";
+import { format } from "date-fns"
 
 export const Display = () => {
   const {
@@ -32,20 +34,30 @@ export const Display = () => {
     setDark,
     lastPostIndex, 
     setLastPostIndex,
-    setUserNotification,
-    userNotification,
-    activeNotification, 
-    setActiveNotification,
     setUnreadNotifications,
-    time,
+    setUserNotification,
     setTime,
-    setNumb
   } = useContext(accountContext);
 
   const [loadingState, setLoadingState] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date())
 
   const navigateTo = useNavigate();
+  
+  useEffect(() => {
+    const getUserNotifications = async () => {
+      console.log("caller")
+      const url = `http://localhost:3001/user/${user.id}/notifications`;
+      const response = await axios.get(url, {
+        headers: {
+          authorization: localStorage.getItem("Token"),
+        }
+      });
+      console.log(response.data.notifications,'tess')
+      setUserNotification(response.data.notifications)
+    }
+    getUserNotifications()
+  },[])
 
   useEffect(() => {
     const getNewNotifications = async () => {
@@ -113,107 +125,70 @@ export const Display = () => {
       setLastPostIndex(lastPostIndex + 5);
     }
   };
-  const likeHandler = async (post) => {
+
+  const likeHandler = (post) => {
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/like/${post._id}/${lastPostIndex}`;
-    const response = await axios.patch(URL, data, {
-        headers: {
-          authorization: localStorage.getItem("Token"),
-        },
-      })
-      if (response.data)
-      setPosts(response.data)
-      //createNotificaction(post)
-  }
-
-  const unlikeHandler = async (post) => {
-    const data = { user: user.id };
-    const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;
-    const response = 
-     await axios
+    axios
       .patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
       })
-      if (response.data)
-        setPosts(response.data)
-  }
+      .then((response) => {
+        setPosts(response.data);
+        socket.emit("notification",
+          {
+            postID: post._id, 
+            posterID: post.posterId._id,
+            currentUser: user.id
+          }
+        )
+      })
+      .catch((error) => console.log(error));
+  };
 
-  //const likeHandler = async (post) => {
-  //const data = { user: user.id };
-  //const URL = `http://localhost:3001/posts/like/${post._id}/${lastPostIndex}`;
-  //const response = await axios.patch(URL, data, {
-  //    headers: {
-  //      authorization: localStorage.getItem("Token"),
-  //    },
-  //  })
-  //    setPosts(response.data)
-  //    createNotificaction(post)
-  //    console.log(response, 'like response')
-  //    if (response)
-  //    socket.emit("notification",
-  //      {
-  //        postID: post._id, 
-  //        posterID: post.posterId._id,
-  //        currentUser: user.id
-  //      }
-  //    )
-  //}
-
-  //const unlikeHandler = async (post) => {
-  //  console.log("inside unlike function", post)
-  //  const data = { user: user.id };
-  //  const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;
-  //  const response = 
-  //   await axios
-  //    .patch(URL, data, {
-  //      headers: {
-  //        authorization: localStorage.getItem("Token"),
-  //      },
-  //    })
-  //    console.log(response, 'unlike response')
-  //    if (response.data) {
-  //      setPosts(response.data)
-  //      deleteNotification(post)
-  //    }
-  //};
-
-  const createNotificaction = async (post) => {
-    const url = `http://localhost:3001/user/create/notifications/`
-    const data = {
-      postId: post._id,
-      notifiedUser: post.posterId._id,
-      attendId: user.id
-    }
-    axios.post(url, data, {
-      headers: {
-        authorization: localStorage.getItem("Token")
-      }
-    })
-  }
-
-  const deleteNotification = async (post) => {
-    const url = `http://localhost:3001/user/delete/notifications/`
-    const data = {
-      postId: post._id,
-      notifiedUser: post.posterId._id,
-      attendId: user.id
-    }
-    axios.post(url, data, {
-      headers: {
-        authorization: localStorage.getItem("Token")
-      }
-    })
-  }
+  const unlikeHandler = (post) => {
+    const data = { user: user.id };
+    const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;
+    axios
+      .patch(URL, data, {
+        headers: {
+          authorization: localStorage.getItem("Token"),
+        },
+      })
+      .then((response) => {
+        setPosts(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
   
   const handlePastHours = (time) => {
     const postDate = new Date(time)
-    const difference = Math.abs((parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 3600000)
-    const minutes = Math.abs((parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 60000)
-    return difference > 1 ? Math.round(difference)+ " hours ago" : Math.trunc(minutes) + " Minutes Ago"
+    const difference = 
+    Math.abs((
+        parseInt(postDate.getTime()) 
+      - parseInt(currentDate.getTime())) 
+      / 3600000
+    )
+    const minutes = 
+    Math.abs((
+      parseInt(postDate.getTime()) 
+      - parseInt(currentDate.getTime())) 
+      / 60000
+    )
+    return difference > 1 
+    ? Math.round(difference)+ " hours ago" 
+    : Math.trunc(minutes) + " Minutes Ago"
   }
 
+  const handleEventTimeandDate = (timeAndDate) => {
+    const timeDate = new Date(timeAndDate)
+    const changedDate = format(timeDate, "E, LLL d, y h:m a")
+
+    return `${changedDate}`
+  }
+  
   if (posts === null) return <LoadingCircle loadingState={loadingState} />;
 
   return (
@@ -286,7 +261,25 @@ export const Display = () => {
                         postDescription={post.Description}
                         truncateNumber={150}
                       />
-                  
+                      <div>
+
+                      <Tooltip title = "Scheduled time and date">   
+                      <div 
+                      style = {{
+                        display:"flex", 
+                        alignItems:"center", 
+                        gap:"1%"
+                      }}>
+                        <ScheduleIcon
+                        sx = {{fontSize:"1rem"}}
+                        />
+                        <h6 style = {{ fontSize:".85rem" }}>
+                          {handleEventTimeandDate(post.timeAndDate)}
+                        </h6>
+                      </div>
+                      </Tooltip>
+
+                      </div>
                       <div className="posts_icon_wrapper">
                         <div className="posts_icon_bar">
                           {post.attending.some(
@@ -379,3 +372,4 @@ export const Display = () => {
     </div>
   );
 };
+

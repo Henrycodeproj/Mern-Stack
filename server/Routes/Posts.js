@@ -4,15 +4,17 @@ import PostModel from '../Models/Posts.js';
 import UserModel from '../Models/Users.js';
 import ReportModel from '../Models/Report.js';
 import mongoose from 'mongoose';
+import NotificationModel from '../Models/Notifications.js';
 
 export const router = express.Router();
 
 router.post('/', isAuthenticated, async (req,res) =>{
-    const {user, post} = req.body
-    console.log(user,post)
+    const {user, post, date} = req.body
+    console.log(user, post)
     const newPosts = new PostModel({
-        Description:post,
-        posterId:user
+        Description: post,
+        posterId: user,
+        timeAndDate : date
     })
 
     await newPosts.save()
@@ -83,16 +85,32 @@ router.get('/:postID/attend/:currentShown', isAuthenticated, async (req, res) =>
 })
 
 router.patch('/like/:postID/:postIndex', isAuthenticated, async (req,res) =>{
-    console.log(req.body.user, 'likes')
+    console.log(req.body.user, 'reqbody id')
     try {
         const postID = req.params.postID
-        const userID = req.body.user
+        const user = req.body.user
         const post = await PostModel.findById(postID)
 
-        if (!post.attending.includes(userID)){
-            post.attending.push(userID)
+        const checkExisting = await NotificationModel.findOne({
+            notifiedUser: post.posterId._id,
+            postId: post._id,
+            attendId: user.id
+        })
+
+        //creates notification
+        if (!checkExisting){
+            const notification = new NotificationModel({
+                notifiedUser: post.posterId._id,
+                postId: post._id,
+                attendId: user
+            })
+            notification.save()
+        }
+
+        if (!post.attending.includes(user)){
+            post.attending.push(user)
             await post.save()
-        } 
+        }
 
         const updatedPosts = await PostModel.find({})
         .sort({createdAt: -1})
@@ -107,52 +125,30 @@ router.patch('/like/:postID/:postIndex', isAuthenticated, async (req,res) =>{
 })
 
 router.patch('/unlike/:postID/:postIndex', isAuthenticated, async (req,res) =>{
-    console.log('unlike calling')
     try {
         const postID = req.params.postID
-        const userID = req.body.user
+        const user = req.body.user
         const post = await PostModel.findById(postID)
 
-        if (post.attending.includes(userID)) 
+        if (post.attending.includes(user)) 
             post.attending = post.attending.filter(
-            (users)=> users.toString() !== userID.toString()
+            (users)=> users.toString() !== user.toString()
         )
-
         await post.save()
+
+        //deletes notification in db
+        await NotificationModel.findOneAndDelete({
+            notifiedUser: post.posterId._id,
+            postId: post._id,
+            attendId: user
+        })
 
         const updatedPosts = await PostModel.find({})
         .sort({createdAt: -1})
         .limit(req.params.postIndex)
         .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
         .populate('attending', ['username','profilePicture'])
-        console.log('updated post sending')
         res.status(200).send(updatedPosts)
-    } catch (error) {
-        console.log(error)
-    }
-})
-
-router.patch('/search/like/:postID', isAuthenticated, async (req, res) => {
-    if (req.results.id !== req.body.userID) 
-        return res.status(401).send({message:"You are not Authorized"})
-
-    try {
-        const post = await PostModel.findById(req.params.postID)
-        if (post.attending.includes(req.body.userID)) 
-            post.attending = post.attending.filter(
-            (users)=> users.toString() !== req.body.userID.toString()
-        )
-        else post.attending.push(req.body.userID)
-    
-        await post.save()
-
-        const updatedPost = await PostModel.find({_id:req.params.postID})
-        .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
-        .populate('attending', ['username','profilePicture'])
-    
-        const index = req.body.currentSearch.findIndex(posts => posts._id === req.params.postID)
-        req.body.currentSearch[index] = updatedPost[0]
-        res.send(req.body.currentSearch)
     } catch (error) {
         console.log(error)
     }
@@ -216,6 +212,32 @@ router.post('/search/', isAuthenticated, async (req, res) => {
         } else {
             res.send([])
         }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.patch('/search/like/:postID', isAuthenticated, async (req, res) => {
+    if (req.results.id !== req.body.userID) 
+        return res.status(401).send({message:"You are not Authorized"})
+
+    try {
+        const post = await PostModel.findById(req.params.postID)
+        if (post.attending.includes(req.body.userID)) 
+            post.attending = post.attending.filter(
+            (users)=> users.toString() !== req.body.userID.toString()
+        )
+        else post.attending.push(req.body.userID)
+    
+        await post.save()
+
+        const updatedPost = await PostModel.find({_id:req.params.postID})
+        .populate('posterId', ['username','email', 'createdAt', 'profilePicture'])
+        .populate('attending', ['username','profilePicture'])
+    
+        const index = req.body.currentSearch.findIndex(posts => posts._id === req.params.postID)
+        req.body.currentSearch[index] = updatedPost[0]
+        res.send(req.body.currentSearch)
     } catch (error) {
         console.log(error)
     }

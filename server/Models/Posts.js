@@ -9,9 +9,17 @@ const PostSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Users"
     },
-    attending:[{ type : mongoose.Schema.Types.ObjectId, ref: 'Users' }],
+    attending:[{ 
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+     }],
     expiresAt: {
-        type: Date, default: Date.now, index: { expiresAfterSeconds: 1000 * 60 * 60 * 24 }
+        type: Date,
+        default: Date.now, 
+        index: { expiresAfterSeconds: 1000 * 60 * 60 * 24 }
+    },
+    timeAndDate : {
+        type:String
     }
 },{timestamps:true})
 

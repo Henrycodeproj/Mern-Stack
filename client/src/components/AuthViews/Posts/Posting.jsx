@@ -1,5 +1,5 @@
 import "../Posts/Posting.css";
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { accountContext } from "../../Contexts/appContext";
 import { Emojis } from "../../ReusablesComponents/Emojis";
 import axios from "axios";
@@ -10,21 +10,51 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { TextAreaEmojis } from "../../ReusablesComponents/TextAreaEmojis";
 import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
 import Avatar from "@mui/material/Avatar";
+import TextField from '@mui/material/TextField';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
 
 export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
   const { user, setPosts } = useContext(accountContext);
   const ref = useRef();
+  const calendarRef = useRef();
 
   const [status, setStatus] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [time, setTime] = useState()
+  const [addEventTime, setAddEventTime] = useState(false)
+
+  const currentDate = new Date()
+  const f = format(currentDate, "h:m a")
+  //yyyy-MM-ddThh:mm
+  const currentDateTime = format(currentDate, "yyyy-MM-dd'T'HH:mm")
 
   const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        calendarRef.current 
+      && !calendarRef.current.contains(event.target) 
+      && event.target.offsetWidth >= calendarRef.current.offsetWidth + 50
+      ) {
+        setAddEventTime(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [calendarRef]);
 
   const formHandler = (e) => {
     e.preventDefault();
     const data = {
       user: user.id,
       post: status,
+      date: time ? time : new Date()
     };
     const url = "http://localhost:3001/posts/";
     axios
@@ -43,6 +73,10 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
       })
       .catch((err) => alert(err.response.data.message));
   };
+
+  const handleDateandTime = (event) => {
+    setTime(event.target.value)
+  }
 
   if (user === null) return <LoadingCircle loadingState={user} />;
 
@@ -74,7 +108,31 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
                 setAnchor={setAnchorEl}
                 title={true}
               />
-              <AddPhotoAlternateIcon sx={{ color: "gray" }} />
+              {
+              addEventTime
+              ? <TextField
+              id="datetime-local"
+              label="What time and day?"
+              type="datetime-local"
+              defaultValue={`${currentDateTime}`}
+              sx={{ width: 250 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              ref = {calendarRef}
+              onChange = {handleDateandTime}
+              /> 
+              : <div style={{display:"flex", alignItems:"center"}}>
+                  <motion.div
+                  whileHover={{scale: 1.1}}
+                  >
+                  <CalendarMonthIcon sx={{ color: "black", marginRight:"5px", cursor:"pointer" }} 
+                  onClick = {()=> setAddEventTime(true)}
+                  />
+                  </motion.div>
+                  <h3 style = {{color:"black"}}>Date</h3>
+                </div>
+              }
               <LocationOnIcon sx={{ color: "gray" }} />
             </div>
           </div>
