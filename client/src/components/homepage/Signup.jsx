@@ -204,6 +204,7 @@ export const Signup = () =>{
               {/* start of form */}
               <form className='signup' onSubmit={submitHandler}>
                 {/* username */}
+                <div className='signup_input_wrapper'>
                   <label className='signup_label'>
                     <h3>Username</h3>
                       <input name = "username" 
@@ -211,33 +212,37 @@ export const Signup = () =>{
                         onChange={formHandler}
                         className = "signup_username"
                       />
-                      {<p className='form-errors'>{formErrors.username}</p>}
                   </label>
+                  {<p className='form-errors'>{formErrors.username}</p>}
+                </div>
                 {/* Password section */}
-                  <label className='signup_label'>
-                    <h3>Password</h3>
-                      <input 
-                        name = "password" 
-                        type = "password"  
-                        value = {newUser.password} 
-                        onChange={formHandler}
-                        className = "signup_username"
-                      />
-                      <p className='form-errors'>{formErrors.password}</p>
-                      <p className='requirement-warning' style ={{color:`${requirements.length}`}}>
-                        Password length must be 6 or more
-                        {requirements.length ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
-                      </p>
-                      <p className='requirement-warning' style ={{color:`${requirements.uppercase}`}}>
-                        One upper case letter (A-Z)
-                        {requirements.uppercase ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
-                      </p>
-                      <p className='requirement-warning' style ={{color:`${requirements.numbers}`}}>
-                        One number (0-9)
-                        {requirements.numbers ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
-                      </p>
-                  </label>
+                <div className='signup_input_wrapper'>
+                    <label className='signup_label'>
+                      <h3>Password</h3>
+                        <input 
+                          name = "password" 
+                          type = "password"  
+                          value = {newUser.password} 
+                          onChange={formHandler}
+                          className = "signup_username"
+                        />
+                    </label>
+                    <p className='form-errors'>{formErrors.password}</p>
+                    <p className='requirement-warning' style ={{color:`${requirements.length}`}}>
+                          Password length must be 6 or more
+                          {requirements.length ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
+                        </p>
+                        <p className='requirement-warning' style ={{color:`${requirements.uppercase}`}}>
+                          One upper case letter (A-Z)
+                          {requirements.uppercase ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
+                        </p>
+                        <p className='requirement-warning' style ={{color:`${requirements.numbers}`}}>
+                          One number (0-9)
+                          {requirements.numbers ==='#005700' && <CheckCircleIcon className='password-checkmark'/>}
+                    </p>
+                  </div>
                 {/* confirm pass */}
+                <div className='signup_input_wrapper'>
                   <label className='signup_label'>
                     <h3>Confirm Password</h3>
                       <input 
@@ -247,10 +252,12 @@ export const Signup = () =>{
                         onChange={formHandler}
                         className = "signup_username"
                       />
-                      <p className='form-errors'>{formErrors.Confirm}</p>
-                      <p className='form-errors'>{confirm.match}</p>
                   </label>
+                  <p className='form-errors'>{formErrors.Confirm}</p>
+                  <p className='form-errors'>{confirm.match}</p>
+                </div>
                 {/*Email  */}
+                <div className='signup_input_wrapper'>
                   <label className='signup_label'>
                     <h3>Email</h3>
                       <input
@@ -260,8 +267,9 @@ export const Signup = () =>{
                         onChange = {formHandler}
                         className = "signup_username"
                       />
-                      <p className='form-errors'>{formErrors.email}</p>
                   </label>
+                  <p className='form-errors'>{formErrors.email}</p>
+                </div>
                   <div className='submit-section'>
                   <Button variant="contained" color='secondary' type='submit' className='signup-submit-button'>Sign up</Button>
                   {signLoading && <CircularProgress color="inherit" />}

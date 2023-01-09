@@ -1,3 +1,5 @@
+import "./SearchBarModal.css"
+import axios from "axios"
 import Box from '@mui/material/Box';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
@@ -6,17 +8,16 @@ import Avatar from "@mui/material/Avatar";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useEffect, useRef, useContext } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import "./SearchBarModal.css"
-import { accountContext } from '../Contexts/appContext';
-import axios from "axios"
-import { motion, AnimatePresence} from 'framer-motion';
 import Tooltip from "@mui/material/Tooltip";
+import { accountContext } from '../Contexts/appContext';
+import { motion, AnimatePresence} from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Truncating } from '../ReusablesComponents/Truncating';
+import { useEffect, useRef, useContext } from 'react';
+import { handleEventTimeandDate } from "../Reusable Functions/TimeFunctions"
 
 
 
@@ -119,6 +120,7 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
                   }
                   sx = {{marginTop:"0"}}
                   />
+                  <h6>{handleEventTimeandDate(postInfo.timeAndDate)}</h6>
                     <div style = {{display:"flex", justifyContent:"space-between"}}>
                       {
                       postInfo.attending.some(attending => attending._id === user.id) 

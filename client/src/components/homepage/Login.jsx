@@ -43,12 +43,12 @@ export const Login = ({ setOption, option, active, inactive }) => {
       })
       .then((res) => {
         console.log(res)
+        setLoginLoading(true)
         if (res.data.accessToken) {
           localStorage.setItem("Token", res.data.accessToken);
           localStorage.setItem("userStatus", true);
           localStorage.setItem("User", JSON.stringify(res.data.user));
           setUser(JSON.parse(localStorage.getItem("User")));
-          setLoginLoading(true);
           setNotificationID(res.data.user.id);
           setTime(res.data.user.lastActive);
           navigateTo("/display");

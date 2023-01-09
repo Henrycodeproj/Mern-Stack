@@ -66,12 +66,12 @@ textarea {
     caret-color: black !important;
 }
 .bottom_icon_bar_wrapper {
-    width: 70%;
+    width: 100%;
 }
 .input_icons_bar {
     width:100%;
     display:flex; 
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 }
 @media (max-width:400px){

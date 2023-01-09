@@ -24,7 +24,6 @@ import axios from "axios";
 import "../navigation/navbar.css";
 import { SearchBarModal } from "./SearchBarModal";
 import { Notification } from "../AuthViews/DisplayPage/Notification";
-import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 
 
