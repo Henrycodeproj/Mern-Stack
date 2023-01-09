@@ -18,26 +18,27 @@ import { motion } from "framer-motion";
 export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
   const { user, setPosts } = useContext(accountContext);
   const ref = useRef();
-  const calendarRef = useRef();
-
+  const postRef = useRef();
+  
   const [status, setStatus] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [time, setTime] = useState()
   const [addEventTime, setAddEventTime] = useState(false)
+  const [dateTime, setDateTime] = useState()
+  const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
 
   const currentDate = new Date()
-  const f = format(currentDate, "h:m a")
-  //yyyy-MM-ddThh:mm
-  const currentDateTime = format(currentDate, "yyyy-MM-dd'T'HH:mm")
+  const currentDateFormatted = format(currentDate, "yyyy-MM-dd'T'HH:mm")
 
-  const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (
-        calendarRef.current 
-      && !calendarRef.current.contains(event.target) 
-      && event.target.offsetWidth >= calendarRef.current.offsetWidth + 50
+        postRef.current 
+      && !postRef.current.contains(event.target) 
+      && 
+      ( event.target.offsetWidth >= postRef.current.offsetWidth + 50
+      || event.target.offsetHeight >= postRef.current.offsetHeight + 10
+      )
       ) {
         setAddEventTime(false)
       }
@@ -47,14 +48,14 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [calendarRef]);
+  }, [postRef]);
 
   const formHandler = (e) => {
     e.preventDefault();
     const data = {
       user: user.id,
       post: status,
-      date: time ? time : new Date()
+      date: dateTime ? dateTime : null
     };
     const url = "http://localhost:3001/posts/";
     axios
@@ -69,19 +70,21 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
           setPosts((prevPosts) => [res.data.newestPost, ...prevPosts]);
           setLastPostIndex(lastPostIndex + 1);
           setStatus("");
+          setDateTime()
+          setAddEventTime(false)
         } else throw Error;
       })
       .catch((err) => alert(err.response.data.message));
   };
 
   const handleDateandTime = (event) => {
-    setTime(event.target.value)
+    setDateTime(event.target.value)
   }
 
   if (user === null) return <LoadingCircle loadingState={user} />;
 
   return (
-    <div className="add_post_container">
+    <div className="add_post_container" ref = {postRef}>
       <Avatar
         className="input_picture"
         src={`https://ucarecdn.com/${userInfo.profilePicture}/`}
@@ -114,26 +117,31 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
               id="datetime-local"
               label="What time and day?"
               type="datetime-local"
-              defaultValue={`${currentDateTime}`}
+              defaultValue={`${currentDateFormatted}`}
               sx={{ width: 250 }}
               InputLabelProps={{
                 shrink: true,
               }}
-              ref = {calendarRef}
               onChange = {handleDateandTime}
               /> 
-              : <div style={{display:"flex", alignItems:"center"}}>
-                  <motion.div
-                  whileHover={{scale: 1.1}}
-                  >
-                  <CalendarMonthIcon sx={{ color: "black", marginRight:"5px", cursor:"pointer" }} 
-                  onClick = {()=> setAddEventTime(true)}
+              : <motion.div 
+                style={{
+                  display:"flex", 
+                  alignItems:"center"
+                  }}
+                onClick = {()=> setAddEventTime(true)}
+                whileHover = {{ scale: 1.1 }}
+                >
+                  <CalendarMonthIcon 
+                  sx={{
+                     color: "black", 
+                     marginRight:"5px", 
+                     cursor:"pointer" 
+                  }} 
                   />
-                  </motion.div>
                   <h3 style = {{color:"black"}}>Date</h3>
-                </div>
+                </motion.div>
               }
-              <LocationOnIcon sx={{ color: "gray" }} />
             </div>
           </div>
           <Button

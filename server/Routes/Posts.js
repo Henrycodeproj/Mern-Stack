@@ -10,7 +10,7 @@ export const router = express.Router();
 
 router.post('/', isAuthenticated, async (req,res) =>{
     const {user, post, date} = req.body
-    console.log(user, post)
+    console.log(user, post, date)
     const newPosts = new PostModel({
         Description: post,
         posterId: user,
@@ -46,7 +46,7 @@ router.get('/amount/:postAmount/', isAuthenticated, async (req, res) =>{
         const posts = await PostModel.find({})
         .sort({createdAt: -1})
         .limit(req.params.postAmount)
-        .populate('posterId', ['username','email', 'createdAt','profilePicture'])
+        .populate('posterId', ['username','email', 'createdAt','profilePicture', 'timeAndDate'])
         .populate('attending', ['username','profilePicture'])
 
         return res.status(200).send(posts)

@@ -1,10 +1,13 @@
 .signup_label {
     display:flex;
     flex-direction: column;
-    margin: 15px 0px;
     font-family: 'Mulish', sans-serif;
     font-weight: 900;
-    color:rgb(85, 128, 227)
+    color:rgb(85, 128, 227);
+    border-bottom-style: solid;
+    border-color: rgb(199, 199, 199);
+    border-bottom-width: 2px;
+    border-bottom: 100%;
 }
 .signup_username{
     color:white;
@@ -16,12 +19,11 @@
     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px !important;
 }
 .signup-container{
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     box-sizing: border-box;
     background:#ffffff38;
     width:450px;
-    padding:30px;
+    padding:1.5rem;
     border-style: solid;
     border-radius: 15px;
     font-family: 'Mulish', sans-serif;
@@ -35,6 +37,18 @@
     display:flex;
     justify-content: center;
     align-items: center;
+}
+.form-errors {
+    color:rgb(120, 2, 2);
+    font-weight: bolder;
+}
+.signup_input_wrapper {
+    margin: 15px 0px;
+}
+.requirement-warning{
+    display:flex;
+    align-items: center;
+    font-weight: bold;
 }
 @media (max-width:999px) {
     .signup_sideimage_logo {

@@ -2,7 +2,6 @@ import axios from "axios";
 import "./Display.css";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AddToHomeScreenIcon from "@mui/icons-material/AddToHomeScreen";
 import Zoom from "@mui/material/Zoom";
 import Tooltip from "@mui/material/Tooltip";
@@ -20,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { Posts } from "../Posts/Posting.jsx";
 import { accountContext } from "../../Contexts/appContext";
 import { LeftColumn } from "./LeftSideCol";
-import { format } from "date-fns"
+import { handleEventTimeandDate } from "../../Reusable Functions/TimeFunctions.js"
 
 export const Display = () => {
   const {
@@ -181,13 +180,6 @@ export const Display = () => {
     ? Math.round(difference)+ " hours ago" 
     : Math.trunc(minutes) + " Minutes Ago"
   }
-
-  const handleEventTimeandDate = (timeAndDate) => {
-    const timeDate = new Date(timeAndDate)
-    const changedDate = format(timeDate, "E, LLL d, y h:m a")
-
-    return `${changedDate}`
-  }
   
   if (posts === null) return <LoadingCircle loadingState={loadingState} />;
 
@@ -262,14 +254,9 @@ export const Display = () => {
                         truncateNumber={150}
                       />
                       <div>
-
+                      { post.timeAndDate &&
                       <Tooltip title = "Scheduled time and date">   
-                      <div 
-                      style = {{
-                        display:"flex", 
-                        alignItems:"center", 
-                        gap:"1%"
-                      }}>
+                      <div className="meeting_bar">
                         <ScheduleIcon
                         sx = {{fontSize:"1rem"}}
                         />
@@ -278,6 +265,7 @@ export const Display = () => {
                         </h6>
                       </div>
                       </Tooltip>
+                      }
 
                       </div>
                       <div className="posts_icon_wrapper">
@@ -333,9 +321,6 @@ export const Display = () => {
                               </Tooltip>
                             </motion.button>
                           )}
-                          <Tooltip title="Disabled (Add the date of event)">
-                            <CalendarMonthIcon sx={{ color: "gray" }} />
-                          </Tooltip>
                           <Tooltip title="Disabled (Add event to your phone calendar)">
                             <AddToHomeScreenIcon sx={{ color: "gray" }} />
                           </Tooltip>
@@ -372,4 +357,3 @@ export const Display = () => {
     </div>
   );
 };
-

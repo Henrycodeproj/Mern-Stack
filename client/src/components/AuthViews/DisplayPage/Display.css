@@ -76,7 +76,7 @@
 }
 .posts_icon_bar {
     display: flex;
-    justify-content: space-between;
+    gap:10%;
     width:50%;
 }
 .dss {
@@ -99,6 +99,11 @@
 }
 .online:hover{
     animation: online-pulse 2s infinite;
+}
+.meeting_bar {
+    display: flex;
+    align-items: center;
+    gap: 1%;
 }
 @keyframes online-pulse {
     0% {
@@ -126,20 +131,23 @@
         width:100%;
     }
 }
-@media (max-width:400px){
-    .right_sidebar{
+@media (max-width:500px){
+    .right_sidebar {
         display: none;
     }
-    .display_container{
+    .display_container {
         width:100%;
     }
-    .display_newsfeed_wrapper{
+    .display_newsfeed_wrapper {
         width:100%;
     }
     .posts_articles{
         margin:10px 0px 10px 0px;
     }
-    .newsfeed_container{
+    .newsfeed_container {
         max-height: none;
+    }
+    .meeting_bar {
+        gap: 5%;
     }
 }
