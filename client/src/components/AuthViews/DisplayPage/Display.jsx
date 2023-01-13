@@ -189,7 +189,6 @@ export const Display = () => {
         <div className="left_sidebar">
           <LeftColumn />
         </div>
-
         <div className="newsfeed_container">
           <div className="outer_posts_container">
             <Posts

@@ -72,7 +72,7 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
     }
 
     return (
-        <div >
+        <div className = "search_bar_container">
         <Popper id={id} open={open} anchorEl={anchorEl}>
           <Box sx={{ 
             border: 1,

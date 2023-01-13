@@ -7,6 +7,8 @@ import ChatIcon from "@mui/icons-material/Chat";
 import { accountContext } from "../../Contexts/appContext";
 import { IndividualChats } from "../ChatViews/IndividualChat";
 import { useNavigate } from "react-router-dom";
+import Test from "./Test";
+
 
 export const RightSideCol = () => {
   const newMessageCheck = useRef();
@@ -74,6 +76,7 @@ export const RightSideCol = () => {
 
   return (
     <div className="right_column_wrapper">
+      <Test/>
       <div className="popular_container">
         <h2
           style={{
