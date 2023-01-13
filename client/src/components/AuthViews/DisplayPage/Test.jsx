@@ -33,7 +33,7 @@ function Test() {
         eventClick = {(e)=> p(e)}
         editable = {false}
         headerToolbar = {header}
-        height = "500px"
+        height = "400px"
         dayMaxEvents = {true}
         eventMaxStack = {true}
       />
