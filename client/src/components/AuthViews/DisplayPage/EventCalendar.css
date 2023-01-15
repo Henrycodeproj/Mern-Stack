@@ -1,0 +1,18 @@
+.fc-popover-body  {
+    display: flex;
+    justify-content: space-between;
+    max-width: 50%;
+    flex-direction: column;
+    word-wrap: break-word;
+}
+.fc-daygrid-event {
+    white-space: normal;
+}
+.fc-daygrid-more-link {
+    font-weight: 900;
+    font-size: 1rem;
+}
+.see {
+    display: flex;
+    align-items: center;
+}
