@@ -51,7 +51,7 @@ export const SearchBarModal = ({anchorEl, setAnchorEl, searchResults, setSearchR
       const url = `http://localhost:3001/posts/search/like/${postID}`
       const data = {
         userID: user.id,
-        currentSearch: searchResults
+        currentSearch: searchResults,
       }
       const response = await axios.patch(url, data, {
         headers:{

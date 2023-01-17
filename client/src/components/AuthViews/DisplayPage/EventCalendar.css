@@ -16,3 +16,9 @@
     display: flex;
     align-items: center;
 }
+.fc-popover-title {
+    font-weight: 900;
+}
+.fc-popover-body {
+    max-width: 100%;
+}
