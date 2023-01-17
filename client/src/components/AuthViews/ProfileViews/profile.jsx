@@ -153,7 +153,7 @@ export const Profile = ()=> {
 
     const list = (anchor) => (
       <Box
-        sx={anchor === 'bottom' ? 'auto' : 250 }
+        sx= {anchor === 'bottom' ? 'auto' : 250 }
         role="presentation"
         onClick={toggleDrawer(anchor, true)}
       >
@@ -183,7 +183,8 @@ export const Profile = ()=> {
     const profileImagehandler = () => {
       const dialog = widgetApi.current.openDialog();
       dialog.switchTab("url");
-    }       
+    }      
+
     return(
         <>
         {viewedUser &&
