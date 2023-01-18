@@ -5,6 +5,7 @@
     "@fullcalendar/react": "^6.0.2",
     "@fullcalendar/timegrid": "^6.0.3",
     "date-fns": "^2.29.3",
+    "react-admin": "^4.7.1",
     "react-datetime-picker": "^4.1.1"
   }
 }

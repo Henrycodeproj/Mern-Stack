@@ -11,6 +11,7 @@ import { Profile } from "./components/AuthViews/ProfileViews/profile";
 import { Display } from './components/AuthViews/DisplayPage/Display';
 import { NotFound } from "./components/config/NotFound";
 import { ChatPage } from './components/AuthViews/ChatViews/ChatPage';
+import { Admin } from 'react-admin';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <AppContext>
        <Navbar/>
         <Routes>
+          <Route path="/admin" element ={<Admin/>}/>
           <Route path="/" element ={<Signup/>}/>
           <Route element = {<UserAuthentication/>}>
               <Route path="/display" element = {<Display/>}/>
