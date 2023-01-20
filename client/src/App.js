@@ -11,13 +11,16 @@ import { Profile } from "./components/AuthViews/ProfileViews/profile";
 import { Display } from './components/AuthViews/DisplayPage/Display';
 import { NotFound } from "./components/config/NotFound";
 import { ChatPage } from './components/AuthViews/ChatViews/ChatPage';
+import {AdminPage} from "./components/AdminPage.jsx"
 
 function App() {
+
   return (
     <Router>
       <AppContext>
        <Navbar/>
         <Routes>
+          <Route path="/admin*" element ={<AdminPage/>}/>
           <Route path="/" element ={<Signup/>}/>
           <Route element = {<UserAuthentication/>}>
               <Route path="/display" element = {<Display/>}/>

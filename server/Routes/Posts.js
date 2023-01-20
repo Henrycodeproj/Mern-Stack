@@ -31,7 +31,7 @@ router.post("/", isAuthenticated, async (req, res) => {
   return res.status(500).send({ message: "Error your post failed." });
 });
 
-router.get("/all", isAuthenticated, async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const posts = await PostModel.find({})
       .sort({ createdAt: -1 })
@@ -42,7 +42,8 @@ router.get("/all", isAuthenticated, async (req, res) => {
         "profilePicture",
       ])
       .populate("attending", ["username", "profilePicture"]);
-    return res.status(200).send(posts);
+    console.log(posts)
+    return res.status(200).json(posts);
   } catch (err) {
     return res.status(500).send("Internal Server error");
   }
@@ -351,53 +352,8 @@ router.get("/all/posts", isAuthenticated, async (req, res) => {
         }
       }
     ])
+    console.log(results)
     res.status(200).send(results)
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-router.patch("/event/like", isAuthenticated, async (req, res) => {
-  const {postID, userID, postIndex} = req.body
-  try {
-    await PostModel.findByIdAndUpdate({_id: postID}, {$addToSet:{ attending:userID }}, {new:true})
-    const updatedPosts = await PostModel.find({})
-    .sort({ createdAt: -1 })
-    .limit(postIndex)
-    .populate("posterId", [
-      "username",
-      "email",
-      "createdAt",
-      "profilePicture",
-      "timeAndDate",
-    ])
-    .populate("attending", ["username", "profilePicture"]);
-
-    const events = await PostModel.aggregate([
-      {
-        $set: {
-          start: "$timeAndDate",
-          title: "$Description",
-             id: "$_id",
-             //extendedProps:"ww"
-        }
-      },
-      {
-        $project: {
-          _id : 0,
-          timeAndDate: 0,
-          Description: 0,
-          posterId: 0,
-          attending :0,
-          expiresAt: 0,
-          createdAt: 0,
-          updatedAt: 0,
-          __v: 0
-        }
-      }
-    ])
-
-    res.status(200).send(events)
   } catch (error) {
     console.log(error)
   }
