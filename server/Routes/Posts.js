@@ -31,7 +31,7 @@ router.post("/", isAuthenticated, async (req, res) => {
   return res.status(500).send({ message: "Error your post failed." });
 });
 
-router.get("/all", isAuthenticated, async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const posts = await PostModel.find({})
       .sort({ createdAt: -1 })
@@ -42,7 +42,8 @@ router.get("/all", isAuthenticated, async (req, res) => {
         "profilePicture",
       ])
       .populate("attending", ["username", "profilePicture"]);
-    return res.status(200).send(posts);
+    console.log(posts)
+    return res.status(200).json(posts);
   } catch (err) {
     return res.status(500).send("Internal Server error");
   }
