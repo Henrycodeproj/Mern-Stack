@@ -1,50 +1,70 @@
-import { Admin, Resource, ListGuesser, EditGuesser } from 'react-admin';
-import Test from './PostDisplay';
-import jsonServerProvider from "ra-data-json-server";
-import axios from "axios"
-import { PostEdit } from './PostEdit';
-
+import { Admin, Resource} from "react-admin";
+import { PostDisplay } from "./PostDisplay";
+import axios from "axios";
+import { PostEdit } from "./PostEdit";
+import ArticleIcon from "@mui/icons-material/Article";
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import { Layout } from "react-admin";
+import { UsersDisplay } from "./UsersDisplay";
+import { UsersEdit } from "./UsersEdit";
+import authProvider from './AuthProvider.js';
+import MyLoginPage from "./Login";
 
 export const AdminPage = () => {
+  //middleware to format obj into library format
+  function getListHandler(response, params) {
+    const {page, perPage}= params.pagination
 
-    //middleware to format obj into library format
-    function getListHandler (response) {
-        console.log(response)
-        const formattedData = response.map((fields) => ({...fields, id: fields._id}))
-        return {
-            data: formattedData,
-            total: response.length
-        }
-    }
+    const formattedData = response.data.map((fields) => ({
+      ...fields,
+      id: fields._id,
+    }));
 
-    const apiUrl = "http://localhost:3001/admin";
-    //const dataProvider = jsonServerProvider(apiUrl)
-    const dataProvider = {
-        getList: async () =>  await axios.get(apiUrl)
-        .then(response => getListHandler(response.data)),
+    //pagination
+    const newArray = formattedData.slice((page - 1) * perPage, page * perPage)
 
-        deleteMany: async (resource, params) => 
-        await axios.patch(`${apiUrl}/delete`, {resource: resource, params:params})
-        .then(response => response.data),
+    return {
+      data: newArray,
+      total: response.data.length,
+    };
+  }
 
-        //updateMany: async (resource, params) => console.log(params)
-        //await axios.put(`${apiUrl}/update`, {resource: resource, params:params})
-        //.then(response => response.data),
+  const apiUrl = "http://localhost:3001/admin";
+  const dataProvider = {
+    getList: async (resource, params) =>
+      await axios
+        .post(`${apiUrl}/${resource}`, {resource:resource, params:params})
+        .then((response) => getListHandler(response, params)),
 
-        update: async (resource, params) => 
-        await axios.put(`${apiUrl}/update`, {resource: resource, params:params})
-        .then(response => response.data),
+    delete: async (resource, params) =>
+      await axios
+        .patch(`${apiUrl}/${resource}/delete`, { resource: resource, params: params })
+        .then((response) => response.data),
 
-        getOne: async (resource, params) =>     
-        await axios.put(`${apiUrl}/getOne`, {resource: resource, params:params})
-        .then(response => response.data),
+    deleteMany: async (resource, params) =>
+      await axios
+        .patch(`${apiUrl}/${resource}/deleteMany`, { resource: resource, params: params })
+        .then((response) => response.data),
 
-    }
+    update: async (resource, params) =>
+      await axios
+        .put(`${apiUrl}/${resource}/update`, { resource: resource, params: params })
+        .then((response) => response.data),
 
+    //updateMany: async (resource, params) => console.log(params)
+    //await axios.put(`${apiUrl}/${resource}/update`, {resource: resource, params:params})
+    //.then(response => response.data),
 
-    return (
-        <Admin basename='/admin' dataProvider={dataProvider}>
-            <Resource name="Post" list={Test} edit = {PostEdit}/>
-        </Admin>
-    );
-}
+    getOne: async (resource, params) =>
+      await axios
+        .put(`${apiUrl}/${resource}/getOne`, { resource: resource, params: params })
+        .then((response) => response.data),
+  };
+
+  return (
+    <Admin basename="/admin" dataProvider={dataProvider} authProvider = {authProvider} loginPage = {MyLoginPage}>
+      <Resource name="Post" list = {PostDisplay} edit = {PostEdit} icon = {ArticleIcon} />
+      <Resource name="Users" list = {UsersDisplay} edit = {UsersEdit} icon = {SupervisorAccountIcon}/>
+    </Admin>
+  );
+};

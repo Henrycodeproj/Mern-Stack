@@ -2,7 +2,7 @@ import './App.css';
 import  { Signup } from './components/homepage/Signup';
 import { Navbar } from './components/navigation/navbar'
 import { Errorpage } from './components/config/ErrorPage';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation} from 'react-router-dom';
 import { AppContext} from './components/Contexts/appContext';
 import { ExpiredVerification } from "./components/config/ExpiredVerified";
 import { Confirmation } from "./components/config/ConfirmationPage";
@@ -11,26 +11,27 @@ import { Profile } from "./components/AuthViews/ProfileViews/profile";
 import { Display } from './components/AuthViews/DisplayPage/Display';
 import { NotFound } from "./components/config/NotFound";
 import { ChatPage } from './components/AuthViews/ChatViews/ChatPage';
-import {AdminPage} from "./components/Admin/AdminConfig.jsx"
+import { AdminPage } from "./components/Admin/AdminConfig.jsx"
+import { NavWrapper } from './components/config/NavWrapper';
 
 function App() {
-
   return (
     <Router>
       <AppContext>
-       <Navbar/>
         <Routes>
-          <Route path="/admin/*" element ={<AdminPage/>}/>
-          <Route path="/" element ={<Signup/>}/>
-          <Route element = {<UserAuthentication/>}>
-              <Route path="/display" element = {<Display/>}/>
-              <Route path="/profile/:userId" element = {<Profile/>}/>
-              <Route path="/profile/chats/:userId" element = {<ChatPage/>}/>
+           <Route element = {<NavWrapper/>}> 
+            <Route path="/" element ={<Signup/>}/>
+            <Route path="/admin/*" element ={<AdminPage/>}/>
+            <Route element = {<UserAuthentication/>}>
+                <Route path="/display" element = {<Display/>}/>
+                <Route path="/profile/:userId" element = {<Profile/>}/>
+                <Route path="/profile/chats/:userId" element = {<ChatPage/>}/>
+            </Route>
+            <Route path = "/invalid/expired/" element = {<ExpiredVerification/>}/>
+            <Route path = "/valid" element = {<Confirmation/>}/>
+            <Route path = "/error" element ={<NotFound/> }/>
+            <Route path = "*" element ={<Errorpage/> }/>
           </Route>
-          <Route path = "/invalid/expired/" element = {<ExpiredVerification/>}/>
-          <Route path = "/valid" element = {<Confirmation/>}/>
-          <Route path = "/error" element ={<NotFound/> }/>
-          <Route path = "*" element ={<Errorpage/> }/>
         </Routes>
       </AppContext>
     </Router>

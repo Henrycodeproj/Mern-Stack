@@ -75,7 +75,6 @@ export const EventCalendar = () => {
           dayMaxEvents={0}
           moreLinkClassNames={changeDefaultName}
           eventMaxStack={-1}
-          eventsSet={(e) => console.log(e[0]._context)}
         />
       )}
     </div>
