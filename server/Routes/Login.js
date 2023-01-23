@@ -1,6 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import crypto from 'crypto';
 import UserModel from "../Models/Users.js";
 
 export const router = express.Router();
@@ -23,8 +24,18 @@ router.post("/", async (req, res) => {
                 "This password you have entered is incorrect. Please try again.",
             });
 
+        const salt = bcrypt.genSaltSync(10)
+        const token = bcrypt.hashSync(login_username, salt)
+        const randomHash = crypto.randomBytes(64).toString('hex')
+        
+
         const accessToken = jwt.sign(
-          { username: user.username, id: user.id },
+          {
+            username: user.username,
+            refreshToken: randomHash,
+            id: user.id, 
+            token: token
+          },
           process.env.SECRET_SESSION,
           { expiresIn: "1d" }
         );

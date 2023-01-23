@@ -28,6 +28,7 @@ const corsOptions ={
     origin:'*',
     credentials:true,           
     optionSuccessStatus:200,
+    exposedHeaders: ['Content-Range']
 }
 
 const httpServer = createServer(app);
@@ -38,7 +39,7 @@ const io = new Server(httpServer, {
     cors:{
         origin:'http://localhost:3000',
         methods:["GET", "POST", "PATCH", "DELETE"],
-        credentials:true
+        credentials:true,
     }
 });
 
@@ -50,7 +51,6 @@ app.use('/message', MessageRouter);
 app.use('/conversation', ConversationRouter);
 app.use('/login', LoginRouter);
 app.use('/admin', AdminRouter);
-
 const DB_URL = `mongodb+srv://admin:${databasePassword}@cluster0.dlurz.mongodb.net/Users?retryWrites=true&w=majority`
 
 mongoose.connect(DB_URL, {useNewUrlParser:true, useUnifiedTopology:true})
@@ -98,8 +98,8 @@ app.post("/createUser", async (req,res) => {
     .then(async response =>{
         //Creates token
         let emailToken = new verifyTokenModel({
-            userId:newUser._id,
-            token:crypto.randomBytes(64).toString('hex')
+            userId: newUser._id,
+            token: crypto.randomBytes(64).toString('hex')
         })
 
         await emailToken.save()
