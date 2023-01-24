@@ -7,7 +7,7 @@ import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { Layout } from "react-admin";
 import { UsersDisplay } from "./UsersDisplay";
 import { UsersEdit } from "./UsersEdit";
-import authProvider from './AuthProvider.js';
+import {authProvider} from './AuthProvider.js';
 import MyLoginPage from "./Login";
 
 export const AdminPage = () => {
@@ -60,9 +60,8 @@ export const AdminPage = () => {
         .put(`${apiUrl}/${resource}/getOne`, { resource: resource, params: params })
         .then((response) => response.data),
   };
-
   return (
-    <Admin basename="/admin" dataProvider={dataProvider} authProvider = {authProvider} loginPage = {MyLoginPage}>
+    <Admin basename="/admin" dataProvider={dataProvider} authProvider = {authProvider}>
       <Resource name="Post" list = {PostDisplay} edit = {PostEdit} icon = {ArticleIcon} />
       <Resource name="Users" list = {UsersDisplay} edit = {UsersEdit} icon = {SupervisorAccountIcon}/>
     </Admin>
