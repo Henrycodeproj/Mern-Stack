@@ -42,7 +42,7 @@ router.get("/all", async (req, res) => {
         "profilePicture",
       ])
       .populate("attending", ["username", "profilePicture"]);
-    console.log(posts)
+    console.log(posts);
     return res.status(200).json(posts);
   } catch (err) {
     return res.status(500).send("Internal Server error");
@@ -329,32 +329,46 @@ router.get("/popular", isAuthenticated, async (req, res) => {
 });
 
 router.get("/all/posts", isAuthenticated, async (req, res) => {
+  const dateToday = new Date();
+  const previousDay = new Date(
+    `${
+      dateToday.getMonth() === 0
+        ? dateToday.getMonth() + 1
+        : dateToday.getMonth()
+    }/${dateToday.getDate() - 1}/${dateToday.getFullYear()}`
+  );
+
   try {
     const results = await PostModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gt: previousDay },
+        },
+      },
       {
         $set: {
           start: "$timeAndDate",
           title: "$Description",
-             id: "$_id",
-        }
+          id: "$_id",
+        },
       },
       {
         $project: {
-          _id : 0,
+          _id: 0,
           timeAndDate: 0,
           Description: 0,
           posterId: 0,
-          attending :0,
+          attending: 0,
           expiresAt: 0,
           createdAt: 0,
           updatedAt: 0,
-          __v: 0
-        }
-      }
-    ])
-    console.log(results)
-    res.status(200).send(results)
+          __v: 0,
+        },
+      },
+    ]);
+    console.log(results);
+    res.status(200).send(results);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});

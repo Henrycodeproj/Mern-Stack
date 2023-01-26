@@ -82,7 +82,7 @@ export const AppContext = ({children}) =>{
             newNotification,
             setNewNotification,
             clicked, 
-            setClicked
+            setClicked,
         }}>
             {children}
         </accountContext.Provider>    

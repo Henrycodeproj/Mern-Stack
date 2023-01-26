@@ -7,7 +7,7 @@ import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { Layout } from "react-admin";
 import { UsersDisplay } from "./UsersDisplay";
 import { UsersEdit } from "./UsersEdit";
-import {authProvider} from './AuthProvider.js';
+import { authProvider } from './AuthProvider.js';
 import MyLoginPage from "./Login";
 
 export const AdminPage = () => {
@@ -61,7 +61,7 @@ export const AdminPage = () => {
         .then((response) => response.data),
   };
   return (
-    <Admin basename="/admin" dataProvider={dataProvider} authProvider = {authProvider}>
+    <Admin basename="/admin" dataProvider={dataProvider} authProvider = {authProvider} requireAuth>
       <Resource name="Post" list = {PostDisplay} edit = {PostEdit} icon = {ArticleIcon} />
       <Resource name="Users" list = {UsersDisplay} edit = {UsersEdit} icon = {SupervisorAccountIcon}/>
     </Admin>

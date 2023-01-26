@@ -1,28 +1,36 @@
 import express from "express";
 import PostModel from "../Models/Posts.js";
 import UserModel from "../Models/Users.js";
-import isAuthenticated from "../Middleware/auth.js";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
 export const router = express.Router();
 
-router.post("/authenticate", isAuthenticated, async (req, res) => {
+router.post("/authenticate", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const checkUsername = await bcrypt.compare(username, req.results.token);
-    const user = await UserModel.findOne({ _id: req.results.id });
+    const user = await UserModel.findOne({
+      username: { $regex: username, $options: "i" },
+    });
     const checkPassword = await bcrypt.compare(password, user.password);
-    if (checkPassword && checkUsername && user.admin) return res.send(true);
-    else res.send(false);
+    const randomHash = crypto.randomBytes(64).toString("hex");
+    const accessToken = jwt.sign(
+      {
+        username: username,
+        refreshToken: randomHash,
+      },
+      process.env.SECRET_SESSION,
+      { expiresIn: "1d" }
+    );
+    if (checkPassword && user.admin)
+      return res.send({ adminToken: accessToken, auth: true });
+    else res.send({ data: false });
   } catch (uncaughtError) {
     console.log(uncaughtError);
   }
 });
-router.get("/zap/", async (req,res) => {
 
-  const update = await UserModel.updateMany({}, {$set:{"admin":false}})
-  console.log(update)
-})
 router.post("/Post", async (req, res) => {
   const { order } = req.body.params.sort;
   try {
