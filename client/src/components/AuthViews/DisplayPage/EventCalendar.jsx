@@ -20,7 +20,6 @@ export const EventCalendar = () => {
           authorization: localStorage.getItem("Token"),
         },
       });
-      console.log(response.data);
       setEvent({ events: response.data });
     }
     getData();
@@ -34,6 +33,7 @@ export const EventCalendar = () => {
   };
 
   function renderEventContent(eventInfo) {
+    console.log(eventInfo)
     return (
       <>
         <div style={{ padding: "5px", width: "100%" }}>

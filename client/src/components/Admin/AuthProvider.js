@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useContext } from "react";
+import { accountContext } from "../Contexts/appContext";
 
 export const authProvider = {
     login: async ({ username, password }) => {
@@ -13,31 +15,31 @@ export const authProvider = {
             }
         })
         console.log(response)
-        if (response.data === false) {
+        if (response.data.auth === false) {
             return Promise.reject();
         }
-        localStorage.setItem('username', username);
+        localStorage.setItem('adminToken', response.data.adminToken);
         return Promise.resolve();
     },
     logout: () => {
-        localStorage.removeItem('username');
+        localStorage.removeItem('adminToken');
         return Promise.resolve();
     },
         checkAuth: () =>
-        localStorage.getItem('username') ? Promise.resolve() : Promise.reject(),
+        localStorage.getItem('adminToken') ? Promise.resolve() : Promise.reject(),
     checkError:  (error) => {
         const status = error.status;
         if (status === 401 || status === 403) {
-            localStorage.removeItem('username');
+            localStorage.removeItem('adminToken');
             return Promise.reject();
         }
         // other error code (404, 500, etc): no need to log out
         return Promise.resolve();
     },
-    getIdentity: () =>
+    getIdentity: (test) =>
         Promise.resolve({
             id: 'user',
-            fullName: 'Henry',
+            fullName: test,
         }),
     getPermissions: () => Promise.resolve(''),
 };
