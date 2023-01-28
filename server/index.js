@@ -28,7 +28,6 @@ const corsOptions ={
     origin:'*',
     credentials:true,           
     optionSuccessStatus:200,
-    exposedHeaders: ['Content-Range']
 }
 
 const httpServer = createServer(app);

@@ -1,16 +1,13 @@
 import "../Posts/Posting.css";
 import { useState, useContext, useRef, useEffect } from "react";
 import { accountContext } from "../../Contexts/appContext";
-import { Emojis } from "../../ReusablesComponents/Emojis";
 import axios from "axios";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { Button } from "@mui/material";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { TextAreaEmojis } from "../../ReusablesComponents/TextAreaEmojis";
 import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
 import Avatar from "@mui/material/Avatar";
-import TextField from '@mui/material/TextField';
+import TextField from "@mui/material/TextField";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
@@ -19,28 +16,25 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
   const { user, setPosts } = useContext(accountContext);
   const ref = useRef();
   const postRef = useRef();
-  
+
   const [status, setStatus] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [addEventTime, setAddEventTime] = useState(false)
-  const [dateTime, setDateTime] = useState()
+  const [addEventTime, setAddEventTime] = useState(false);
+  const [dateTime, setDateTime] = useState();
   const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
 
-  const currentDate = new Date()
-  const currentDateFormatted = format(currentDate, "yyyy-MM-dd'T'HH:mm")
-
+  const currentDate = new Date();
+  const currentDateFormatted = format(currentDate, "yyyy-MM-dd'T'HH:mm");
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (
-        postRef.current 
-      && !postRef.current.contains(event.target) 
-      && 
-      ( event.target.offsetWidth >= postRef.current.offsetWidth + 50
-      || event.target.offsetHeight >= postRef.current.offsetHeight + 10
-      )
+        postRef.current &&
+        !postRef.current.contains(event.target) &&
+        (event.target.offsetWidth >= postRef.current.offsetWidth + 50 ||
+          event.target.offsetHeight >= postRef.current.offsetHeight + 10)
       ) {
-        setAddEventTime(false)
+        setAddEventTime(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -55,7 +49,7 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
     const data = {
       user: user.id,
       post: status,
-      date: dateTime ? dateTime : null
+      date: dateTime ? dateTime : null,
     };
     const url = "http://localhost:3001/posts/";
     axios
@@ -70,21 +64,21 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
           setPosts((prevPosts) => [res.data.newestPost, ...prevPosts]);
           setLastPostIndex(lastPostIndex + 1);
           setStatus("");
-          setDateTime()
-          setAddEventTime(false)
+          setDateTime();
+          setAddEventTime(false);
         } else throw Error;
       })
       .catch((err) => alert(err.response.data.message));
   };
 
   const handleDateandTime = (event) => {
-    setDateTime(event.target.value)
-  }
+    setDateTime(event.target.value);
+  };
 
   if (user === null) return <LoadingCircle loadingState={user} />;
 
   return (
-    <div className="add_post_container" ref = {postRef}>
+    <div className="add_post_container" ref={postRef}>
       <Avatar
         className="input_picture"
         src={`https://ucarecdn.com/${userInfo.profilePicture}/`}
@@ -111,37 +105,37 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
                 setAnchor={setAnchorEl}
                 title={true}
               />
-              {
-              addEventTime
-              ? <TextField
-              id="datetime-local"
-              label="What time and day?"
-              type="datetime-local"
-              defaultValue={`${currentDateFormatted}`}
-              sx={{ width: 250 }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange = {handleDateandTime}
-              /> 
-              : <motion.div 
-                style={{
-                  display:"flex", 
-                  alignItems:"center"
+              {addEventTime ? (
+                <TextField
+                  id="datetime-local"
+                  label="What time and day?"
+                  type="datetime-local"
+                  defaultValue={`${currentDateFormatted}`}
+                  sx={{ width: 250 }}
+                  InputLabelProps={{
+                    shrink: true,
                   }}
-                onClick = {()=> setAddEventTime(true)}
-                whileHover = {{ scale: 1.1 }}
+                  onChange={handleDateandTime}
+                />
+              ) : (
+                <motion.div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  onClick={() => setAddEventTime(true)}
+                  whileHover={{ scale: 1.1 }}
                 >
-                  <CalendarMonthIcon 
-                  sx={{
-                     color: "black", 
-                     marginRight:"5px", 
-                     cursor:"pointer" 
-                  }} 
+                  <CalendarMonthIcon
+                    sx={{
+                      color: "black",
+                      marginRight: "5px",
+                      cursor: "pointer",
+                    }}
                   />
-                  <h3 style = {{color:"black"}}>Date</h3>
+                  <h3 style={{ color: "black" }}>Date</h3>
                 </motion.div>
-              }
+              )}
             </div>
           </div>
           <Button

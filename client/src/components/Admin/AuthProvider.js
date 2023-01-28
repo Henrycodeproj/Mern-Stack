@@ -18,19 +18,19 @@ export const authProvider = {
         if (response.data.auth === false) {
             return Promise.reject();
         }
-        localStorage.setItem('adminToken', response.data.adminToken);
+        sessionStorage.setItem('adminToken', response.data.adminToken);
         return Promise.resolve();
     },
     logout: () => {
-        localStorage.removeItem('adminToken');
+        sessionStorage.removeItem('adminToken');
         return Promise.resolve();
     },
         checkAuth: () =>
-        localStorage.getItem('adminToken') ? Promise.resolve() : Promise.reject(),
+        sessionStorage.getItem('adminToken') ? Promise.resolve() : Promise.reject(),
     checkError:  (error) => {
         const status = error.status;
         if (status === 401 || status === 403) {
-            localStorage.removeItem('adminToken');
+            sessionStorage.removeItem('adminToken');
             return Promise.reject();
         }
         // other error code (404, 500, etc): no need to log out

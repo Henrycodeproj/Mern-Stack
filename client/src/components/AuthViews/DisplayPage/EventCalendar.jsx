@@ -11,6 +11,9 @@ export const EventCalendar = () => {
   const { user, lastPostIndex, setPosts, posts } = useContext(accountContext);
 
   const [event, setEvent] = useState();
+
+  const test = [{start: '2023-02-02T23:51', title: 'b', id: '63d3828da73823e567eacf7e'}]
+
   //format is {title:, start:}
   useEffect(() => {
     async function getData() {
@@ -20,6 +23,7 @@ export const EventCalendar = () => {
           authorization: localStorage.getItem("Token"),
         },
       });
+      console.log(response.data, 'response data')
       setEvent({ events: response.data });
     }
     getData();
@@ -33,21 +37,20 @@ export const EventCalendar = () => {
   };
 
   function renderEventContent(eventInfo) {
-    console.log(eventInfo)
     return (
       <>
         <div style={{ padding: "5px", width: "100%" }}>
           <div className="see">
-            <h3
-              style={{
-                marginRight: "5px",
-                width: "100%",
-                display: "inline",
-                color: "black",
-              }}
+            <h2
+            style={{
+              marginRight: "5px",
+              width: "100%",
+              display: "inline",
+              color: "black",
+            }}
             >
               {(eventInfo.timeText = eventInfo.timeText + "m")}
-            </h3>
+            </h2>
           </div>
           <div style={{ textTransform: "capitalize", width: "100%", fontSize:"1rem" }}>
             <Truncating
