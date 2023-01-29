@@ -26,8 +26,8 @@ export const MyCalendar = () => {
         {
             id: 0,
             title: "training",
-            start: new Date(2023, 0, 27, 9, 0, 0),
-            end: new Date(2023, 0, 27, 13, 0, 0),
+            start: new Date(2023, 0, 28, 9, 0, 0),
+            end: new Date(2023, 0, 28, 23, 0, 0),
             resourceId: 1
         },
     ])
@@ -36,14 +36,11 @@ export const MyCalendar = () => {
         const t = {
             id: 2,
             title: "cooking",
-            start: new Date(2023, 0, 27, 9, 0, 0),
-            end: new Date(2023, 0, 27, 9, 0, 0),
+            start: new Date(2023, 0, 29, 9, 0, 0),
+            end: new Date(2023, 0, 29, 9, 0, 0),
             resourceId: 2
         }
         setEvents(prev => [t, ...prev])
-        setTimeout(() => {
-            console.log(events)
-        }, 3000);
     }
     function handleSelectEvent(event) {
         const d =new Date(event.end)
