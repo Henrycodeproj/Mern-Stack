@@ -9,12 +9,12 @@ import NotificationModel from "../Models/Notifications.js";
 export const router = express.Router();
 
 router.post("/", isAuthenticated, async (req, res) => {
-  const { user, post, date } = req.body;
-  console.log(user, post, date);
+  const { user, post, start, end } = req.body;
   const newPosts = new PostModel({
     Description: post,
     posterId: user,
-    timeAndDate: date,
+    timeAndDate: start,
+    timeAndDateEnd : end ? end : null
   });
 
   await newPosts.save();
@@ -348,6 +348,7 @@ router.get("/all/posts", isAuthenticated, async (req, res) => {
       {
         $set: {
           start: "$timeAndDate",
+          end : "$timeAndDateEnd",
           title: "$Description",
           id: "$_id",
         },
@@ -362,6 +363,7 @@ router.get("/all/posts", isAuthenticated, async (req, res) => {
           expiresAt: 0,
           createdAt: 0,
           updatedAt: 0,
+          timeAndDateEnd: 0,
           __v: 0,
         },
       },

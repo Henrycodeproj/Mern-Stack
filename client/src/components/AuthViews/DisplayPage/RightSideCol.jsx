@@ -8,7 +8,6 @@ import { accountContext } from "../../Contexts/appContext";
 import { IndividualChats } from "../ChatViews/IndividualChat";
 import { useNavigate } from "react-router-dom";
 import { EventCalendar } from "./EventCalendar";
-import { MyCalendar } from "./tester";
 
 
 export const RightSideCol = () => {
@@ -77,7 +76,7 @@ export const RightSideCol = () => {
 
   return (
     <div className="right_column_wrapper">
-      {/* <EventCalendar/> */}<MyCalendar/>
+      <EventCalendar/>
       <div className="popular_container">
         <h2
           style={{
@@ -101,7 +100,7 @@ export const RightSideCol = () => {
                     navigateTo(`/profile/${post.original_poster[0]._id}`)
                   }
                 />
-                <div>
+                <div style ={{overflowWrap:"anywhere"}}>
                   <h3
                     style={{
                       textTransform: "capitalize",
@@ -120,7 +119,9 @@ export const RightSideCol = () => {
                       </span>
                     </div>
                   ) : (
+                    <p>
                     post.Description.substring(0, 50)
+                    </p>
                   )}
                 </div>
               </div>

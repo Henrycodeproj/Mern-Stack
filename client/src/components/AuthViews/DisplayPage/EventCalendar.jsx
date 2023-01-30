@@ -1,20 +1,30 @@
-import React from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import "./EventCalendar.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+//import "./myCalendar.css";
+import { format, parse, startOfWeek, getDay } from "date-fns";
+import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Truncating } from "../../ReusablesComponents/Truncating";
-import { useEffect, useState, useContext } from "react";
-import { accountContext } from "../../Contexts/appContext";
+import "./EventCalendar.css"
+
+const locales = {
+  "en-US": require("date-fns"),
+};
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
+
+const view = {
+  day: true,
+  agenda: true,
+};
 
 export const EventCalendar = () => {
-  const { user, lastPostIndex, setPosts, posts } = useContext(accountContext);
+  const [events, setEvents] = useState();
 
-  const [event, setEvent] = useState();
-
-  const test = [{start: '2023-02-02T23:51', title: 'b', id: '63d3828da73823e567eacf7e'}]
-
-  //format is {title:, start:}
   useEffect(() => {
     async function getData() {
       const url = "http://localhost:3001/posts/all/posts";
@@ -23,63 +33,48 @@ export const EventCalendar = () => {
           authorization: localStorage.getItem("Token"),
         },
       });
-      console.log(response.data, 'response data')
-      setEvent({ events: response.data });
+      function eventDateFormat() {
+        response.data.forEach((event) => {
+          event.start = new Date(event.start);
+          event.end = new Date(event.end);
+        });
+      }
+      eventDateFormat();
+      setEvents(response.data);
     }
     getData();
   }, []);
 
-  function changeDefaultName(event) {
-    return (event.text = event.shortText);
+  function call() {
+    const t = {
+      id: 2,
+      title: "cooking",
+      start: new Date(2023, 0, 29, 9, 0, 0),
+      end: new Date(2023, 0, 29, 9, 0, 0),
+      resourceId: 2,
+    };
+    setEvents((prev) => [t, ...prev]);
   }
-  const header = {
-    end: "prev,next",
-  };
-
-  function renderEventContent(eventInfo) {
-    return (
-      <>
-        <div style={{ padding: "5px", width: "100%" }}>
-          <div className="see">
-            <h2
-            style={{
-              marginRight: "5px",
-              width: "100%",
-              display: "inline",
-              color: "black",
-            }}
-            >
-              {(eventInfo.timeText = eventInfo.timeText + "m")}
-            </h2>
-          </div>
-          <div style={{ textTransform: "capitalize", width: "100%", fontSize:"1rem" }}>
-            <Truncating
-              postDescription={eventInfo.event.title}
-              truncateNumber={25}
-            />
-          </div>
-        </div>
-      </>
-    );
+  function handleSelectEvent(event) {
+    const d = new Date(event.end);
+    alert(event.title);
   }
-
   return (
-    <div>
-      {event && (
-        <FullCalendar
-          plugins={[dayGridPlugin]}
-          initialView="dayGridMonth"
-          weekends={true}
-          initialEvents={event}
-          eventContent={renderEventContent}
-          editable={false}
-          headerToolbar={header}
-          height="400px"
-          dayMaxEvents={0}
-          moreLinkClassNames={changeDefaultName}
-          eventMaxStack={-1}
-        />
-      )}
-    </div>
+    <>
+      <div className="calendars">
+        <div>
+          <h1>Today's Events</h1>
+          <Calendar
+            events={events}
+            localizer={localizer}
+            defaultDate={new Date()}
+            defaultView={Views.DAY}
+            style={{ height: 700 }}
+            views={view}
+            onSelectEvent={handleSelectEvent}
+          />
+        </div>
+      </div>
+    </>
   );
 };

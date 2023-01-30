@@ -1,6 +1,4 @@
 import axios from "axios";
-import { useContext } from "react";
-import { accountContext } from "../Contexts/appContext";
 
 export const authProvider = {
     login: async ({ username, password }) => {
