@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 
 const PostSchema = new mongoose.Schema({
-    Description:{
+    Description: {
         type:String,
         required:true
     },
-    posterId:{
+    posterId: {
         type:mongoose.Schema.Types.ObjectId,
         ref:"Users"
     },
-    attending:[{ 
+    attending: [{ 
         type : mongoose.Schema.Types.ObjectId,
         ref: 'Users'
      }],
@@ -20,7 +20,10 @@ const PostSchema = new mongoose.Schema({
     },
     timeAndDate : {
         type:String
-    }
+    },
+    timeAndDateEnd: {
+        type:String
+    },
 },{timestamps:true})
 
 const PostModel = mongoose.model("Posts", PostSchema)

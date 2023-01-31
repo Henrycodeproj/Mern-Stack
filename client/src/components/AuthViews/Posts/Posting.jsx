@@ -24,7 +24,10 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
   const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
 
   const currentDate = new Date();
-  const currentDateFormatted = format(currentDate, "yyyy-MM-dd'T'HH:mm");
+
+  function formatDate(dateObj) {
+    return format(dateObj, "yyyy-MM-dd'T'HH:mm")
+  }  
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -45,11 +48,14 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
   }, [postRef]);
 
   const formHandler = (e) => {
+    const startDateTime = new Date(dateTime).getTime()
+    const updatedTIme = new Date(startDateTime + 2 * 60 * 30 * 1000);
     e.preventDefault();
     const data = {
       user: user.id,
       post: status,
-      date: dateTime ? dateTime : null,
+      start: dateTime ? dateTime : null,
+      end : dateTime ? formatDate(updatedTIme) : null
     };
     const url = "http://localhost:3001/posts/";
     axios
@@ -110,7 +116,7 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
                   id="datetime-local"
                   label="What time and day?"
                   type="datetime-local"
-                  defaultValue={`${currentDateFormatted}`}
+                  defaultValue={`${formatDate(currentDate)}`}
                   sx={{ width: 250 }}
                   InputLabelProps={{
                     shrink: true,
