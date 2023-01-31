@@ -14,7 +14,7 @@ router.post("/", isAuthenticated, async (req, res) => {
     Description: post,
     posterId: user,
     timeAndDate: start,
-    timeAndDateEnd : end ? end : null
+    timeAndDateEnd: end ? end : null,
   });
 
   await newPosts.save();
@@ -328,7 +328,7 @@ router.get("/popular", isAuthenticated, async (req, res) => {
   }
 });
 
-router.get("/all/posts", isAuthenticated, async (req, res) => {
+router.get("/all/events", isAuthenticated, async (req, res) => {
   const dateToday = new Date();
   const previousDay = new Date(
     `${
@@ -348,7 +348,7 @@ router.get("/all/posts", isAuthenticated, async (req, res) => {
       {
         $set: {
           start: "$timeAndDate",
-          end : "$timeAndDateEnd",
+          end: "$timeAndDateEnd",
           title: "$Description",
           id: "$_id",
         },
@@ -358,13 +358,20 @@ router.get("/all/posts", isAuthenticated, async (req, res) => {
           _id: 0,
           timeAndDate: 0,
           Description: 0,
-          posterId: 0,
           attending: 0,
           expiresAt: 0,
           createdAt: 0,
           updatedAt: 0,
           timeAndDateEnd: 0,
           __v: 0,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "posterId",
+          foreignField: "_id",
+          as: "original_poster",
         },
       },
     ]);

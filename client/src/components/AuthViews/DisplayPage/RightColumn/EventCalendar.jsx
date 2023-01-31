@@ -4,7 +4,8 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./EventCalendar.css"
+import "./EventCalendar.css";
+import { EventViewer } from "./EventViewer";
 
 const locales = {
   "en-US": require("date-fns"),
@@ -24,10 +25,12 @@ const view = {
 
 export const EventCalendar = () => {
   const [events, setEvents] = useState();
+  const [open, setOpen] = useState(false);
+  const [focusedEvent, setFocusedEvent] = useState(null);
 
   useEffect(() => {
     async function getData() {
-      const url = "http://localhost:3001/posts/all/posts";
+      const url = "http://localhost:3001/posts/all/events";
       const response = await axios.get(url, {
         headers: {
           authorization: localStorage.getItem("Token"),
@@ -55,10 +58,12 @@ export const EventCalendar = () => {
     };
     setEvents((prev) => [t, ...prev]);
   }
+
   function handleSelectEvent(event) {
-    const d = new Date(event.end);
-    alert(event.title);
+    setFocusedEvent(event);
+    setOpen(true);
   }
+
   return (
     <>
       <div className="calendars">
@@ -72,7 +77,9 @@ export const EventCalendar = () => {
             style={{ height: 700 }}
             views={view}
             onSelectEvent={handleSelectEvent}
+            className = "event_calendar"
           />
+          <EventViewer open={open} setOpen={setOpen} event={focusedEvent} />
         </div>
       </div>
     </>

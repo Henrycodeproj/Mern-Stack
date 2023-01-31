@@ -7,8 +7,8 @@ import Zoom from "@mui/material/Zoom";
 import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import Attending from "../Posts/Attending";
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import { RightSideCol } from "./RightSideCol";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import { RightSideCol } from "./RightColumn/RightSideCol";
 import { MoreOptions } from "../Posts/MoreOptions";
 import { Truncating } from "../../ReusablesComponents/Truncating.jsx";
 import { SendMessage } from "../Posts/SendMessage";
@@ -18,8 +18,8 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Posts } from "../Posts/Posting.jsx";
 import { accountContext } from "../../Contexts/appContext";
-import { LeftColumn } from "./LeftSideCol";
-import { handleEventTimeandDate } from "../../Reusable Functions/TimeFunctions.js"
+import { LeftColumn } from "./LeftColumn/LeftSideCol";
+import { handleEventTimeandDate } from "../../Reusable Functions/TimeFunctions.js";
 
 export const Display = () => {
   const {
@@ -31,7 +31,7 @@ export const Display = () => {
     socket,
     dark,
     setDark,
-    lastPostIndex, 
+    lastPostIndex,
     setLastPostIndex,
     setUnreadNotifications,
     setUserNotification,
@@ -39,65 +39,65 @@ export const Display = () => {
   } = useContext(accountContext);
 
   const [loadingState, setLoadingState] = useState(true);
-  const [currentDate, setCurrentDate] = useState(new Date())
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const navigateTo = useNavigate();
-  
+
   useEffect(() => {
     const getUserNotifications = async () => {
-      console.log("caller")
+      console.log("caller");
       const url = `http://localhost:3001/user/${user.id}/notifications`;
       const response = await axios.get(url, {
         headers: {
           authorization: localStorage.getItem("Token"),
-        }
+        },
       });
-      console.log(response.data.notifications,'tess')
-      setUserNotification(response.data.notifications)
-    }
-    getUserNotifications()
-  },[])
+      console.log(response.data.notifications, "tess");
+      setUserNotification(response.data.notifications);
+    };
+    getUserNotifications();
+  }, []);
 
   useEffect(() => {
     const getNewNotifications = async () => {
       const url = `http://localhost:3001/user/${user.id}/newnotifications`;
       const response = await axios.get(url, {
         headers: {
-          authorization: localStorage.getItem("Token")
-        }
-      })
-      console.log(response.data, 'get new not section')
+          authorization: localStorage.getItem("Token"),
+        },
+      });
+      console.log(response.data, "get new not section");
       if (response.data.new > 0) {
-        setUnreadNotifications(response.data.new)
-        setTime(response.data.lastActive)
+        setUnreadNotifications(response.data.new);
+        setTime(response.data.lastActive);
       }
-    }
-    getNewNotifications()
-  }, [])
+    };
+    getNewNotifications();
+  }, []);
 
   useEffect(() => {
     socket.emit("status", { userId: user.id });
     socket.on("activeUsers", (user) => {
       setActiveUsers(user);
     });
-    return () => { 
+    return () => {
       socket.removeListener("activeUsers");
-    }
+    };
   }, []);
 
   useEffect(() => {
     socket.on("inactiveUsers", (user) => {
       setActiveUsers(user);
     });
-    return () => { 
+    return () => {
       socket.removeListener("inactiveUsers");
-    }
-  },[])
-
+    };
+  }, []);
 
   useEffect(() => {
     const URL = `http://localhost:3001/posts/amount/${lastPostIndex}/`;
-    axios.get(URL, {
+    axios
+      .get(URL, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
@@ -136,13 +136,11 @@ export const Display = () => {
       })
       .then((response) => {
         setPosts(response.data);
-        socket.emit("notification",
-          {
-            postID: post._id, 
-            posterID: post.posterId._id,
-            currentUser: user.id
-          }
-        )
+        socket.emit("notification", {
+          postID: post._id,
+          posterID: post.posterId._id,
+          currentUser: user.id,
+        });
       })
       .catch((error) => console.log(error));
   };
@@ -161,26 +159,20 @@ export const Display = () => {
       })
       .catch((error) => console.log(error));
   };
-  
+
   const handlePastHours = (time) => {
-    const postDate = new Date(time)
-    const difference = 
-    Math.abs((
-        parseInt(postDate.getTime()) 
-      - parseInt(currentDate.getTime())) 
-      / 3600000
-    )
-    const minutes = 
-    Math.abs((
-      parseInt(postDate.getTime()) 
-      - parseInt(currentDate.getTime())) 
-      / 60000
-    )
-    return difference > 1 
-    ? Math.round(difference)+ " hours ago" 
-    : Math.trunc(minutes) + " Minutes Ago"
-  }
-  
+    const postDate = new Date(time);
+    const difference = Math.abs(
+      (parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 3600000
+    );
+    const minutes = Math.abs(
+      (parseInt(postDate.getTime()) - parseInt(currentDate.getTime())) / 60000
+    );
+    return difference > 1
+      ? Math.round(difference) + " hours ago"
+      : Math.trunc(minutes) + " Minutes Ago";
+  };
+
   if (posts === null) return <LoadingCircle loadingState={loadingState} />;
 
   return (
@@ -196,11 +188,22 @@ export const Display = () => {
               setLastPostIndex={setLastPostIndex}
             />
           </div>
-          <div className="post_container_section" onScroll={(e) => handleScroll(e)}>
+          <div
+            className="post_container_section"
+            onScroll={(e) => handleScroll(e)}
+          >
             <ul>
               {posts.length > 0 ? (
                 posts.map((post) => (
-                  <li key={post._id} className="posts_articles" style = {{background: dark ? "rgb(100, 100, 100, .90)":"var(--white-background)"}}>
+                  <li
+                    key={post._id}
+                    className="posts_articles"
+                    style={{
+                      background: dark
+                        ? "rgb(100, 100, 100, .90)"
+                        : "var(--white-background)",
+                    }}
+                  >
                     <>
                       <Tooltip
                         title={`${
@@ -225,20 +228,29 @@ export const Display = () => {
 
                     <div className="inner_post_container">
                       <div className="title_wrapper">
-                        <div style={{display:"flex", gap:"3%", width:"100%", alignItems:"center"}}>
-                        <h4 
-                        style={{ 
-                          textTransform: "capitalize", 
-                          cursor: "pointer",
-                          color: dark ? "white" : "black" 
-                        }}
-                        onClick={() =>
-                          navigateTo(`/profile/${post.posterId._id}`)
-                        }
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "3%",
+                            width: "100%",
+                            alignItems: "center",
+                          }}
                         >
-                          {post.posterId.username}
-                        </h4>
-                        <h6 style = {{fontSize:".75rem"}}>{handlePastHours(post.createdAt)}</h6>
+                          <h4
+                            style={{
+                              textTransform: "capitalize",
+                              cursor: "pointer",
+                              color: dark ? "white" : "black",
+                            }}
+                            onClick={() =>
+                              navigateTo(`/profile/${post.posterId._id}`)
+                            }
+                          >
+                            {post.posterId.username}
+                          </h4>
+                          <h6 style={{ fontSize: ".75rem" }}>
+                            {handlePastHours(post.createdAt)}
+                          </h6>
                         </div>
                         <div style={{ display: "flex" }}>
                           {post.posterId._id !== user.id ? (
@@ -253,19 +265,16 @@ export const Display = () => {
                         truncateNumber={150}
                       />
                       <div>
-                      { post.timeAndDate &&
-                      <Tooltip title = "Scheduled time and date">   
-                      <div className="meeting_bar">
-                        <ScheduleIcon
-                        sx = {{fontSize:"1rem"}}
-                        />
-                        <h6 style = {{ fontSize:".85rem" }}>
-                          {handleEventTimeandDate(post.timeAndDate)}
-                        </h6>
-                      </div>
-                      </Tooltip>
-                      }
-
+                        {post.timeAndDate && (
+                          <Tooltip title="Scheduled time and date">
+                            <div className="meeting_bar">
+                              <ScheduleIcon sx={{ fontSize: "1rem" }} />
+                              <h6 style={{ fontSize: ".85rem" }}>
+                                {handleEventTimeandDate(post.timeAndDate)}
+                              </h6>
+                            </div>
+                          </Tooltip>
+                        )}
                       </div>
                       <div className="posts_icon_wrapper">
                         <div className="posts_icon_bar">
@@ -349,7 +358,10 @@ export const Display = () => {
           </div>
         </div>
 
-        <div className="right_sidebar" style = {{background: dark ? "gray" : "var(--white-background)"}}>
+        <div
+          className="right_sidebar"
+          style={{ background: dark ? "gray" : "var(--white-background)" }}
+        >
           <RightSideCol />
         </div>
       </div>
