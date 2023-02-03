@@ -85,6 +85,22 @@ export const Display = () => {
     };
   }, []);
 
+  //being worked on rn
+  useEffect(() => {
+    socket.on("likedpost", (newLike) => {
+      function g(posts){
+        const currentPost = posts.find(newLike.post)
+        console.log(currentPost,'current post')
+      }
+      setPosts(posts => 
+        [g(posts)]
+      ) 
+    });
+    return () => {
+      socket.removeListener("likedpost");
+    };
+  }, []);
+
   useEffect(() => {
     socket.on("inactiveUsers", (user) => {
       setActiveUsers(user);
@@ -140,6 +156,7 @@ export const Display = () => {
           postID: post._id,
           posterID: post.posterId._id,
           currentUser: user.id,
+          user: {_id:user.id, username:user.username, profilePicture:user.profilePicture }
         });
       })
       .catch((error) => console.log(error));
@@ -192,6 +209,7 @@ export const Display = () => {
             className="post_container_section"
             onScroll={(e) => handleScroll(e)}
           >
+            {console.log(posts)}
             <ul>
               {posts.length > 0 ? (
                 posts.map((post) => (

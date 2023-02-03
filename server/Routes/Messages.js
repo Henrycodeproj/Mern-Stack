@@ -106,7 +106,7 @@ router.get('/unread/:convoID/:userID', isAuthenticated, async (req, res) => {
         const results = await MessageModel.find({
             conversationId: req.params.convoID,
             recipientId: user._id, 
-            createdAt:{$gt: user.lastActiveDate}
+            createdAt:{ $gt: user.lastActiveDate }
         })
         if (results) res.send({results: results.length})
     } catch(error) {

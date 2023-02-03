@@ -145,9 +145,9 @@ io.on("connection", (socket) => {
     })
 
     socket.on("notification", async (data) => {
-        const {posterID, postID, currentUser} = data
+        const {posterID, postID, currentUser, user} = data
         console.log(posterID, postID, currentUser, 'info')
-        //change time to 2000 ms for production
+
         const checkNotification = await NotificationModel
         .findOne({
             notifiedUser: posterID,
@@ -160,6 +160,7 @@ io.on("connection", (socket) => {
         if (posterID in activeUsers && posterID !== currentUser) {
             socket.broadcast.emit(`${posterID}-notification`, checkNotification)
         }
+        socket.broadcast.emit("likedpost", {post: postID, user : user})
     })
     // new chats socket handler
     socket.on("messages", (newChatInfo) => {
