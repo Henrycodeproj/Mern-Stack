@@ -13,6 +13,7 @@ import Popover from '@mui/material/Popover';
 
 
 const Attending = (posting) => {
+    console.log(posting)
 
     const {user} = useContext(accountContext)
     const currentUser = user
