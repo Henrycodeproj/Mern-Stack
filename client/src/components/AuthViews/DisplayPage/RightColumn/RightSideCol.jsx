@@ -51,7 +51,7 @@ export const RightSideCol = () => {
       checkNewMessageInRecents();
     });
     return () => {
-      socket.off(`${user.id}`);
+      socket.removeListener(`${user.id}`);
     };
   }, []);
 

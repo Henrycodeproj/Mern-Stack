@@ -47,6 +47,9 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             }
             if (chatOpen.current === false) setNotification(prevNotifications => prevNotifications + 1)
         })
+        return () => {
+            socket.removeListener(`${convoId}`);
+        };
     },[])
     
     useEffect(() => {
