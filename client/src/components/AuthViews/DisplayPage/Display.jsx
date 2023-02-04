@@ -14,7 +14,7 @@ import { Truncating } from "../../ReusablesComponents/Truncating.jsx";
 import { SendMessage } from "../Posts/SendMessage";
 import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
 import { motion } from "framer-motion";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Posts } from "../Posts/Posting.jsx";
 import { accountContext } from "../../Contexts/appContext";
@@ -42,6 +42,11 @@ export const Display = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const navigateTo = useNavigate();
+
+  const ref = useRef()
+  useEffect(() => {
+    ref.current = posts
+  }, [posts])
 
   useEffect(() => {
     const getUserNotifications = async () => {
@@ -85,16 +90,15 @@ export const Display = () => {
     };
   }, []);
 
+  function g(a){
+    const index = ref.current.map(element => element._id).indexOf(a.post)
+    ref.current[index].attending.push(a.user)
+    setPosts([...ref.current])
+  }
   //being worked on rn
   useEffect(() => {
     socket.on("likedpost", (newLike) => {
-      function g(posts){
-        const currentPost = posts.find(newLike.post)
-        console.log(currentPost,'current post')
-      }
-      setPosts(posts => 
-        [g(posts)]
-      ) 
+      g(newLike)
     });
     return () => {
       socket.removeListener("likedpost");
