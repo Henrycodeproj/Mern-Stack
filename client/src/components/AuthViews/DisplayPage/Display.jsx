@@ -44,9 +44,8 @@ export const Display = () => {
   const navigateTo = useNavigate();
 
   const ref = useRef()
-  useEffect(() => {
-    ref.current = posts
-  }, [posts])
+
+  ref.current = posts
 
   useEffect(() => {
     const getUserNotifications = async () => {
@@ -95,10 +94,24 @@ export const Display = () => {
     ref.current[index].attending.push(a.user)
     setPosts([...ref.current])
   }
+  function removeAttendHandler(a){
+    const index = ref.current.map(element => element._id).indexOf(a.post)
+    delete ref.current[index]
+    setPosts([...ref.current])
+  }
   //being worked on rn
   useEffect(() => {
     socket.on("likedpost", (newLike) => {
       g(newLike)
+    });
+    return () => {
+      socket.removeListener("likedpost");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("removeUser", (newLike) => {
+      removeAttendHandler(newLike)
     });
     return () => {
       socket.removeListener("likedpost");
@@ -177,6 +190,9 @@ export const Display = () => {
       })
       .then((response) => {
         setPosts(response.data);
+      })
+      socket.emit("removeUser", {
+        user: {_id:user.id, username:user.username, profilePicture:user.profilePicture }
       })
       .catch((error) => console.log(error));
   };

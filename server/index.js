@@ -162,6 +162,10 @@ io.on("connection", (socket) => {
         }
         socket.broadcast.emit("likedpost", {post: postID, user : user})
     })
+    socket.on("removeUser", async (data) => {
+        const { user } = data
+        socket.broadcast.emit("removeLike", {user: user})
+    })
     // new chats socket handler
     socket.on("messages", (newChatInfo) => {
         const newMessage = {
