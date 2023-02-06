@@ -109,15 +109,14 @@ router.get(
 );
 
 router.patch("/like/:postID/:postIndex", isAuthenticated, async (req, res) => {
-  console.log(req.body.user, "reqbody id");
+  const {user, posterId } = req.body
   try {
     const postID = req.params.postID;
-    const user = req.body.user;
     const post = await PostModel.findById(postID);
 
-    const checkExisting = await NotificationModel.findOne({
-      notifiedUser: post.posterId._id,
-      postId: post._id,
+    const checkExisting = await NotificationModel.find({
+      notifiedUser: posterId,
+      postId: postID,
       attendId: user.id,
     });
 
@@ -131,23 +130,14 @@ router.patch("/like/:postID/:postIndex", isAuthenticated, async (req, res) => {
       notification.save();
     }
 
+    console.log(checkExisting, 'exist')
+
     if (!post.attending.includes(user)) {
       post.attending.push(user);
       await post.save();
     }
 
-    const updatedPosts = await PostModel.find({})
-      .sort({ createdAt: -1 })
-      .limit(req.params.postIndex)
-      .populate("posterId", [
-        "username",
-        "email",
-        "createdAt",
-        "profilePicture",
-      ])
-      .populate("attending", ["username", "profilePicture"]);
-
-    res.status(200).send(updatedPosts);
+    res.status(200)
   } catch (error) {
     console.log(error);
   }
@@ -175,17 +165,17 @@ router.patch(
         attendId: user,
       });
 
-      const updatedPosts = await PostModel.find({})
-        .sort({ createdAt: -1 })
-        .limit(req.params.postIndex)
-        .populate("posterId", [
-          "username",
-          "email",
-          "createdAt",
-          "profilePicture",
-        ])
-        .populate("attending", ["username", "profilePicture"]);
-      res.status(200).send(updatedPosts);
+      //const updatedPosts = await PostModel.find({})
+      //  .sort({ createdAt: -1 })
+      //  .limit(req.params.postIndex)
+      //  .populate("posterId", [
+      //    "username",
+      //    "email",
+      //    "createdAt",
+      //    "profilePicture",
+      //  ])
+      //  .populate("attending", ["username", "profilePicture"]);
+      res.status(200);
     } catch (error) {
       console.log(error);
     }

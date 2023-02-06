@@ -146,10 +146,9 @@ io.on("connection", (socket) => {
 
     socket.on("notification", async (data) => {
         const {posterID, postID, currentUser, user} = data
-        console.log(posterID, postID, currentUser, 'info')
 
         const checkNotification = await NotificationModel
-        .findOne({
+        .find({
             notifiedUser: posterID,
             postId: postID, 
             attendId: currentUser
@@ -163,8 +162,9 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("likedpost", {post: postID, user : user})
     })
     socket.on("removeUser", async (data) => {
-        const { user } = data
-        socket.broadcast.emit("removeLike", {user: user})
+        console.log(data)
+        const { user, post } = data
+        socket.broadcast.emit("removeLike", {user: user, post: post})
     })
     // new chats socket handler
     socket.on("messages", (newChatInfo) => {

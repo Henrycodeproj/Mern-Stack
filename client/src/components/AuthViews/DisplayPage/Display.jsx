@@ -89,20 +89,20 @@ export const Display = () => {
     };
   }, []);
 
-  function g(a){
-    const index = ref.current.map(element => element._id).indexOf(a.post)
-    ref.current[index].attending.push(a.user)
+  function liveLikeHandler(info){
+    const index = ref.current.map(element => element._id).indexOf(info.post)
+    ref.current[index].attending.push(info.user)
     setPosts([...ref.current])
   }
-  function removeAttendHandler(a){
-    const index = ref.current.map(element => element._id).indexOf(a.post)
-    delete ref.current[index]
+  function removeAttendHandler(info){
+    const index = ref.current.map(element => element._id).indexOf(info.post)
+    ref.current[index].attending = ref.current[index].attending.filter(element => element._id !== info.user._id)
     setPosts([...ref.current])
   }
-  //being worked on rn
+  //info contains user info and post id
   useEffect(() => {
-    socket.on("likedpost", (newLike) => {
-      g(newLike)
+    socket.on("likedpost", (info) => {
+      liveLikeHandler(info)
     });
     return () => {
       socket.removeListener("likedpost");
@@ -110,11 +110,11 @@ export const Display = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("removeUser", (newLike) => {
+    socket.on("removeLike", (newLike) => {
       removeAttendHandler(newLike)
     });
     return () => {
-      socket.removeListener("likedpost");
+      socket.removeListener("removeUser");
     };
   }, []);
 
@@ -159,24 +159,24 @@ export const Display = () => {
   };
 
   const likeHandler = (post) => {
-    const data = { user: user.id };
+    const data = { user: user.id, posterId: post.posterId._id };
     const URL = `http://localhost:3001/posts/like/${post._id}/${lastPostIndex}`;
-    axios
+    const response = axios
       .patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
       })
-      .then((response) => {
-        setPosts(response.data);
-        socket.emit("notification", {
-          postID: post._id,
-          posterID: post.posterId._id,
-          currentUser: user.id,
-          user: {_id:user.id, username:user.username, profilePicture:user.profilePicture }
-        });
-      })
-      .catch((error) => console.log(error));
+    console.log(response, 'response')
+    if (response) {
+      socket.emit("notification", {
+        postID: post._id,
+        posterID: post.posterId._id,
+        currentUser: user.id,
+        user: {_id:user.id, username:user.username, profilePicture:user.profilePicture }
+      });
+    }
+
   };
 
   const unlikeHandler = (post) => {
@@ -192,7 +192,8 @@ export const Display = () => {
         setPosts(response.data);
       })
       socket.emit("removeUser", {
-        user: {_id:user.id, username:user.username, profilePicture:user.profilePicture }
+        user: {_id:user.id, username:user.username, profilePicture:user.profilePicture },
+        post : post._id
       })
       .catch((error) => console.log(error));
   };
