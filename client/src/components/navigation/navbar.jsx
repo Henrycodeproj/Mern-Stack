@@ -119,6 +119,7 @@ export const Navbar = () => {
 
   useEffect(() => {
       socket.on(`${notificationID}-notification`, (data) => {
+        console.log(data, 'notification data')
         setNewNotification(data)
       })
     return () => { 
@@ -128,6 +129,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     const checkNotificationInArray = () => {
+      console.log(userNotification, 'usernotif')
       if (!(userNotification.some(notification => notification.postId._id === newNotification.postId._id))) {
         setUserNotification(prev => [newNotification, ...prev])
         setUnreadNotifications(count => count + 1)
