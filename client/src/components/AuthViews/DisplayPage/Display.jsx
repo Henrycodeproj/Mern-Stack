@@ -88,16 +88,18 @@ export const Display = () => {
       socket.removeListener("activeUsers");
     };
   }, []);
-
+  //workedon
   function liveLikeHandler(info){
     const index = ref.current.map(element => element._id).indexOf(info.post)
     ref.current[index].attending.push(info.user)
     setPosts([...ref.current])
   }
+  //workedon
   function removeAttendHandler(info){
     const index = ref.current.map(element => element._id).indexOf(info.post)
     ref.current[index].attending = ref.current[index].attending.filter(element => element._id !== info.user._id)
     setPosts([...ref.current])
+    setUnreadNotifications(notifications => notifications > 0 ? notifications - 1 : 0)
   }
   //info contains user info and post id
   useEffect(() => {
@@ -157,28 +159,31 @@ export const Display = () => {
       setLastPostIndex(lastPostIndex + 5);
     }
   };
-
-  const likeHandler = (post) => {
-    const data = { user: user.id, posterId: post.posterId._id };
+  //workedon
+  const likeHandler = async (post) => {
+    const data = { user: user.id, posterId: post.posterId._id, postID:post._id };
     const URL = `http://localhost:3001/posts/like/${post._id}/${lastPostIndex}`;
-    const response = axios
+    const response = await axios
       .patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
       })
-    console.log(response, 'response')
     if (response) {
       socket.emit("notification", {
         postID: post._id,
         posterID: post.posterId._id,
         currentUser: user.id,
-        user: {_id:user.id, username:user.username, profilePicture:user.profilePicture }
+        user: {
+          _id:user.id, 
+          username:user.username, 
+          profilePicture:user.profilePicture 
+        }
       });
     }
 
   };
-
+  //workedon
   const unlikeHandler = (post) => {
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;

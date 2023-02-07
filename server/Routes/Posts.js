@@ -107,9 +107,9 @@ router.get(
     }
   }
 );
-
+//workedon
 router.patch("/like/:postID/:postIndex", isAuthenticated, async (req, res) => {
-  const {user, posterId } = req.body
+  const {user, posterId} = req.body
   try {
     const postID = req.params.postID;
     const post = await PostModel.findById(postID);
@@ -121,23 +121,22 @@ router.patch("/like/:postID/:postIndex", isAuthenticated, async (req, res) => {
     });
 
     //creates notification
-    if (!checkExisting) {
+    if (checkExisting.length === 0) {
       const notification = new NotificationModel({
         notifiedUser: post.posterId._id,
-        postId: post._id,
+        postId: postID,
         attendId: user,
       });
       notification.save();
     }
 
-    console.log(checkExisting, 'exist')
 
-    if (!post.attending.includes(user)) {
+    if (!post.attending.includes(user) && checkExisting) {
       post.attending.push(user);
       await post.save();
     }
+    res.status(200).send({message:"liked"})
 
-    res.status(200)
   } catch (error) {
     console.log(error);
   }
