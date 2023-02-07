@@ -116,25 +116,35 @@ export const Navbar = () => {
     setUserNotification(response.data.notifications)
   }
 
-
+  //workedon
+  //useEffect(() => {
+  //    socket.on(`${notificationID}-notification`, (data) => {
+  //      if (data) setNewNotification(data)
+  //    })
+  //  return () => { 
+  //    socket.removeListener(`${notificationID}-notification`);
+  //  }
+  //}, [notificationID])
   useEffect(() => {
-      socket.on(`${notificationID}-notification`, (data) => {
-        console.log(data, 'notification data')
-        setNewNotification(data)
-      })
-    return () => { 
-      socket.removeListener(`${notificationID}-notification`);
-    }
-  }, [notificationID])
-
+    socket.on(`${notificationID}-notification`, (data) => {
+      if (!(userNotification.some(notification => notification.postId._id === data[0].postId._id))) {
+        setUserNotification(prev => [...prev, data[0]])
+        setUnreadNotifications(count => count + 1)
+      }
+    })
+  return () => { 
+    socket.removeListener(`${notificationID}-notification`);
+  }
+}, [notificationID])
+  //workedon
   useEffect(() => {
     const checkNotificationInArray = () => {
-      console.log(userNotification, 'usernotif')
-      if (!(userNotification.some(notification => notification.postId._id === newNotification.postId._id))) {
-        setUserNotification(prev => [newNotification, ...prev])
+      if (!(userNotification.some(notification => notification.postId._id === newNotification[0].postId._id))) {
+        setUserNotification(prev => [...prev, newNotification[0]])
         setUnreadNotifications(count => count + 1)
       }
     }
+    console.log(userNotification, newNotification)
     if (newNotification) checkNotificationInArray()
   }, [newNotification])
 
