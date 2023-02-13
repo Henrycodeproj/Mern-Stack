@@ -53,6 +53,22 @@ export const Navbar = () => {
     } =
     useContext(accountContext);
 
+  //animation for framer motion
+  const variants = {
+    alert: { 
+      opacity: 1,
+      scale:[.95, 1, .95], 
+      boxShadow: [
+        "0 0 0 0 rgba(128, 128, 128, 0.393)",
+       "0 0 0 15px rgba(128, 128, 128, 0)",
+       "0 0 0 0 rgba(128, 128, 128, 0)"
+      ],
+      transition:{ repeat: Infinity, duration: 2 }
+     },
+      
+    noAlert: {},
+  }
+
   const [profile, setProfile] = useState(null);
   const [notification, setNotification] = useState(null);
   const [userInfo, setUserInfo] = useState();
@@ -116,15 +132,6 @@ export const Navbar = () => {
     setUserNotification(response.data.notifications)
   }
 
-  //workedon
-  //useEffect(() => {
-  //    socket.on(`${notificationID}-notification`, (data) => {
-  //      if (data) setNewNotification(data)
-  //    })
-  //  return () => { 
-  //    socket.removeListener(`${notificationID}-notification`);
-  //  }
-  //}, [notificationID])
   useEffect(() => {
     socket.on(`${notificationID}-notification`, (data) => {
       if (!(userNotification.some(notification => notification.postId._id === data[0].postId._id))) {
@@ -136,17 +143,6 @@ export const Navbar = () => {
     socket.removeListener(`${notificationID}-notification`);
   }
 }, [notificationID])
-  //workedon
-  useEffect(() => {
-    const checkNotificationInArray = () => {
-      if (!(userNotification.some(notification => notification.postId._id === newNotification[0].postId._id))) {
-        setUserNotification(prev => [...prev, newNotification[0]])
-        setUnreadNotifications(count => count + 1)
-      }
-    }
-    console.log(userNotification, newNotification)
-    if (newNotification) checkNotificationInArray()
-  }, [newNotification])
 
   const openProfile = (e) => {
     setProfile(e.currentTarget);
@@ -255,10 +251,15 @@ export const Navbar = () => {
               setSearchResults={setSearchResults}
             />
             <Badge badgeContent={unreadNotifications} color="error">
+                <motion.div
+                  style = {{borderRadius:"50%", width:"30.4px", height:"30.4px"}} 
+                  animate={unreadNotifications > 0 ? "alert": "noAlert"}
+                  variants={variants}>
                 <NotificationsIcon
                   className="notification_bell"
                   onClick={(e) => handleClick(e)}
                 />
+                </motion.div>
               <Popover
                 open={notificationOpen}
                 anchorEl={notification}

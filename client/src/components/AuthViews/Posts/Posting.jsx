@@ -12,8 +12,8 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 
-export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
-  const { user, setPosts } = useContext(accountContext);
+export const Posting = ({ lastPostIndex, setLastPostIndex }) => {
+  const { user, setPosts, user2 } = useContext(accountContext);
   const ref = useRef();
   const postRef = useRef();
 
@@ -22,6 +22,8 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
   const [addEventTime, setAddEventTime] = useState(false);
   const [dateTime, setDateTime] = useState();
   const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
+
+  const [tester, setTester] = useState(0)
 
   const currentDate = new Date();
 
@@ -80,7 +82,7 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
   const handleDateandTime = (event) => {
     setDateTime(event.target.value);
   };
-
+  
   if (user === null) return <LoadingCircle loadingState={user} />;
 
   return (
@@ -142,15 +144,15 @@ export const Posts = ({ lastPostIndex, setLastPostIndex }) => {
                   <h3 style={{ color: "black" }}>Date</h3>
                 </motion.div>
               )}
-            </div>
-          </div>
-          <Button
+            <Button
             variant="contained"
             color="secondary"
             onClick={status ? (e) => formHandler(e) : null}
-          >
-            Submit
-          </Button>
+            >
+              Submit
+            </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

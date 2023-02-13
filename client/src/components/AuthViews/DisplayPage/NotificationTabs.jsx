@@ -54,7 +54,7 @@ export const NotificationTabs = ({entry}) => {
             <ListItemText
             primary={
                 <Truncating 
-                postDescription={entry.postId.Description}
+                postDescription={`Post Description: ${entry.postId.Description}`}
                 truncateNumber = {150}
                 />
             } 

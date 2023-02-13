@@ -10,10 +10,25 @@ export const AppContext = ({children}) =>{
     
     const navigateTo = useNavigate()
 
+    const logoutHandler = () => {
+        setUserNotification([])
+        socket.disconnect()
+        localStorage.removeItem("userStatus")
+        localStorage.removeItem("Token")
+        localStorage.removeItem("User")
+        navigateTo("/")
+        setOption(false)
+      }
+
+    const [option, setOption] = useState(true)
+
     const [lastActive, setLastActive] = useState()
+
     const [userStatus, setUserStatus] = useState(localStorage.getItem("userStatus"))
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")))
+
+    const [user2, setUser2] = useState()
 
     const [posts, setPosts] = useState(null)
     
@@ -39,14 +54,6 @@ export const AppContext = ({children}) =>{
 
     const [clicked, setClicked] = useState(false)
 
-    const logoutHandler = () => {
-      setUserNotification([])
-      socket.disconnect()
-      localStorage.removeItem("userStatus")
-      localStorage.removeItem("Token")
-      localStorage.removeItem("User")
-      navigateTo("/")
-    }
 
     return(
         <accountContext.Provider 
@@ -83,6 +90,10 @@ export const AppContext = ({children}) =>{
             setNewNotification,
             clicked, 
             setClicked,
+            option, 
+            setOption,
+            user2, 
+            setUser2
         }}>
             {children}
         </accountContext.Provider>    

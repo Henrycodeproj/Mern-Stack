@@ -14,7 +14,8 @@ export const Login = ({ setOption, option, active, inactive }) => {
     setUser,
     setActiveNotification,
     setNotificationID,
-    setTime
+    setTime,
+    setUser2
   } = useContext(accountContext);
 
   const [loginInfo, setLoginInfo] = useState({
@@ -48,6 +49,7 @@ export const Login = ({ setOption, option, active, inactive }) => {
           localStorage.setItem("Token", res.data.accessToken);
           localStorage.setItem("userStatus", true);
           localStorage.setItem("User", JSON.stringify(res.data.user));
+          setUser2(res.data.user)
           setUser(JSON.parse(localStorage.getItem("User")));
           setNotificationID(res.data.user.id);
           setTime(res.data.user.lastActive);
