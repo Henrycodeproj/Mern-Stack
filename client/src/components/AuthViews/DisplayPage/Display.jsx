@@ -16,7 +16,7 @@ import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
 import { motion } from "framer-motion";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Posts } from "../Posts/Posting.jsx";
+import { Posting } from "../Posts/Posting.jsx";
 import { accountContext } from "../../Contexts/appContext";
 import { LeftColumn } from "./LeftColumn/LeftSideCol";
 import { handleEventTimeandDate } from "../../Reusable Functions/TimeFunctions.js";
@@ -40,11 +40,11 @@ export const Display = () => {
 
   const [loadingState, setLoadingState] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [likeLoading, setLikeLoading] = useState(false)
 
   const navigateTo = useNavigate();
 
   const ref = useRef()
-
   ref.current = posts
 
   useEffect(() => {
@@ -88,19 +88,7 @@ export const Display = () => {
       socket.removeListener("activeUsers");
     };
   }, []);
-  //workedon
-  function liveLikeHandler(info){
-    const index = ref.current.map(element => element._id).indexOf(info.post)
-    ref.current[index].attending.push(info.user)
-    setPosts([...ref.current])
-  }
-  //workedon
-  function removeAttendHandler(info){
-    const index = ref.current.map(element => element._id).indexOf(info.post)
-    ref.current[index].attending = ref.current[index].attending.filter(element => element._id !== info.user._id)
-    setPosts([...ref.current])
-    setUnreadNotifications(notifications => notifications > 0 ? notifications - 1 : 0)
-  }
+
   //info contains user info and post id
   useEffect(() => {
     socket.on("likedpost", (info) => {
@@ -159,10 +147,29 @@ export const Display = () => {
       setLastPostIndex(lastPostIndex + 5);
     }
   };
-  //workedon
+
+  function liveLikeHandler(info){
+    const index = ref.current.map(element => element._id).indexOf(info.post)
+    ref.current[index].attending.push(info.user)
+    setPosts([...ref.current])
+    setLikeLoading(false)
+  }
+
+  function removeAttendHandler(info){
+    const index = ref.current.map(element => element._id).indexOf(info.post)
+    ref.current[index].attending = ref.current[index].attending.filter(element => element._id !== info.user._id)
+    setPosts([...ref.current])
+    setUnreadNotifications(notifications => notifications > 0 ? notifications - 1 : 0)
+  }
+
   const likeHandler = async (post) => {
-    const data = { user: user.id, posterId: post.posterId._id, postID:post._id };
-    const URL = `http://localhost:3001/posts/like/${post._id}/${lastPostIndex}`;
+    setLikeLoading(true)
+    const data = { 
+      user: user.id, 
+      posterId: post.posterId._id, 
+      postID:post._id 
+    };
+    const URL = `http://localhost:3001/posts/like/${post._id}`;
     const response = await axios
       .patch(URL, data, {
         headers: {
@@ -181,26 +188,24 @@ export const Display = () => {
         }
       });
     }
-
   };
-  //workedon
-  const unlikeHandler = (post) => {
+
+  const unlikeHandler = async (post) => {
     const data = { user: user.id };
-    const URL = `http://localhost:3001/posts/unlike/${post._id}/${lastPostIndex}`;
-    axios
+    const URL = `http://localhost:3001/posts/unlike/${post._id}`;
+    const response = await axios
       .patch(URL, data, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
       })
-      .then((response) => {
-        setPosts(response.data);
-      })
-      socket.emit("removeUser", {
-        user: {_id:user.id, username:user.username, profilePicture:user.profilePicture },
-        post : post._id
-      })
-      .catch((error) => console.log(error));
+      console.log(response)
+      if (response) {
+        socket.emit("removeUser", {
+          user: {_id:user.id, username:user.username, profilePicture:user.profilePicture },
+          post : post._id
+        })
+      }
   };
 
   const handlePastHours = (time) => {
@@ -218,6 +223,7 @@ export const Display = () => {
 
   if (posts === null) return <LoadingCircle loadingState={loadingState} />;
 
+
   return (
     <div className="display_container">
       <div className="display_newsfeed_wrapper">
@@ -226,7 +232,7 @@ export const Display = () => {
         </div>
         <div className="newsfeed_container">
           <div className="outer_posts_container">
-            <Posts
+            <Posting
               lastPostIndex={lastPostIndex}
               setLastPostIndex={setLastPostIndex}
             />
@@ -367,15 +373,12 @@ export const Display = () => {
                               >
                                 <VolunteerActivismIcon
                                   className="heart_button_outline"
-                                  onClick={() => likeHandler(post)}
+                                  onClick={() => likeLoading ? null : likeHandler(post)}
                                   style={{ cursor: "pointer" }}
                                 />
                               </Tooltip>
                             </motion.button>
                           )}
-                          <Tooltip title="Disabled (Add event to your phone calendar)">
-                            <AddToHomeScreenIcon sx={{ color: "gray" }} />
-                          </Tooltip>
                         </div>
 
                         <motion.div

@@ -153,7 +153,7 @@ io.on("connection", (socket) => {
     delete activeUsers[data.userID];
     io.emit("inactiveUsers", activeUsers);
   });
-  //workedon
+
   socket.on("notification", async (data) => {
     const { posterID, postID, currentUser, user } = data;
 
@@ -169,11 +169,12 @@ io.on("connection", (socket) => {
         "profilePicture",
       ])
       .populate("postId", ["_id", "Description"]);
-    if (posterID in activeUsers && posterID !== currentUser) {
+    if (posterID in activeUsers && posterID !== currentUser && checkNotification) {
       socket.broadcast.emit(`${posterID}-notification`, checkNotification);
     }
     socket.broadcast.emit("likedpost", { post: postID, user: user });
   });
+
   socket.on("removeUser", async (data) => {
     console.log(data);
     const { user, post } = data;

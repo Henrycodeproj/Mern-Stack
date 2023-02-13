@@ -149,8 +149,6 @@ router.get("/:user/notifications", isAuthenticated, async (req, res) => {
       ])
       .populate("postId", ["_id", "Description"]);
 
-    console.log(userNotifications);
-
     const filtereduserNotifications = userNotifications.filter(
       (notifications) => notifications.postId !== null
     );

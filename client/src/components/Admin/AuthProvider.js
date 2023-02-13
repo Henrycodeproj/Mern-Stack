@@ -12,7 +12,7 @@ export const authProvider = {
                 "authorization":localStorage.getItem("Token")
             }
         })
-        console.log(response)
+        console.log(response, 'authprovider response')
         if (response.data.auth === false) {
             return Promise.reject();
         }

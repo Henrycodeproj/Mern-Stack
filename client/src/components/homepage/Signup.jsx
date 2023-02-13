@@ -12,15 +12,20 @@ import { HeroSection } from './HeroSection';
 
 export const Signup = () =>{
 
+  const {
+    userStatus, 
+    clicked, 
+    setClicked, 
+    option, setOption
+    } = useContext(accountContext)
+
     const [newUser,setnewUser] = useState({
       username:'',
       password:'',
       Confirm:'',
       email:''
     })
-    //login and signup toggle state
-    const [option, setOption] = useState()
-    
+  
     const [createdAccount, setCreatedAccount] = useState(false)
     const [signLoading, setSignLoading] = useState(false)
 
@@ -165,8 +170,6 @@ export const Signup = () =>{
     const inactive = {
       borderStyle:'none'
     }
-
-    const {userStatus, clicked, setClicked} = useContext(accountContext)
 
     if (userStatus) return <Navigate to="/display" replace={true}/>
     

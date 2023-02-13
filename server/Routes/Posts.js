@@ -9,26 +9,30 @@ import NotificationModel from "../Models/Notifications.js";
 export const router = express.Router();
 
 router.post("/", isAuthenticated, async (req, res) => {
-  const { user, post, start, end } = req.body;
-  const newPosts = new PostModel({
-    Description: post,
-    posterId: user,
-    timeAndDate: start,
-    timeAndDateEnd: end ? end : null,
-  });
+  try {
+    const { user, post, start, end } = req.body;
+    const newPosts = new PostModel({
+      Description: post,
+      posterId: user,
+      timeAndDate: start,
+      timeAndDateEnd: end ? end : null,
+    });
 
-  await newPosts.save();
+    await newPosts.save();
 
-  const newestPost = await PostModel.findOne({
-    posterId: user,
-    Description: post,
-  })
-    .sort({ createdAt: -1 })
-    .populate("posterId", ["username", "email", "createdAt", "profilePicture"]);
+    const newestPost = await PostModel.findOne({
+      posterId: user,
+      Description: post,
+    })
+      .sort({ createdAt: -1 })
+      .populate("posterId", ["username", "email", "createdAt", "profilePicture"]);
 
-  if (newPosts)
-    return res.status(200).send({ message: "Posted", newestPost: newestPost });
-  return res.status(500).send({ message: "Error your post failed." });
+    if (newPosts)
+      return res.status(200).send({ message: "Posted", newestPost: newestPost });
+    return res.status(500).send({ message: "Error your post failed." });
+  } catch(error) {
+    console.log(error)
+  }
 });
 
 router.get("/all", async (req, res) => {
@@ -108,7 +112,7 @@ router.get(
   }
 );
 //workedon
-router.patch("/like/:postID/:postIndex", isAuthenticated, async (req, res) => {
+router.patch("/like/:postID/", isAuthenticated, async (req, res) => {
   const {user, posterId} = req.body
   try {
     const postID = req.params.postID;
@@ -143,7 +147,7 @@ router.patch("/like/:postID/:postIndex", isAuthenticated, async (req, res) => {
 });
 
 router.patch(
-  "/unlike/:postID/:postIndex",
+  "/unlike/:postID/",
   isAuthenticated,
   async (req, res) => {
     try {
@@ -164,17 +168,7 @@ router.patch(
         attendId: user,
       });
 
-      //const updatedPosts = await PostModel.find({})
-      //  .sort({ createdAt: -1 })
-      //  .limit(req.params.postIndex)
-      //  .populate("posterId", [
-      //    "username",
-      //    "email",
-      //    "createdAt",
-      //    "profilePicture",
-      //  ])
-      //  .populate("attending", ["username", "profilePicture"]);
-      res.status(200);
+      res.status(200).send({message:"unliked"});
     } catch (error) {
       console.log(error);
     }
@@ -182,19 +176,23 @@ router.patch(
 );
 
 router.patch("/edit/:postId", isAuthenticated, async (req, res) => {
-  const postID = req.params.postId;
-  const updatedDescription = req.body.updatedDescription;
+  try {
+    const postID = req.params.postId;
+    const updatedDescription = req.body.updatedDescription;
 
-  const filter = { _id: postID };
-  const update = { Description: updatedDescription };
+    const filter = { _id: postID };
+    const update = { Description: updatedDescription };
 
-  const changedPosts = await PostModel.findOneAndUpdate(filter, update, {
-    new: true,
-  })
-    .populate("posterId", ["username", "email", "createdAt", "profilePicture"])
-    .populate("attending", ["username", "profilePicture"]);
+    const changedPosts = await PostModel.findOneAndUpdate(filter, update, {
+      new: true,
+    })
+      .populate("posterId", ["username", "email", "createdAt", "profilePicture"])
+      .populate("attending", ["username", "profilePicture"]);
 
-  res.status(200).send(changedPosts);
+    res.status(200).send(changedPosts);
+  } catch(error) {
+    console.log(error)
+  }
 });
 
 router.delete("/delete/:postId", isAuthenticated, async (req, res) => {
