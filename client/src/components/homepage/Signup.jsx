@@ -9,6 +9,10 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import "./Signup.css"
 import landing from "../../images/landing.png"
 import { HeroSection } from './HeroSection';
+import { LoadingCircle } from '../ReusablesComponents/LoadingCircle';
+import Disclaimer from './DisclaimerModal';
+import CheckIcon from '@mui/icons-material/Check';
+import { borderRadius } from '@mui/system';
 
 export const Signup = () =>{
 
@@ -16,7 +20,8 @@ export const Signup = () =>{
     userStatus, 
     clicked, 
     setClicked, 
-    option, setOption
+    option, 
+    setOption
     } = useContext(accountContext)
 
     const [newUser,setnewUser] = useState({
@@ -28,6 +33,8 @@ export const Signup = () =>{
   
     const [createdAccount, setCreatedAccount] = useState(false)
     const [signLoading, setSignLoading] = useState(false)
+    const [disclaimerClicked, setDisclaimerClicked] = useState(false)
+    const [agreeDisclaimer, setAgreeDisclaimer] = useState(false)
 
     //state errors
     const [formErrors, setformErrors] = useState({})
@@ -39,25 +46,26 @@ export const Signup = () =>{
     const [confirm, setConfirm] = useState({})
     const [valid, setValid] = useState({})
     const [passwordError, setPasswordError] = useState(false)
+    const [disclaimerError, setDisclaimerError] = useState(false)
 
     //helps to clear error alerts on signup
-    useEffect(()=>{
-      const setTimer = setTimeout(()=>{
-        setPasswordError(false)
-        setEmailError(false)
-        setServerError('')
-        setCreatedAccount(false)
-      },3000)
-      
-      return () => {
-        clearTimeout(setTimer)
-      }
-    }, [passwordError, emailError, serverError])
+    //useEffect(()=>{
+    //  const setTimer = setTimeout(()=>{
+    //    setPasswordError(false)
+    //    setEmailError(false)
+    //    setServerError('')
+    //    setCreatedAccount(false)
+    //  },3000)
+    //  
+    //  return () => {
+    //    clearTimeout(setTimer)
+    //  }
+    //}, [passwordError, emailError, serverError])
 
     const submitHandler = async (e) => {
         e.preventDefault()
 
-        if (formCheck(newUser) || !emailCheck(newUser.email)){
+        if (formCheck(newUser) || !emailCheck(newUser.email) || disclaimerCheck()){
           return
         }
         confirmPassword(newUser)
@@ -86,7 +94,10 @@ export const Signup = () =>{
       
       setnewUser({...newUser, [name]:value});
     }
-
+    
+    const disclaimerCheck = () => {
+      if (agreeDisclaimer === false) setDisclaimerError(true)
+    }
     const emailCheck = (email) => {
       const check = /.edu$/;
       if(!check.test(email)){
@@ -161,6 +172,7 @@ export const Signup = () =>{
         return false
       }
     }
+
     const active ={
       borderStyle:'solid',
       borderRadius:'8px',
@@ -204,6 +216,9 @@ export const Signup = () =>{
               {serverError && <Alert variant="filled" severity="error" color="secondary" onClose = {()=> setServerError('')}>{serverError}</Alert>}
               {emailError && <Alert variant ="filled" severity="error" color= "secondary" onClose={()=>setEmailError(false)}>Your email does not end with edu.</Alert>}
               {createdAccount && <Alert variant ="filled" severity="success" onClose={()=>setCreatedAccount(false)}>You account is automatically verified, you may login with your signed up credentials. All posts expire in 24 hours.</Alert>}
+              {disclaimerError && <Alert variant ="filled" severity="error" onClose={()=>setDisclaimerError(false)}>
+                You need to agree to terms to sign up.
+              </Alert>}
               {/* start of form */}
               <form className='signup' onSubmit={submitHandler}>
                 {/* username */}
@@ -272,10 +287,28 @@ export const Signup = () =>{
                       />
                   </label>
                   <p className='form-errors'>{formErrors.email}</p>
+                <div style = {{display:"flex", alignItems:"center"}}>
+                  <h2
+                  style = {{
+                    padding:"20px 0px", 
+                    cursor:"pointer", 
+                    color: "black",
+                    textDecoration:"underline"
+                  }} 
+                  onClick={()=> setDisclaimerClicked(true)}>
+                    Terms and Services
+                  </h2>
+                  {agreeDisclaimer ? <CheckIcon sx = {{fontSize:"2rem", color:"#005700"}}/> : null}
+                </div>
+                <Disclaimer 
+                  open = {disclaimerClicked} 
+                  setOpen = {setDisclaimerClicked} 
+                  setAgree = {setAgreeDisclaimer}
+                />
                 </div>
                   <div className='submit-section'>
                   <Button variant="contained" color='secondary' type='submit' className='signup-submit-button'>Sign up</Button>
-                  {signLoading && <CircularProgress color="inherit" />}
+                  {signLoading && <LoadingCircle loadingState={signLoading}/>}
                   </div>
               </form>
             </motion.div>

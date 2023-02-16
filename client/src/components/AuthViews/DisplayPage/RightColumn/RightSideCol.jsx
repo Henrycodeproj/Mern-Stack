@@ -4,10 +4,12 @@ import "./RightSideCol.css";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import ChatIcon from "@mui/icons-material/Chat";
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { accountContext } from "../../../Contexts/appContext";
 import { IndividualChats } from "../../ChatViews/IndividualChat";
 import { useNavigate } from "react-router-dom";
 import { EventCalendar } from "./EventCalendar";
+import { motion } from "framer-motion";
 
 export const RightSideCol = () => {
   const newMessageCheck = useRef();
@@ -72,6 +74,24 @@ export const RightSideCol = () => {
   };
 
   const open = Boolean(anchorEl);
+
+  //const variants = {
+  //  see :{
+  //    width:"1000px"
+  //  },
+  //  close: {
+  //    opacity:1
+  //  }
+  //}
+  const variants = {
+    alert: { 
+      width:["5px","1000px"],
+      transition:{duration: 2 }
+     },
+      
+    noAlert: {},
+  }
+  const [clak, setClak] = useState(false)
 
   return (
     <div className="right_column_wrapper">
@@ -148,6 +168,13 @@ export const RightSideCol = () => {
           >
             Recent Messages
           </h2>
+          <motion.div 
+            animate={clak > 0 ? "alert": "noAlert"}
+            variants={variants}
+            style = {{borderStyle:"solid"}}
+          >
+          <PersonSearchIcon onClick = {()=> setClak(p => !p)}/>
+          </motion.div>
         </div>
         <div className="recent_message_avatars">
           {recentMessages &&
