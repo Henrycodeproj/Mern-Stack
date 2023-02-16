@@ -15,7 +15,7 @@ export const UserAuthentication = () =>{
 
     useEffect(()=>{
        authCheck().then(res=>{
-            console.log(res.data.auth)
+            console.log(res.data.auth, 'auth cheker')
             setUserStatus(res.data)
             setLoading(false)
         })

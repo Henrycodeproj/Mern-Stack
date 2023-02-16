@@ -28,8 +28,6 @@ export const AppContext = ({children}) =>{
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")))
 
-    const [user2, setUser2] = useState()
-
     const [posts, setPosts] = useState(null)
     
     const [activeUsers, setActiveUsers] = useState({})
@@ -92,8 +90,6 @@ export const AppContext = ({children}) =>{
             setClicked,
             option, 
             setOption,
-            user2, 
-            setUser2
         }}>
             {children}
         </accountContext.Provider>    

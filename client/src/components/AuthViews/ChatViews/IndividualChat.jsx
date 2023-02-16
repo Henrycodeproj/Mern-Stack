@@ -71,6 +71,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         if (isNewMessage) setNotification(prevNotifications => prevNotifications + 1)
     },[])
 
+    //scrolls to bottom of chat on load
     useEffect(()=>{
         if (chatContainer.current && chatClicked.current) {
             chatContainer.current.scrollIntoView()
@@ -78,11 +79,13 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         }
     }, [chatHistory])
 
+    //scrolls to bottom when you type own message
     useEffect(()=>{
         if (chatContainer.current) chatContainer.current.scrollIntoView({behavior: "smooth"})
         setOwnMessage(false)
     }, [ownMessage])
-
+    
+    //scrolls to bottom with new message
     const handleNewMessageScroll = () => {
         if (chatContainer.current) chatContainer.current.scrollIntoView({behavior: "smooth"})
         setNewMessages(false)

@@ -82,7 +82,8 @@ app.get("/verify/:token", async (req, res) => {
 app.post("/createUser", async (req, res) => {
   const { username, password, email } = req.body;
 
-  console.log(username, password, email);
+  //checks uscsc email
+  //if (/@ucsc.edu\s*$/i.test(email) === false) res.status(400).send({message:"Your email should be a UCSC email."})
 
   const newUser = new UserModel({
     username:

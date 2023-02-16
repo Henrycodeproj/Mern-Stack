@@ -7,7 +7,6 @@ import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import "./Login.css"
-import io from "socket.io-client"
 
 export const Login = ({ setOption, option, active, inactive }) => {
   const { 
@@ -15,7 +14,7 @@ export const Login = ({ setOption, option, active, inactive }) => {
     setActiveNotification,
     setNotificationID,
     setTime,
-    setUser2
+    setUserStatus
   } = useContext(accountContext);
 
   const [loginInfo, setLoginInfo] = useState({
@@ -49,7 +48,6 @@ export const Login = ({ setOption, option, active, inactive }) => {
           localStorage.setItem("Token", res.data.accessToken);
           localStorage.setItem("userStatus", true);
           localStorage.setItem("User", JSON.stringify(res.data.user));
-          setUser2(res.data.user)
           setUser(JSON.parse(localStorage.getItem("User")));
           setNotificationID(res.data.user.id);
           setTime(res.data.user.lastActive);

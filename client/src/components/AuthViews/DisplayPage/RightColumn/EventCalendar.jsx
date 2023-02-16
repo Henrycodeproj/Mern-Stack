@@ -1,11 +1,15 @@
 import "react-big-calendar/lib/css/react-big-calendar.css";
 //import "./myCalendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
-import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
-import { useState, useEffect } from "react";
+import { Calendar, dateFnsLocalizer, Views, Navigate} from "react-big-calendar";
+import Agenda from "./customs";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import "./EventCalendar.css";
 import { EventViewer } from "./EventViewer";
+//import { MyWeek } from "./customs";
+import CustomWeekView from "./customs";
+
 
 const locales = {
   "en-US": require("date-fns"),
@@ -21,6 +25,7 @@ const localizer = dateFnsLocalizer({
 const view = {
   day: true,
   agenda: true,
+  MyEvents: CustomWeekView
 };
 
 export const EventCalendar = () => {
@@ -43,21 +48,11 @@ export const EventCalendar = () => {
         });
       }
       eventDateFormat();
+      console.log(response.data)
       setEvents(response.data);
     }
     getData();
   }, []);
-
-  function call() {
-    const t = {
-      id: 2,
-      title: "cooking",
-      start: new Date(2023, 0, 29, 9, 0, 0),
-      end: new Date(2023, 0, 29, 9, 0, 0),
-      resourceId: 2,
-    };
-    setEvents((prev) => [t, ...prev]);
-  }
 
   function handleSelectEvent(event) {
     setFocusedEvent(event);
@@ -78,6 +73,7 @@ export const EventCalendar = () => {
             views={view}
             onSelectEvent={handleSelectEvent}
             className = "event_calendar"
+            messages={{ MyEvents: 'MyEvents' }}
           />
           <EventViewer open={open} setOpen={setOpen} event={focusedEvent} />
         </div>
