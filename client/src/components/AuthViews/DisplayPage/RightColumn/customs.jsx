@@ -1,7 +1,9 @@
-import React, {useMemo, useState} from 'react'
+import React, {useMemo, useState, useEffect, useContext} from 'react'
 import PropTypes from 'prop-types'
 import { Navigate } from 'react-big-calendar'
 import TimeGrid from 'react-big-calendar/lib/TimeGrid'
+import axios from 'axios'
+import { accountContext } from '../../../Contexts/appContext'
 
 export default function CustomWeekView({
   date,
@@ -15,24 +17,24 @@ export default function CustomWeekView({
     () => CustomWeekView.range(date, { localizer }),
     [date, localizer]
   )
-  console.log(props.events,'1', new Date("2023-02-17T03:24:00"))
-  props.events = [  
-    {
-      'title': 'All Day Event very long title',
-      'allDay': true,
-      'start': new Date(2023, 1, 15),
-      'end': new Date(2023, 1, 15),
-      'id': "63e30dec0270cbb8eba66cd2"
-    },
-    {
-      'title': 'Long Event',
-      'start': new Date("2023-02-17T03:24:00"),
-      'end': new Date("2023-02-17T04:24:00"),
-      'id': "63e30dec0270cbb8eba66cd2",
-      'original_poster' : [{_id: '637006051cc69b448ad1f065', username: 'Henry', password: '$2b$10$3wPwI7XNRdS9lxAQOUa6veVdznjNcr.8u86LWLXVC9bJ0Tl/4DMqy', email: 'test@test.edu', selfDescription: ''}]
+  const { user } = useContext(accountContext)
+  const [individualEvents, setIndividualEvents] = useState([])
+  useEffect(() => {
+    async function getIndividualEvents () {
+      const url = 'http://localhost:3001/posts/all/self/events'
+      const data = { userID: user.id }
+      const response = await axios.post(url, data, {
+        headers: {
+          authorization: localStorage.getItem("Token"),
+        }
+      })
+      if (response) setIndividualEvents(response.data)
     }
-  ]
-  console.log(props.events, '2')
+    getIndividualEvents()
+  },[])
+
+  props.events = individualEvents
+  
   return (
     <TimeGrid
       date={date}
@@ -58,11 +60,11 @@ CustomWeekView.propTypes = {
 
 CustomWeekView.range = (date, { localizer }) => {
   const start = date
-  const end = localizer.add(start, 2, 'day')
+  const end = localizer.add(start, 1, 'day')
 
   let current = start
   const range = []
-
+  console.log(localizer)
   while (localizer.lte(current, end, 'day')) {
     range.push(current)
     current = localizer.add(current, 1, 'day')
