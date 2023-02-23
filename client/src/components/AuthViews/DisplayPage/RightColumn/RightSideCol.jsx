@@ -5,11 +5,13 @@ import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import ChatIcon from "@mui/icons-material/Chat";
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import FireplaceIcon from '@mui/icons-material/Fireplace';
 import { accountContext } from "../../../Contexts/appContext";
 import { IndividualChats } from "../../ChatViews/IndividualChat";
 import { useNavigate } from "react-router-dom";
 import { EventCalendar } from "./EventCalendar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 export const RightSideCol = () => {
   const newMessageCheck = useRef();
@@ -74,22 +76,15 @@ export const RightSideCol = () => {
   };
 
   const open = Boolean(anchorEl);
-
-  //const variants = {
-  //  see :{
-  //    width:"1000px"
-  //  },
-  //  close: {
-  //    opacity:1
-  //  }
-  //}
   const variants = {
     alert: { 
-      width:["5px","1000px"],
-      transition:{duration: 2 }
+      width:["0%","100%"],
+      transition:{duration: 1 }
      },
       
-    noAlert: {},
+    noAlert: {
+      x:"0%"
+    },
   }
   const [clak, setClak] = useState(false)
 
@@ -97,6 +92,7 @@ export const RightSideCol = () => {
     <div className="right_column_wrapper">
       <EventCalendar />
       <div className="popular_container">
+        <div style = {{display:"flex", alignItems:"center"}}>
         <h2
           style={{
             marginBottom: "10px",
@@ -107,9 +103,18 @@ export const RightSideCol = () => {
         >
           Biggest Events Today
         </h2>
-        {popularPosts.map((post) => (
-          <div>
-            <Divider />
+        <FireplaceIcon sx = {{fontSize:"3rem", color:"orangered"}}/>
+        </div>
+        {popularPosts.map((post, i) => (
+          <motion.div
+          initial = {{ x:-40, opacity: 0 }}
+          animate = {{ x:0, opacity: 1 }}
+          transition={{delay: i * 0.15, duration:.5}}
+          >
+            <motion.div
+            whileHover={{scale:1.05, x:-2}}
+            key = {post._id}
+            >
             <div className="popular_post_container">
               <div style={{ display: "flex" }}>
                 <Avatar
@@ -126,7 +131,11 @@ export const RightSideCol = () => {
                       color: "black",
                       margin: 0,
                       fontWeight: "600",
+                      cursor:"pointer"
                     }}
+                    onClick={() =>
+                      navigateTo(`/profile/${post.original_poster[0]._id}`)
+                    }
                   >
                     {post.original_poster[0].username}
                   </h3>
@@ -154,7 +163,8 @@ export const RightSideCol = () => {
                 +{post.attendingLength}
               </Avatar>
             </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ))}
       </div>
       <div className="recent_message_container">
@@ -168,13 +178,16 @@ export const RightSideCol = () => {
           >
             Recent Messages
           </h2>
+          <div>
           <motion.div 
-            animate={clak > 0 ? "alert": "noAlert"}
+            initial = {{width:"0%"}}
+            animate={clak ? "alert": "noAlert"}
             variants={variants}
             style = {{borderStyle:"solid"}}
           >
           <PersonSearchIcon onClick = {()=> setClak(p => !p)}/>
           </motion.div>
+          </div>
         </div>
         <div className="recent_message_avatars">
           {recentMessages &&

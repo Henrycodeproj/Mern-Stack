@@ -2,13 +2,12 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 //import "./myCalendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { Calendar, dateFnsLocalizer, Views, Navigate} from "react-big-calendar";
-import Agenda from "./customs";
-import { useState, useEffect, useMemo } from "react";
+import Agenda from "./PersonalEvents";
+import { useState, useEffect, useMemo, useContext} from "react";
 import axios from "axios";
 import "./EventCalendar.css";
 import { EventViewer } from "./EventViewer";
-//import { MyWeek } from "./customs";
-import CustomWeekView from "./customs";
+import PersonalEvents from "./PersonalEvents";
 
 
 const locales = {
@@ -25,10 +24,11 @@ const localizer = dateFnsLocalizer({
 const view = {
   day: true,
   agenda: true,
-  MyEvents: CustomWeekView
+  MyEvents: PersonalEvents
 };
 
 export const EventCalendar = () => {
+
   const [events, setEvents] = useState();
   const [open, setOpen] = useState(false);
   const [focusedEvent, setFocusedEvent] = useState(null);

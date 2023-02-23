@@ -1,11 +1,11 @@
-import React, {useMemo, useState, useEffect, useContext} from 'react'
 import PropTypes from 'prop-types'
-import { Navigate } from 'react-big-calendar'
 import TimeGrid from 'react-big-calendar/lib/TimeGrid'
 import axios from 'axios'
+import {useMemo, useState, useEffect, useContext} from 'react'
+import { Navigate } from 'react-big-calendar'
 import { accountContext } from '../../../Contexts/appContext'
 
-export default function CustomWeekView({
+export default function PersonalEvents({
   date,
   localizer,
   max = localizer.endOf(new Date(), 'day'),
@@ -14,11 +14,12 @@ export default function CustomWeekView({
   ...props
 }) {
   const currRange = useMemo(
-    () => CustomWeekView.range(date, { localizer }),
+    () => PersonalEvents.range(date, { localizer }),
     [date, localizer]
   )
   const { user } = useContext(accountContext)
   const [individualEvents, setIndividualEvents] = useState([])
+
   useEffect(() => {
     async function getIndividualEvents () {
       const url = 'http://localhost:3001/posts/all/self/events'
@@ -28,13 +29,22 @@ export default function CustomWeekView({
           authorization: localStorage.getItem("Token"),
         }
       })
-      if (response) setIndividualEvents(response.data)
+      if (response){
+      function eventDateFormat() {
+        response.data.forEach((event) => {
+          event.start = new Date(event.start);
+          event.end = new Date(event.end);
+        });
+      }
+      eventDateFormat();
+      setIndividualEvents(response.data)
+      }
     }
     getIndividualEvents()
   },[])
 
-  props.events = individualEvents
-  
+  props.events = individualEvents 
+
   return (
     <TimeGrid
       date={date}
@@ -50,7 +60,7 @@ export default function CustomWeekView({
   )
 }
 
-CustomWeekView.propTypes = {
+PersonalEvents.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
   localizer: PropTypes.object,
   max: PropTypes.instanceOf(Date),
@@ -58,7 +68,8 @@ CustomWeekView.propTypes = {
   scrollToTime: PropTypes.instanceOf(Date),
 }
 
-CustomWeekView.range = (date, { localizer }) => {
+PersonalEvents.range = (date, { localizer }) => {
+  console.log(date)
   const start = date
   const end = localizer.add(start, 1, 'day')
 
@@ -73,20 +84,20 @@ CustomWeekView.range = (date, { localizer }) => {
   return range
 }
 
-CustomWeekView.navigate = (date, action, { localizer }) => {
+PersonalEvents.navigate = (date, action, { localizer }) => {
   switch (action) {
     case Navigate.PREVIOUS:
-      return localizer.add(date, -3, 'day')
+      return localizer.add(date, -1, 'day')
 
     case Navigate.NEXT:
-      return localizer.add(date, 3, 'day')
+      return localizer.add(date, 1, 'day')
 
     default:
       return date
   }
 }
 
-CustomWeekView.title = (date, { localizer }) => {
-  const [start, ...rest] = CustomWeekView.range(date, { localizer })
+PersonalEvents.title = (date, { localizer }) => {
+  const [start, ...rest] = PersonalEvents.range(date, { localizer })
   return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
 }

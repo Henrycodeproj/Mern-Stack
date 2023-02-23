@@ -46,7 +46,6 @@ router.get("/all", async (req, res) => {
         "profilePicture",
       ])
       .populate("attending", ["username", "profilePicture"]);
-    console.log(posts);
     return res.status(200).json(posts);
   } catch (err) {
     return res.status(500).send("Internal Server error");
@@ -362,7 +361,6 @@ router.get("/all/events", isAuthenticated, async (req, res) => {
         },
       },
     ]);
-    console.log(results);
     res.status(200).send(results);
   } catch (error) {
     console.log(error);

@@ -128,12 +128,14 @@ export const Navbar = () => {
         authorization: localStorage.getItem("Token"),
       }
     });
+    console.log(userNotification, 'user not')
     console.log(response.data.notifications,'tess')
     setUserNotification(response.data.notifications)
   }
 
   useEffect(() => {
     socket.on(`${notificationID}-notification`, (data) => {
+      console.log(data)
       if (!(userNotification.some(notification => notification.postId._id === data[0].postId._id))) {
         setUserNotification(prev => [...prev, data[0]])
         setUnreadNotifications(count => count + 1)
