@@ -52,7 +52,6 @@ export const AppContext = ({children}) =>{
 
     const [clicked, setClicked] = useState(false)
 
-
     return(
         <accountContext.Provider 
         value = {{

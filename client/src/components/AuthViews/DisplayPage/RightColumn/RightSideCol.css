@@ -23,9 +23,6 @@
     border-top-width: 1px;
 }
 .recent_message_title{
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
     margin-bottom: 17px;
 }
 .profile_image_name_container {
@@ -76,9 +73,13 @@
     margin:0
 }
 .popular_container{
+    margin:10px 0;
     padding:10px;
 }
 .popular_post_container{
+    background: #bcbaba;
+    padding:10px;
+    border-radius: 10px;
     margin: 20px 0;
     display:flex;
     justify-content: space-between;
