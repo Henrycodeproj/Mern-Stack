@@ -79,14 +79,16 @@ export const RightSideCol = () => {
   const variants = {
     alert: { 
       width:["0%","100%"],
-      transition:{duration: 1 }
+      borderStyle:"solid",
+      transition:{duration: .75 }
      },
       
     noAlert: {
       x:"0%"
     },
   }
-  const [clak, setClak] = useState(false)
+  
+  const [searchClicked, setSearchClicked] = useState(false)
 
   return (
     <div className="right_column_wrapper">
@@ -169,6 +171,24 @@ export const RightSideCol = () => {
       </div>
       <div className="recent_message_container">
         <div className="recent_message_title">
+        <motion.div 
+            initial = {{width:"100%"}}
+            //animate={searchClicked ? "alert": "noAlert"}
+            animate = {{
+              width:["0%","100%"],
+              borderStyle:"solid",
+              transition:{duration: .75 }}
+            }
+            variants={variants}
+            style = {{borderRadius:"50px", margin: ".5rem 0"}}
+          >
+          <div
+          style = {{display:"flex", width:"100%"}}
+          >
+          <PersonSearchIcon onClick = {()=> setSearchClicked(p => !p)}/>
+          <input placeholder="Search"/>
+          </div>
+          </motion.div>
           <h2
             style={{
               textDecoration: "underline",
@@ -178,16 +198,6 @@ export const RightSideCol = () => {
           >
             Recent Messages
           </h2>
-          <div>
-          <motion.div 
-            initial = {{width:"0%"}}
-            animate={clak ? "alert": "noAlert"}
-            variants={variants}
-            style = {{borderStyle:"solid"}}
-          >
-          <PersonSearchIcon onClick = {()=> setClak(p => !p)}/>
-          </motion.div>
-          </div>
         </div>
         <div className="recent_message_avatars">
           {recentMessages &&
@@ -200,6 +210,7 @@ export const RightSideCol = () => {
                   height: "100%",
                   marginBottom: "10px",
                 }}
+                className = "jewjew"
               >
                 <div
                   className="profile_image_name_container"
