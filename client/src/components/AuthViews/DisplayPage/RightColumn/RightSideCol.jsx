@@ -5,7 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import ChatIcon from "@mui/icons-material/Chat";
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import FireplaceIcon from '@mui/icons-material/Fireplace';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 import { accountContext } from "../../../Contexts/appContext";
 import { IndividualChats } from "../../ChatViews/IndividualChat";
 import { useNavigate } from "react-router-dom";
@@ -94,7 +94,7 @@ export const RightSideCol = () => {
     <div className="right_column_wrapper">
       <EventCalendar />
       <div className="popular_container">
-        <div style = {{display:"flex", alignItems:"center"}}>
+        <div style = {{display:"flex", alignItems:"flex-start"}}>
         <h2
           style={{
             marginBottom: "10px",
@@ -105,7 +105,7 @@ export const RightSideCol = () => {
         >
           Biggest Events Today
         </h2>
-        <FireplaceIcon sx = {{fontSize:"3rem", color:"orangered"}}/>
+        <WhatshotIcon sx = {{fontSize:"3rem", color:"orangered"}}/>
         </div>
         {popularPosts.map((post, i) => (
           <motion.div
@@ -180,10 +180,13 @@ export const RightSideCol = () => {
               transition:{duration: .75 }}
             }
             variants={variants}
-            style = {{borderRadius:"50px", margin: ".5rem 0"}}
+            style = {{borderRadius:"50px", margin: ".5rem 0",             boxShadow: "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px"}}
           >
           <div
-          style = {{display:"flex", width:"100%"}}
+          style = {{
+            display:"flex", 
+            width:"100%",
+          }}
           >
           <PersonSearchIcon onClick = {()=> setSearchClicked(p => !p)}/>
           <input placeholder="Search"/>
@@ -210,7 +213,7 @@ export const RightSideCol = () => {
                   height: "100%",
                   marginBottom: "10px",
                 }}
-                className = "jewjew"
+                className = "chat_user_bar"
               >
                 <div
                   className="profile_image_name_container"
