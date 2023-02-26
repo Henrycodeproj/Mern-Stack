@@ -84,7 +84,7 @@
     display:flex;
     justify-content: space-between;
 }
-.jewjew:hover {
+.chat_user_bar:hover {
     background: rgba(180, 180, 180, 0.338) !important;
     border-radius: 50px;
 }
