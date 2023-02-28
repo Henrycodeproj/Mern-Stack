@@ -30,7 +30,6 @@ export const TextAreaEmojis = ({
       <motion.div
         style={{ display: "flex", alignItems: "center" }}
         onClick={handleClick}
-        whileHover={{ scale: 1.1 }}
       >
         <SentimentSatisfiedAltIcon
           className="emoji_select"

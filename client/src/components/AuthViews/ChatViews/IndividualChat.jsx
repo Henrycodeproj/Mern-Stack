@@ -35,7 +35,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     const data = {
         chatId:convoId,
-        message:message,
+        message: textAreaRef.current.value ? textAreaRef.current.value : '',
         senderId:user.id,
         recipientId:recievingUserInfo._id
     }
@@ -122,15 +122,16 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     };
     
     const handleReplyEnter = (event) =>{
+        console.log(textAreaRef.current.value, 'text area')
         if (event.key === "Enter") {
             event.preventDefault()
-            if (message){
-                textAreaRef.current.value = ''
+            if (textAreaRef.current.value){
                 sendChatMessage(data)
                 socket.emit("sendUserId", data)
                 setChatHistory(newMessage => [...newMessage, data])
                 setMessage("")
                 setOwnMessage(true)
+                textAreaRef.current.value = ''
             }
         }
     }
@@ -255,7 +256,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                             placeholder='Reply'
                             minRows = {1}
                             maxRows = {5}
-                            onChange={e => setMessage(e.target.value)}
+                            //onChange={e => setMessage(e.target.value)}
                             onKeyDown = {e => handleReplyEnter(e)}
                             ref = {textAreaRef}
                             />

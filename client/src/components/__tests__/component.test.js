@@ -1,3 +1,6 @@
-test('testing react components', ()=> {
-    expect(true).toBe(true)
+import {render, screen, cleanup } from "@testing-library/react"
+import { Truncating } from "../ReusablesComponents/Truncating"
+
+test('should render truncating component', () => {
+    render(<Truncating/>)
 })

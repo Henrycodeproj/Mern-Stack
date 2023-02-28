@@ -119,7 +119,7 @@ export const Posting = ({ lastPostIndex, setLastPostIndex }) => {
                   label="What time and day?"
                   type="datetime-local"
                   defaultValue={`${formatDate(currentDate)}`}
-                  sx={{ width: 250 }}
+                  sx={{ minWidth: 250 }}
                   InputLabelProps={{
                     shrink: true,
                   }}

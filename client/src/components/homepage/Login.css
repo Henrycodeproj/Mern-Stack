@@ -1,5 +1,11 @@
 .login_input {
     color:white;
+    background:none;
+    border-style: none;
+    font-size:30px;
+    caret-color: white;
+    height:25px;
+    width:100%;
   }
   .login_input::placeholder{
     color:rgb(199, 199, 199);
