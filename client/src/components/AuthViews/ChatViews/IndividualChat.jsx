@@ -15,6 +15,7 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import { motion } from "framer-motion";
 
 export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
+
     const {user, socket} = useContext(accountContext)
 
     const [chatAnchor, setChatAnchor] = useState(false);
@@ -35,10 +36,11 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     const data = {
         chatId:convoId,
-        message: textAreaRef.current.value ? textAreaRef.current.value : '',
-        senderId:user.id,
-        recipientId:recievingUserInfo._id
+        message: message,
+        senderId: user.id,
+        recipientId: recievingUserInfo._id
     }
+    
     useEffect(()=> {
         socket.on(`${convoId}`, recievedMessageData => {
             console.log(recievedMessageData)
@@ -82,7 +84,9 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     //scrolls to bottom when you type own message
     useEffect(()=>{
-        if (chatContainer.current) chatContainer.current.scrollIntoView({behavior: "smooth"})
+        console.log("caller")
+        if (chatContainer.current) 
+            chatContainer.current.scrollIntoView({behavior: "smooth"})
         setOwnMessage(false)
     }, [ownMessage])
     
@@ -125,7 +129,8 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         console.log(textAreaRef.current.value, 'text area')
         if (event.key === "Enter") {
             event.preventDefault()
-            if (textAreaRef.current.value){
+            if (message){
+                console.log(data)
                 sendChatMessage(data)
                 socket.emit("sendUserId", data)
                 setChatHistory(newMessage => [...newMessage, data])
@@ -256,9 +261,10 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                             placeholder='Reply'
                             minRows = {1}
                             maxRows = {5}
-                            //onChange={e => setMessage(e.target.value)}
+                            onChange={(e) => setMessage(e.target.value)}
                             onKeyDown = {e => handleReplyEnter(e)}
                             ref = {textAreaRef}
+                            
                             />
                             <TextAreaEmojis
                             input = {textAreaRef.current}
