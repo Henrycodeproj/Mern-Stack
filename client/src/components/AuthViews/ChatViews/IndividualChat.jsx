@@ -36,11 +36,11 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     const data = {
         chatId:convoId,
-        message: message,
+        message: textAreaRef.current ? textAreaRef.current.value : '',
         senderId: user.id,
         recipientId: recievingUserInfo._id
     }
-    
+
     useEffect(()=> {
         socket.on(`${convoId}`, recievedMessageData => {
             console.log(recievedMessageData)
@@ -129,7 +129,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         console.log(textAreaRef.current.value, 'text area')
         if (event.key === "Enter") {
             event.preventDefault()
-            if (message){
+            if (textAreaRef.current.value){
                 console.log(data)
                 sendChatMessage(data)
                 socket.emit("sendUserId", data)
@@ -143,12 +143,12 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     
     const handleReplySubmit = (event) =>{
         if (message){
-            textAreaRef.current.value = ''
             sendChatMessage(data)
             socket.emit("sendUserId", data)
             setChatHistory(newMessage => [...newMessage, data])
             setMessage("")
             setOwnMessage(true)
+            textAreaRef.current.value = ''
         }
     }
     
@@ -256,7 +256,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                 <div>
                     <div style = {{display:"flex", justifyContent:"flex-end", alignItems:"center", gap:"10px", padding:"5px"}}>
                         <div style ={{display:"flex", justifyContent:"space-between", alignItems:"center", background:"rgba(128, 128, 128, 0.30)", borderRadius:"20px", maxWidth:"90%",padding:"5px",flexGrow:1}}>
-                            <TextareaAutosize
+                            <textarea
                             className='input_messages' 
                             placeholder='Reply'
                             minRows = {1}
@@ -264,7 +264,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyDown = {e => handleReplyEnter(e)}
                             ref = {textAreaRef}
-                            
                             />
                             <TextAreaEmojis
                             input = {textAreaRef.current}
@@ -285,3 +284,4 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     </>
   )
 }
+

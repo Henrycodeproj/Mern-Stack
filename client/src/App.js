@@ -12,6 +12,7 @@ import { Display } from './components/AuthViews/DisplayPage/Display';
 import { NotFound } from "./components/config/NotFound";
 import { AdminPage } from "./components/Admin/AdminConfig.jsx"
 import { NavWrapper } from './components/config/NavWrapper';
+import Testarea from './components/Testarea';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Routes>
            <Route element = {<NavWrapper/>}> 
             <Route path="/" element ={<Signup/>}/>
+            <Route path="/testing" element ={<Testarea/>}/>
             <Route path="/admin/*" element ={<AdminPage/>}/>
             <Route element = {<UserAuthentication/>}>
                 <Route path="/display" element = {<Display/>}/>

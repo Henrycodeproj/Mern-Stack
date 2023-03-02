@@ -44,7 +44,6 @@
     word-wrap: break-word;
     font-size: 1.2rem;
     width:100%;
-    height:100%;
 }
 .input_messages::placeholder{
     color:rgba(0, 0, 0, 0.607);
