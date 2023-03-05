@@ -9,10 +9,10 @@ import Badge from '@mui/material/Badge';
 import "./IndividualChat.css"
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import SendIcon from '@mui/icons-material/Send';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { TextAreaEmojis } from '../../ReusablesComponents/TextAreaEmojis';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import { motion } from "framer-motion";
+import TextareaAutosize from 'react-textarea-autosize';
 
 export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
@@ -256,10 +256,10 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                 <div>
                     <div style = {{display:"flex", justifyContent:"flex-end", alignItems:"center", gap:"10px", padding:"5px"}}>
                         <div style ={{display:"flex", justifyContent:"space-between", alignItems:"center", background:"rgba(128, 128, 128, 0.30)", borderRadius:"20px", maxWidth:"90%",padding:"5px",flexGrow:1}}>
-                            <textarea
+                            <TextareaAutosize
                             className='input_messages' 
                             placeholder='Reply'
-                            minRows = {1}
+                            //minRows = {1}
                             maxRows = {5}
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyDown = {e => handleReplyEnter(e)}
@@ -274,7 +274,14 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                             />
                         </div>
                     <div>
-                    <SendIcon sx ={{fontSize:"25px", cursor:"pointer"}} onClick = { e => handleReplySubmit(e)}/>
+                    <motion.div
+                    whileHover={{
+                        transition:{repeat: Infinity, duration: 1},
+                        opacity:[.5,0]
+                    }}
+                    >
+                        <SendIcon sx ={{fontSize:"25px", cursor:"pointer"}} onClick = { e => handleReplySubmit(e)}/>
+                    </motion.div>
                     </div>
                     </div>
                 </div>
@@ -284,4 +291,3 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     </>
   )
 }
-
