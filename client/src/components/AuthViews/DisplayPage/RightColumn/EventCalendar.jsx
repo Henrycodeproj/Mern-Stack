@@ -73,7 +73,7 @@ export const EventCalendar = () => {
             views={view}
             onSelectEvent={handleSelectEvent}
             className = "event_calendar"
-            messages={{ MyEvents: 'MyEvents' }}
+            messages={{ MyEvents: 'MyEvents', day:'Daily Events' }}
           />
           <EventViewer open={open} setOpen={setOpen} event={focusedEvent} />
         </div>
