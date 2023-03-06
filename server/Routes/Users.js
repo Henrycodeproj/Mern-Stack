@@ -197,3 +197,12 @@ router.post("/update/activity", isAuthenticated, async (req, res) => {
     console.log(error);
   }
 });
+
+router.post("/chat/search/", isAuthenticated, async (req, res) => {
+  const { query } = req.body.words
+  try {
+    UserModel.find({username: query})
+  } catch (error) {
+    console.log(error)
+  }
+})

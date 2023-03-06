@@ -59,6 +59,11 @@ export const RightSideCol = () => {
     };
   }, []);
 
+  //need to create search function for messages
+  function handleChatSearch(){
+    
+  }
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -189,7 +194,9 @@ export const RightSideCol = () => {
           }}
           >
           <PersonSearchIcon onClick = {()=> setSearchClicked(p => !p)}/>
-          <input placeholder="Search"/>
+          <input placeholder="Search"
+          
+          />
           </div>
           </motion.div>
           <h2
