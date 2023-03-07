@@ -4,14 +4,14 @@ import "./RightSideCol.css";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import ChatIcon from "@mui/icons-material/Chat";
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
 import { accountContext } from "../../../Contexts/appContext";
 import { IndividualChats } from "../../ChatViews/IndividualChat";
 import { useNavigate } from "react-router-dom";
 import { EventCalendar } from "./EventCalendar";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { ChatSearchModal } from "./ChatSearchModal";
 
 export const RightSideCol = () => {
   const newMessageCheck = useRef();
@@ -22,6 +22,8 @@ export const RightSideCol = () => {
 
   const [popularPosts, setPopularPosts] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [totalUsers, setTotalUsers] = useState([]);
+  const [searchText, setSearchText] = useState(false)
 
   useEffect(() => {
     const url = "http://localhost:3001/posts/popular";
@@ -60,9 +62,17 @@ export const RightSideCol = () => {
   }, []);
 
   //need to create search function for messages
-  function handleChatSearch(){
-    
-  }
+  useEffect(() => {
+    const url = "http://localhost:3001/user/chat/search/";
+    axios
+      .get(url, {
+        headers: {
+          authorization: localStorage.getItem("Token"),
+        },
+      })
+      .then((res) => setTotalUsers(res.data))
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -81,124 +91,89 @@ export const RightSideCol = () => {
   };
 
   const open = Boolean(anchorEl);
-  const variants = {
-    alert: { 
-      width:["0%","100%"],
-      borderStyle:"solid",
-      transition:{duration: .75 }
-     },
-      
-    noAlert: {
-      x:"0%"
-    },
-  }
-  
-  const [searchClicked, setSearchClicked] = useState(false)
 
   return (
     <div className="right_column_wrapper">
       <EventCalendar />
       <div className="popular_container">
-        <div style = {{display:"flex", alignItems:"flex-start"}}>
-        <h2
-          style={{
-            marginBottom: "10px",
-            textDecoration: "underline",
-            fontSize: "1.6rem",
-            fontWeight: "900",
-          }}
-        >
-          Biggest Events Today
-        </h2>
-        <WhatshotIcon sx = {{fontSize:"3rem", color:"orangered"}}/>
+        <div style={{ display: "flex", alignItems: "flex-start" }}>
+          <h2
+            style={{
+              marginBottom: "10px",
+              textDecoration: "underline",
+              fontSize: "1.6rem",
+              fontWeight: "900",
+            }}
+          >
+            Biggest Events Today
+          </h2>
+          <WhatshotIcon sx={{ fontSize: "3rem", color: "orangered" }} />
         </div>
         {popularPosts.map((post, i) => (
           <motion.div
-          initial = {{ x:-40, opacity: 0 }}
-          animate = {{ x:0, opacity: 1 }}
-          transition={{delay: i * 0.15, duration:.5}}
+            initial={{ x: -40, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: i * 0.15, duration: 0.5 }}
           >
-            <motion.div
-            whileHover={{scale:1.05, x:-2}}
-            key = {post._id}
-            >
-            <div className="popular_post_container">
-              <div style={{ display: "flex" }}>
-                <Avatar
-                  sx={{ marginRight: "10px", cursor: "pointer" }}
-                  src={`https://ucarecdn.com/${post.original_poster[0].profilePicture}/`}
-                  onClick={() =>
-                    navigateTo(`/profile/${post.original_poster[0]._id}`)
-                  }
-                />
-                <div style={{ overflowWrap: "anywhere" }}>
-                  <h3
-                    style={{
-                      textTransform: "capitalize",
-                      color: "black",
-                      margin: 0,
-                      fontWeight: "600",
-                      cursor:"pointer"
-                    }}
+            <motion.div whileHover={{ scale: 1.05, x: -2 }} key={post._id}>
+              <div className="popular_post_container">
+                <div style={{ display: "flex" }}>
+                  <Avatar
+                    sx={{ marginRight: "10px", cursor: "pointer" }}
+                    src={`https://ucarecdn.com/${post.original_poster[0].profilePicture}/`}
                     onClick={() =>
                       navigateTo(`/profile/${post.original_poster[0]._id}`)
                     }
-                  >
-                    {post.original_poster[0].username}
-                  </h3>
-                  {post.Description.length >= 50 ? (
-                    <div>
-                      {post.Description.substring(0, 50)}
-                      <span style={{ cursor: "pointer" }} onClick={handleClick}>
-                        ...
-                      </span>
-                    </div>
-                  ) : (
-                    <p>{post.Description.substring(0, 50)}</p>
-                  )}
+                  />
+                  <div style={{ overflowWrap: "anywhere" }}>
+                    <h3
+                      style={{
+                        textTransform: "capitalize",
+                        color: "black",
+                        margin: 0,
+                        fontWeight: "600",
+                        cursor: "pointer",
+                      }}
+                      onClick={() =>
+                        navigateTo(`/profile/${post.original_poster[0]._id}`)
+                      }
+                    >
+                      {post.original_poster[0].username}
+                    </h3>
+                    {post.Description.length >= 50 ? (
+                      <div>
+                        {post.Description.substring(0, 50)}
+                        <span
+                          style={{ cursor: "pointer" }}
+                          onClick={handleClick}
+                        >
+                          ...
+                        </span>
+                      </div>
+                    ) : (
+                      <p>{post.Description.substring(0, 50)}</p>
+                    )}
+                  </div>
                 </div>
+                <Avatar
+                  onClick={handleClick}
+                  sx={{
+                    background: "rgba(80, 80, 80, 0.4)",
+                    borderStyle: "solid",
+                    width: "35px",
+                    height: "35px",
+                  }}
+                >
+                  +{post.attendingLength}
+                </Avatar>
               </div>
-              <Avatar
-                onClick={handleClick}
-                sx={{
-                  background: "rgba(80, 80, 80, 0.4)",
-                  borderStyle: "solid",
-                  width: "35px",
-                  height: "35px",
-                }}
-              >
-                +{post.attendingLength}
-              </Avatar>
-            </div>
             </motion.div>
           </motion.div>
         ))}
       </div>
       <div className="recent_message_container">
         <div className="recent_message_title">
-        <motion.div 
-            initial = {{width:"100%"}}
-            //animate={searchClicked ? "alert": "noAlert"}
-            animate = {{
-              width:["0%","100%"],
-              borderStyle:"solid",
-              transition:{duration: .75 }}
-            }
-            variants={variants}
-            style = {{borderRadius:"50px", margin: ".5rem 0",             boxShadow: "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px"}}
-          >
-          <div
-          style = {{
-            display:"flex", 
-            width:"100%",
-          }}
-          >
-          <PersonSearchIcon onClick = {()=> setSearchClicked(p => !p)}/>
-          <input placeholder="Search"
-          
-          />
-          </div>
-          </motion.div>
+        <ChatSearchModal totalUsers = {totalUsers}/>
           <h2
             style={{
               textDecoration: "underline",
@@ -220,7 +195,7 @@ export const RightSideCol = () => {
                   height: "100%",
                   marginBottom: "10px",
                 }}
-                className = "chat_user_bar"
+                className="chat_user_bar"
               >
                 <div
                   className="profile_image_name_container"

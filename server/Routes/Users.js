@@ -198,10 +198,17 @@ router.post("/update/activity", isAuthenticated, async (req, res) => {
   }
 });
 
-router.post("/chat/search/", isAuthenticated, async (req, res) => {
-  const { query } = req.body.words
+router.get("/chat/search/", isAuthenticated, async (req, res) => {
+
   try {
-    UserModel.find({username: query})
+    const response = await UserModel.find({}, 'username email profilePicture')
+    //.populate("attendId", [
+    //  "username",
+    //  "email",
+    //  "createdAt",
+    //  "profilePicture",
+    //])
+    res.send(response)
   } catch (error) {
     console.log(error)
   }
