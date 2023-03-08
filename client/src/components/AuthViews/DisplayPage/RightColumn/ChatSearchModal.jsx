@@ -81,7 +81,13 @@ export const ChatSearchModal = ({totalUsers}) => {
         </motion.div>
         <Popper id={id} open={open} anchorEl={anchorEl}>
         <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-          {filterSearchResults().map((results) => <div>{results.username}</div>)}
+          {filterSearchResults().map((results) => 
+          <div>
+            {results.username}
+            <img src={`https://ucarecdn.com/${results.profilePicture}/`} alt="" />
+          </div>
+          )
+          }
         </Box>
       </Popper>
     </>
