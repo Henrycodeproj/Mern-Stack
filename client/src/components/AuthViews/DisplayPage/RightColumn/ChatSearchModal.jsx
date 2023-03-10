@@ -2,6 +2,7 @@ import React from "react";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Popper from "@mui/material/Popper";
 import Avatar from "@mui/material/Avatar";
@@ -11,6 +12,8 @@ import "./ChatSearchModal.css";
 export const ChatSearchModal = ({ totalUsers }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState("");
+
+  const navigateTo = useNavigate()
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -102,8 +105,10 @@ export const ChatSearchModal = ({ totalUsers }) => {
                 gap: "5px",
                 alignItems: "center",
                 padding: "5px",
+                cursor:"pointer"
               }}
               className = "users_search_container"
+              onClick={() => navigateTo(`/profile/${results._id}`)}
             >
               <Avatar src={`https://ucarecdn.com/${results.profilePicture}/`} />
               <div
@@ -115,7 +120,7 @@ export const ChatSearchModal = ({ totalUsers }) => {
                 }}
               >
                 <h4 style={{}}>{results.username}</h4>
-                <ForwardToInboxIcon />
+                <ForwardToInboxIcon className = "chat_message_inbox"/>
               </div>
             </div>
           ))}
