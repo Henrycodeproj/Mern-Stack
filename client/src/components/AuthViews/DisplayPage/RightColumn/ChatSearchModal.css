@@ -14,3 +14,7 @@
     background: rgba(163, 161, 161, 0.454);
     border-radius: 5px;
 }
+.chat_message_inbox:hover {
+    background: white;
+    border-radius: 50%;
+}
