@@ -37,6 +37,8 @@
     padding: 5px 10px;
     background-color: #edacf8d3;
     font-weight: 500;
+    overflow-wrap: break-word;
+    max-width: 80%;
 }
 .input_messages{
     caret-color: gray;
@@ -79,6 +81,9 @@
 .chat-icon:hover {
     background: white;
     border-radius: 50%;
+}
+.css-106c1u2-MuiBadge-badge {
+    z-index: 0 !important;
 }
 @keyframes shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }

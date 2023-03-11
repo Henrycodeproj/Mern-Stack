@@ -181,8 +181,10 @@ io.on("connection", (socket) => {
     const { user, post } = data;
     socket.broadcast.emit("removeLike", { user: user, post: post });
   });
+
   // new chats socket handler
   socket.on("messages", (newChatInfo) => {
+    console.log(newChatInfo, 'chat info')
     const newMessage = {
       _id: newChatInfo.chatId,
       recieverInfo: [

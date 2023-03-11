@@ -8,12 +8,13 @@ import Popper from "@mui/material/Popper";
 import Avatar from "@mui/material/Avatar";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import "./ChatSearchModal.css";
+import { SendMessage } from "../../../ReusablesComponents/SendMessage";
 
 export const ChatSearchModal = ({ totalUsers }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState("");
 
-  const navigateTo = useNavigate()
+  const navigateTo = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -39,16 +40,21 @@ export const ChatSearchModal = ({ totalUsers }) => {
   };
 
   function handleChatSearch(event) {
-    const f = filterSearchResults();
+    const checkResults = totalUsers.filter((user) =>
+      user.username.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+
     setSearchText(event.target.value);
-    if (event.target.value.length > 0) setAnchorEl(event.currentTarget);
+    if (event.target.value.length > 0 && checkResults.length > 0)
+      setAnchorEl(event.currentTarget);
     else setAnchorEl(null);
   }
+
   function filterSearchResults() {
     const filteredResults = totalUsers.filter((user) =>
       user.username.toLowerCase().includes(searchText.toLowerCase())
     );
-    console.log(filteredResults, "function filter");
+    
     return filteredResults;
   }
 
@@ -95,9 +101,6 @@ export const ChatSearchModal = ({ totalUsers }) => {
             borderRadius: "10px",
           }}
         >
-          <h1 style={{ textDecoration: "underline", padding: "5px 10px", marginBottom:"10px" }}>
-            Search Results
-          </h1>
           {filterSearchResults().map((results) => (
             <div
               style={{
@@ -105,10 +108,9 @@ export const ChatSearchModal = ({ totalUsers }) => {
                 gap: "5px",
                 alignItems: "center",
                 padding: "5px",
-                cursor:"pointer"
+                cursor: "pointer",
               }}
-              className = "users_search_container"
-              onClick={() => navigateTo(`/profile/${results._id}`)}
+              className="users_search_container"
             >
               <Avatar src={`https://ucarecdn.com/${results.profilePicture}/`} />
               <div
@@ -118,10 +120,16 @@ export const ChatSearchModal = ({ totalUsers }) => {
                   alignItems: "center",
                   justifyContent: "space-between",
                 }}
+                onClick={() => navigateTo(`/profile/${results._id}`)}
               >
-                <h4 style={{}}>{results.username}</h4>
-                <ForwardToInboxIcon className = "chat_message_inbox"/>
+                <h4
+                  style={{ marginLeft: "10px" }}
+                  onClick={() => navigateTo(`/profile/${results._id}`)}
+                >
+                  {results.username}
+                </h4>
               </div>
+              <SendMessage post={results} />
             </div>
           ))}
         </Box>
