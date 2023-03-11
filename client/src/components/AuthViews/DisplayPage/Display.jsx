@@ -11,7 +11,7 @@ import ScheduleIcon from "@mui/icons-material/Schedule";
 import { RightSideCol } from "./RightColumn/RightSideCol";
 import { MoreOptions } from "../Posts/MoreOptions";
 import { Truncating } from "../../ReusablesComponents/Truncating.jsx";
-import { SendMessage } from "../Posts/SendMessage";
+import { SendMessage } from "../../ReusablesComponents/SendMessage";
 import { LoadingCircle } from "../../ReusablesComponents/LoadingCircle";
 import { motion } from "framer-motion";
 import { useState, useEffect, useContext, useRef } from "react";
@@ -40,12 +40,12 @@ export const Display = () => {
 
   const [loadingState, setLoadingState] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [likeLoading, setLikeLoading] = useState(false)
+  const [likeLoading, setLikeLoading] = useState(false);
 
   const navigateTo = useNavigate();
 
-  const ref = useRef()
-  ref.current = posts
+  const ref = useRef();
+  ref.current = posts;
 
   useEffect(() => {
     const getUserNotifications = async () => {
@@ -92,7 +92,7 @@ export const Display = () => {
   //info contains user info and post id
   useEffect(() => {
     socket.on("likedpost", (info) => {
-      liveLikeHandler(info)
+      liveLikeHandler(info);
     });
     return () => {
       socket.removeListener("likedpost");
@@ -101,7 +101,7 @@ export const Display = () => {
 
   useEffect(() => {
     socket.on("removeLike", (newLike) => {
-      removeAttendHandler(newLike)
+      removeAttendHandler(newLike);
     });
     return () => {
       socket.removeListener("removeUser");
@@ -148,44 +148,47 @@ export const Display = () => {
     }
   };
 
-  function liveLikeHandler(info){
-    const index = ref.current.map(element => element._id).indexOf(info.post)
-    ref.current[index].attending.push(info.user)
-    setPosts([...ref.current])
-    setLikeLoading(false)
+  function liveLikeHandler(info) {
+    const index = ref.current.map((element) => element._id).indexOf(info.post);
+    ref.current[index].attending.push(info.user);
+    setPosts([...ref.current]);
+    setLikeLoading(false);
   }
 
-  function removeAttendHandler(info){
-    const index = ref.current.map(element => element._id).indexOf(info.post)
-    ref.current[index].attending = ref.current[index].attending.filter(element => element._id !== info.user._id)
-    setPosts([...ref.current])
-    setUnreadNotifications(notifications => notifications > 0 ? notifications - 1 : 0)
+  function removeAttendHandler(info) {
+    const index = ref.current.map((element) => element._id).indexOf(info.post);
+    ref.current[index].attending = ref.current[index].attending.filter(
+      (element) => element._id !== info.user._id
+    );
+    setPosts([...ref.current]);
+    setUnreadNotifications((notifications) =>
+      notifications > 0 ? notifications - 1 : 0
+    );
   }
 
   const likeHandler = async (post) => {
-    setLikeLoading(true)
-    const data = { 
-      user: user.id, 
-      posterId: post.posterId._id, 
-      postID:post._id 
+    setLikeLoading(true);
+    const data = {
+      user: user.id,
+      posterId: post.posterId._id,
+      postID: post._id,
     };
     const URL = `http://localhost:3001/posts/like/${post._id}`;
-    const response = await axios
-      .patch(URL, data, {
-        headers: {
-          authorization: localStorage.getItem("Token"),
-        },
-      })
+    const response = await axios.patch(URL, data, {
+      headers: {
+        authorization: localStorage.getItem("Token"),
+      },
+    });
     if (response) {
       socket.emit("notification", {
         postID: post._id,
         posterID: post.posterId._id,
         currentUser: user.id,
         user: {
-          _id:user.id, 
-          username:user.username, 
-          profilePicture:user.profilePicture 
-        }
+          _id: user.id,
+          username: user.username,
+          profilePicture: user.profilePicture,
+        },
       });
     }
   };
@@ -193,19 +196,22 @@ export const Display = () => {
   const unlikeHandler = async (post) => {
     const data = { user: user.id };
     const URL = `http://localhost:3001/posts/unlike/${post._id}`;
-    const response = await axios
-      .patch(URL, data, {
-        headers: {
-          authorization: localStorage.getItem("Token"),
+    const response = await axios.patch(URL, data, {
+      headers: {
+        authorization: localStorage.getItem("Token"),
+      },
+    });
+    console.log(response);
+    if (response) {
+      socket.emit("removeUser", {
+        user: {
+          _id: user.id,
+          username: user.username,
+          profilePicture: user.profilePicture,
         },
-      })
-      console.log(response)
-      if (response) {
-        socket.emit("removeUser", {
-          user: {_id:user.id, username:user.username, profilePicture:user.profilePicture },
-          post : post._id
-        })
-      }
+        post: post._id,
+      });
+    }
   };
 
   const handlePastHours = (time) => {
@@ -222,7 +228,6 @@ export const Display = () => {
   };
 
   if (posts === null) return <LoadingCircle loadingState={loadingState} />;
-
 
   return (
     <div className="display_container">
@@ -304,7 +309,7 @@ export const Display = () => {
                         </div>
                         <div style={{ display: "flex" }}>
                           {post.posterId._id !== user.id ? (
-                            <SendMessage post={post} />
+                            <SendMessage post={post.posterId} />
                           ) : null}
                           <MoreOptions post={post} />
                         </div>
@@ -373,7 +378,9 @@ export const Display = () => {
                               >
                                 <VolunteerActivismIcon
                                   className="heart_button_outline"
-                                  onClick={() => likeLoading ? null : likeHandler(post)}
+                                  onClick={() =>
+                                    likeLoading ? null : likeHandler(post)
+                                  }
                                   style={{ cursor: "pointer" }}
                                 />
                               </Tooltip>
