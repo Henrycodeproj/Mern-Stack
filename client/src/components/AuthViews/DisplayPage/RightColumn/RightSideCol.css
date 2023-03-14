@@ -85,7 +85,7 @@
     justify-content: space-between;
 }
 .chat_user_bar:hover {
-    background: rgba(180, 180, 180, 0.338) !important;
+    background: rgba(155, 154, 154, 0.333) !important;
     border-radius: 50px;
 }
 @keyframes online-pulse {

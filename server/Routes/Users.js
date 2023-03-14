@@ -199,15 +199,14 @@ router.post("/update/activity", isAuthenticated, async (req, res) => {
 });
 
 router.get("/chat/search/", isAuthenticated, async (req, res) => {
-
   try {
-    const response = await UserModel.find({}, 'username email profilePicture')
-    //.populate("attendId", [
-    //  "username",
-    //  "email",
-    //  "createdAt",
-    //  "profilePicture",
-    //])
+    const response = await UserModel.find(
+      {
+        _id: {$ne: req.results.id}
+      },
+       'username email profilePicture'
+    )
+    console.log(response)
     res.send(response)
   } catch (error) {
     console.log(error)

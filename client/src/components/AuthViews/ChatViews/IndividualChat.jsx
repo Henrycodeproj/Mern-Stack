@@ -16,7 +16,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
-    const {user, socket} = useContext(accountContext)
+    const {user, socket, activeUsers } = useContext(accountContext)
 
     const [chatAnchor, setChatAnchor] = useState(false);
     const [chatHistory, setChatHistory] = useState([])
@@ -198,9 +198,12 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             <> 
             <div className='chat_box_wrapper'>
                 <div style = {{display:"flex", gap:"10px", alignItems:"center"}}>
+                <div>
                 <Avatar src ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOCLcCD0l0PpNGuRAmtNh47ovGB3c_a59DPQ&usqp=CAU"
                 sx ={{width:"30px", height:"30px"}}
                 />
+                {recievingUserInfo._id in activeUsers && <span className="chat_online"/>}
+                </div>
                 <h2 style ={{fontWeight:"600"}}>{recievingUserInfo.username.charAt(0).toUpperCase() + recievingUserInfo.username.slice(1)}</h2>
                 </div>
                 <div style ={{display:"flex", flexDirection:"row"}}> 

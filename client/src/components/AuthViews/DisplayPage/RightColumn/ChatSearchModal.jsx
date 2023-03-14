@@ -13,6 +13,7 @@ import { SendMessage } from "../../../ReusablesComponents/SendMessage";
 export const ChatSearchModal = ({ totalUsers }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState("");
+  console.log(totalUsers, 'total user')
 
   const navigateTo = useNavigate();
 
@@ -129,7 +130,7 @@ export const ChatSearchModal = ({ totalUsers }) => {
                   {results.username}
                 </h4>
               </div>
-              <SendMessage post={results} />
+              <SendMessage userInformation ={results} />
             </div>
           ))}
         </Box>

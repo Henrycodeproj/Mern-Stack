@@ -13,7 +13,7 @@ import axios from "axios";
 import { TextAreaEmojis } from "./TextAreaEmojis";
 import { motion } from "framer-motion";
 
-export const SendMessage = ({ post }) => {
+export const SendMessage = ({ userInformation }) => {
   const { user, setRecentMessages, socket, recentMessages } =
     useContext(accountContext);
   const [sendMessageOpen, setSendMessageOpen] = useState(false);
@@ -23,12 +23,12 @@ export const SendMessage = ({ post }) => {
 
   const ref = useRef();
 
-  console.log(recentMessages, 'recent')
+  console.log(userInformation, 'userinfo')
 
   const handleClickOpen = async () => {
     setSendMessageOpen(true);
     const Url = "http://localhost:3001/conversation/create";
-    const data = { user1: user.id, user2: post._id };
+    const data = { user1: user.id, user2: userInformation._id };
     const newConvoId = await axios.post(Url, data, {
       headers: {
         authorization: localStorage.getItem("Token"),
@@ -72,8 +72,8 @@ export const SendMessage = ({ post }) => {
       message: message,
       senderId: user.id,
       senderUsername: user.username,
-      recipientId: post._id,
-      recipientUsername: post.username,
+      recipientId: userInformation._id,
+      recipientUsername: userInformation.username,
     };
     const res = await axios.post(Url, data, {
       headers: {
@@ -96,7 +96,7 @@ export const SendMessage = ({ post }) => {
       >
         <Tooltip
           title={`Send ${
-            post.username.charAt(0).toUpperCase() + post.username.slice(1)
+            userInformation.username.charAt(0).toUpperCase() + userInformation.username.slice(1)
           } a Message`}
         >
           <SendIcon
@@ -107,7 +107,6 @@ export const SendMessage = ({ post }) => {
               color: "rgb(68, 68, 68)",
               cursor: "pointer",
               transform: "rotate(-20deg)",
-              //marginRight: "5px",
             }}
           />
         </Tooltip>
@@ -125,7 +124,7 @@ export const SendMessage = ({ post }) => {
               borderWidth: ".5px",
             }}
           >
-            To: {post.username.charAt(0).toUpperCase() + post.username.slice(1)}
+            To: {userInformation.username.charAt(0).toUpperCase() + userInformation.username.slice(1)}
           </div>
         </DialogTitle>
         <DialogContent>
@@ -133,7 +132,7 @@ export const SendMessage = ({ post }) => {
           <TextareaAutosize
             aria-label="empty textarea"
             placeholder="Write your message here"
-            style={{ maxWidth: "300px", height: "auto" }}
+            style={{ width:"100%", height: "auto" }}
             minRows={10}
             onChange={(e) => setMessage(e.target.value)}
             ref={ref}
