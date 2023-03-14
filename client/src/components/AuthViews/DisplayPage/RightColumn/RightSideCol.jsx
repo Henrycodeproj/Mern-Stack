@@ -23,7 +23,6 @@ export const RightSideCol = () => {
   const [popularPosts, setPopularPosts] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [totalUsers, setTotalUsers] = useState([]);
-  const [searchText, setSearchText] = useState(false)
 
   useEffect(() => {
     const url = "http://localhost:3001/posts/popular";
@@ -38,7 +37,8 @@ export const RightSideCol = () => {
       })
       .catch((err) => console.log(err));
   }, []);
-
+  
+  //gets all messages
   useEffect(() => {
     const Url = `http://localhost:3001/message/recent/all/${user.id}`;
     axios
@@ -50,7 +50,7 @@ export const RightSideCol = () => {
       .then((res) => setRecentMessages(res.data.reverse()))
       .catch((err) => console.log(err));
   }, []);
-
+  
   useEffect(() => {
     socket.on(`${user.id}`, (data) => {
       newMessageCheck.current = data;
@@ -61,7 +61,7 @@ export const RightSideCol = () => {
     };
   }, []);
 
-  //need to create search function for messages
+  //gets total users
   useEffect(() => {
     const url = "http://localhost:3001/user/chat/search/";
     axios
