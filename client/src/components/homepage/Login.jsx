@@ -7,6 +7,7 @@ import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import "./Login.css"
+import jwt_decode from "jwt-decode";
 
 export const Login = ({ setOption, option, active, inactive }) => {
   const { 
@@ -39,7 +40,6 @@ export const Login = ({ setOption, option, active, inactive }) => {
     const Url = "http://localhost:3001/login";
     axios
       .post(Url, loginInfo, {
-        //withCredentials:true,
       })
       .then((res) => {
         console.log(res)
@@ -47,11 +47,13 @@ export const Login = ({ setOption, option, active, inactive }) => {
         if (res.data.accessToken) {
           localStorage.setItem("Token", res.data.accessToken);
           localStorage.setItem("userStatus", true);
-          localStorage.setItem("User", JSON.stringify(res.data.user));
-          setUser(JSON.parse(localStorage.getItem("User")));
-          setNotificationID(res.data.user.id);
-          setTime(res.data.user.lastActive);
-          navigateTo("/display");
+          const jwtInfo = jwt_decode(res.data.accessToken)
+          setUser(jwtInfo.user);
+          setNotificationID(jwtInfo.user.id);
+          setTime(jwtInfo.user.lastActive);
+          setTimeout(() => {
+            navigateTo("/display");
+          }, 2000);
         }
       })
       .catch((error) => {
