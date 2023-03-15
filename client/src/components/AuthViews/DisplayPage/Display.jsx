@@ -8,6 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import Attending from "../Posts/Attending";
 import ScheduleIcon from "@mui/icons-material/Schedule";
+import jwt_decode from "jwt-decode";
 import { RightSideCol } from "./RightColumn/RightSideCol";
 import { MoreOptions } from "../Posts/MoreOptions";
 import { Truncating } from "../../ReusablesComponents/Truncating.jsx";
@@ -20,12 +21,14 @@ import { Posting } from "../Posts/Posting.jsx";
 import { accountContext } from "../../Contexts/appContext";
 import { LeftColumn } from "./LeftColumn/LeftSideCol";
 import { handleEventTimeandDate } from "../../Reusable Functions/TimeFunctions.js";
+import jwtDecode from "jwt-decode";
 
 export const Display = () => {
   const {
     posts,
     setPosts,
     user,
+    setUser,
     activeUsers,
     setActiveUsers,
     socket,
@@ -41,6 +44,7 @@ export const Display = () => {
   const [loadingState, setLoadingState] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [likeLoading, setLikeLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState(true)
 
   const navigateTo = useNavigate();
 
@@ -227,7 +231,7 @@ export const Display = () => {
       : Math.trunc(minutes) + " Minutes Ago";
   };
 
-  if (posts === null) return <LoadingCircle loadingState={loadingState} />;
+  if (posts === null || userInfo === false) return <LoadingCircle loadingState={loadingState} />;
 
   return (
     <div className="display_container">

@@ -34,7 +34,14 @@ router.post("/", async (req, res) => {
             username: user.username,
             refreshToken: randomHash,
             id: user.id, 
-            token: token
+            token: token,
+            user: {
+              id: user.id,
+              username: user.username,
+              collegeAffiliation: user.collegeAffiliation,
+              profilePicture: user.profilePicture,
+              lastActive: user.lastActiveDate,
+            }
           },
           process.env.SECRET_SESSION,
           { expiresIn: "1d" }
@@ -43,13 +50,6 @@ router.post("/", async (req, res) => {
         res.status(200).send({
           message: "Logging In...",
           accessToken: accessToken,
-          user: {
-            id: user.id,
-            username: user.username,
-            collegeAffiliation: user.collegeAffiliation,
-            profilePicture: user.profilePicture,
-            lastActive: user.lastActiveDate,
-          },
         });
       });
     } else {

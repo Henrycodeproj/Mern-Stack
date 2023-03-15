@@ -1,7 +1,7 @@
 import {createContext, useState, useEffect} from "react";
 import { useNavigate} from "react-router-dom";
 import io from "socket.io-client"
-import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 export const accountContext = createContext()
 
@@ -18,7 +18,8 @@ export const AppContext = ({children}) =>{
         localStorage.removeItem("User")
         navigateTo("/")
         setOption(false)
-      }
+    }
+    const tokenInfo = localStorage.getItem("Token") ? jwt_decode(localStorage.getItem("Token")) : null
 
     const [option, setOption] = useState(true)
 
@@ -26,7 +27,7 @@ export const AppContext = ({children}) =>{
 
     const [userStatus, setUserStatus] = useState(localStorage.getItem("userStatus"))
 
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")))
+    const [user, setUser] = useState(tokenInfo?.user)
 
     const [posts, setPosts] = useState(null)
     

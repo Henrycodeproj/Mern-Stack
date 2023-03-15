@@ -25,7 +25,7 @@ import Switch from "@mui/material/Switch";
 export const LeftColumn = () => {
   const { user, logoutHandler } = useContext(accountContext);
   const navigateTo = useNavigate();
-  const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
+  //const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
 
   return (
     <div className="side_header">
@@ -39,7 +39,7 @@ export const LeftColumn = () => {
       >
         <Avatar
           sx={{ width: 50, height: 50 }}
-          src={`https://ucarecdn.com/${userInfo.profilePicture}/`}
+          src={`https://ucarecdn.com/${user.profilePicture}/`}
         />
         <span className="leftsidebar_online" />
         <div className="leftside_profile_card_name">
@@ -54,7 +54,7 @@ export const LeftColumn = () => {
               textTransform: "capitalize",
             }}
           >
-            {"@" + userInfo.collegeAffiliation}
+            {"@" + user.collegeAffiliation}
           </h5>
         </div>
       </div>

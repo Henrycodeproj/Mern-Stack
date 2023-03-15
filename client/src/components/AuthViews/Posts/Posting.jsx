@@ -13,7 +13,7 @@ import { format } from "date-fns";
 import { motion } from "framer-motion";
 
 export const Posting = ({ lastPostIndex, setLastPostIndex }) => {
-  const { user, setPosts, user2 } = useContext(accountContext);
+  const { user, setPosts } = useContext(accountContext);
   const ref = useRef();
   const postRef = useRef();
 
@@ -21,7 +21,7 @@ export const Posting = ({ lastPostIndex, setLastPostIndex }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [addEventTime, setAddEventTime] = useState(false);
   const [dateTime, setDateTime] = useState();
-  const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
+  //const [userInfo] = useState(JSON.parse(localStorage.getItem("User")));
 
   const [tester, setTester] = useState(0)
 
@@ -89,7 +89,7 @@ export const Posting = ({ lastPostIndex, setLastPostIndex }) => {
     <div className="add_post_container" ref={postRef}>
       <Avatar
         className="input_picture"
-        src={`https://ucarecdn.com/${userInfo.profilePicture}/`}
+        src={`https://ucarecdn.com/${user.profilePicture}/`}
       />
       <div className="post_form_container">
         <div className="post_form">
