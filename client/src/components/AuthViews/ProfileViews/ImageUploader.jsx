@@ -4,15 +4,18 @@ import axios from "axios"
 import { accountContext } from "../../Contexts/appContext";
 import { useContext } from "react"; 
 
-export const ImageUploader = ({widgetApi, viewedUser, user, setViewedUser}) => {
+export const ImageUploader = ({widgetApi, viewedUser, setViewedUser}) => {
 
-  const {setUser} = useContext(accountContext)
+  const {setUser, user} = useContext(accountContext)
 
   const changeProfileImageHandler = (response) => {
-    const userInfo = JSON.parse(localStorage.getItem("User"))
-    userInfo.profilePicture = response.profilePicture
-    localStorage.setItem("User", JSON.stringify(userInfo))
-    setUser(userInfo)
+    //console.log(response, 'uploaded resposne')
+    //const userInfo = JSON.parse(localStorage.getItem("User"))
+    //user.profilePicture = response.profilePicture
+    //localStorage.setItem("User", JSON.stringify(userInfo))
+    console.log(typeof user, 'user uploader')
+    setUser((prev) => ({...prev}, prev.profilePicture = response.profilePicture))
+    //setUser(userInfo)
 }
 
   const uploadHandler = async (file) => {
@@ -26,7 +29,9 @@ export const ImageUploader = ({widgetApi, viewedUser, user, setViewedUser}) => {
           "authorization": localStorage.getItem("Token")
         }
       })
+      console.log(response, 'response stored')
       if (response.status === 200 && response.data.new._id === user.id) {
+        console.log(response.data, user.id)
         setViewedUser(response.data.new)
         changeProfileImageHandler(response.data.new)
         await axios.delete(`https://api.uploadcare.com/files/${response.data.prev.profilePicture}/storage/`, {
