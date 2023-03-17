@@ -52,6 +52,21 @@ export const Display = () => {
   ref.current = posts;
 
   useEffect(() => {
+    console.log(user,' display usering')
+    const getProfileImage = async () => {
+      const url = `http://localhost:3001/user/profilePicture/${user.id}/`;
+      const response = await axios.get(url, {
+        headers: {
+          authorization: localStorage.getItem("Token"),
+        },
+      });
+      console.log(response, 'the stuff')
+      setUser(prevInfo => ({...prevInfo, profilePicture: response.data }))
+    }
+    getProfileImage()
+  },[])
+
+  useEffect(() => {
     const getUserNotifications = async () => {
       console.log("caller");
       const url = `http://localhost:3001/user/${user.id}/notifications`;
