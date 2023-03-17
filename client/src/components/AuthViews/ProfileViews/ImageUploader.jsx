@@ -9,13 +9,15 @@ export const ImageUploader = ({widgetApi, viewedUser, setViewedUser}) => {
   const {setUser, user} = useContext(accountContext)
 
   const changeProfileImageHandler = (response) => {
-    //console.log(response, 'uploaded resposne')
-    //const userInfo = JSON.parse(localStorage.getItem("User"))
-    //user.profilePicture = response.profilePicture
-    //localStorage.setItem("User", JSON.stringify(userInfo))
-    console.log(typeof user, 'user uploader')
-    setUser((prev) => ({...prev}, prev.profilePicture = response.profilePicture))
-    //setUser(userInfo)
+    setUser((prev) => (
+      {
+        ...prev,
+        profilePicture: response.profilePicture,
+        pewpew:'1'
+    }))
+    setTimeout(() => {
+      console.log(user)
+    }, 5000);
 }
 
   const uploadHandler = async (file) => {

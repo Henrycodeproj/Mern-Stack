@@ -310,7 +310,7 @@ export const Navbar = () => {
                   }}
                   className="navbar-avatar"
                   onClick={openProfile}
-                ></Avatar>
+                />
               </IconButton>
               <Menu
                 id="basic-menu"

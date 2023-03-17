@@ -212,3 +212,12 @@ router.get("/chat/search/", isAuthenticated, async (req, res) => {
     console.log(error)
   }
 })
+
+router.get("/profilePicture/:id", isAuthenticated, async (req, res) => {
+  try{
+    const response = await UserModel.findById({_id: req.params.id}, 'profilePicture')
+    res.send(response.profilePicture)
+  } catch(error) {
+    console.log(error)
+  }
+})

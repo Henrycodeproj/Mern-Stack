@@ -15,7 +15,6 @@ export const AppContext = ({children}) =>{
         socket.disconnect()
         localStorage.removeItem("userStatus")
         localStorage.removeItem("Token")
-        localStorage.removeItem("User")
         navigateTo("/")
         setOption(false)
     }
