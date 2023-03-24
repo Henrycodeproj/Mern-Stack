@@ -50,20 +50,26 @@ export const Display = () => {
 
   const ref = useRef();
   ref.current = posts;
+  
 
   useEffect(() => {
     console.log(user,' display usering')
-    const getProfileImage = async () => {
-      const url = `http://localhost:3001/user/profilePicture/${user.id}/`;
+    const getUserInformation = async () => {
+      const url = `http://localhost:3001/user/profileInfo/${user.id}/`;
       const response = await axios.get(url, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
       });
       console.log(response, 'the stuff')
-      setUser(prevInfo => ({...prevInfo, profilePicture: response.data }))
+      setUser(prevInfo => (
+        {
+          ...prevInfo,
+          profilePicture: response.data.profilePicture,
+          collegeAffiliation: response.data.collegeAffiliation
+        }))
     }
-    getProfileImage()
+    getUserInformation()
   },[])
 
   useEffect(() => {
@@ -381,7 +387,7 @@ export const Display = () => {
                             <motion.button
                               whileHover={{ scale: 1.1, rotate: -10 }}
                               whileTap={{
-                                scale: 1.5,
+                                scale: .7,
                               }}
                               style={{
                                 borderStyle: "none",
@@ -437,6 +443,7 @@ export const Display = () => {
         >
           <RightSideCol />
         </div>
+        
       </div>
     </div>
   );

@@ -238,6 +238,7 @@ export const Profile = ()=> {
                                       transition = {{duration: 1}}
                                       >
                                       <input
+                                      className="college_input"
                                       value={clicked ? affiliation : viewedUser.collegeAffiliation}
                                       onChange = {e => setAffiliation(e.target.value)}
                                       style = {{caretColor:"black"}}

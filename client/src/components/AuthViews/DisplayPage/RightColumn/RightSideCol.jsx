@@ -92,6 +92,11 @@ export const RightSideCol = () => {
 
   const open = Boolean(anchorEl);
 
+  //function grape() {
+  //  const element = document.getElementById("bro")
+  //  element.scrollIntoView({behavior:"smooth"})
+  //}
+
   return (
     <div className="right_column_wrapper">
       <EventCalendar />

@@ -38,7 +38,6 @@ router.post("/", async (req, res) => {
             user: {
               id: user.id,
               username: user.username,
-              collegeAffiliation: user.collegeAffiliation,
               lastActive: user.lastActiveDate,
             }
           },
