@@ -60,6 +60,13 @@
 .uploadcare--widget__text {
   display: none;
 }
+.college_input {
+    color:black;
+    background:none;
+    border-style: none;
+    font-size:30px;
+    caret-color: black;
+}
 @media(min-width:1675px) {
     .profile_page_description{
         width:65%;

@@ -13,12 +13,8 @@ export const ImageUploader = ({widgetApi, viewedUser, setViewedUser}) => {
       {
         ...prev,
         profilePicture: response.profilePicture,
-        pewpew:'1'
     }))
-    setTimeout(() => {
-      console.log(user)
-    }, 5000);
-}
+  }
 
   const uploadHandler = async (file) => {
     const results = await file
