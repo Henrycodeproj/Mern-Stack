@@ -101,7 +101,6 @@ router.get('/conversation/prev/:convoID/:currentNumber', isAuthenticated, async 
 
 router.get('/unread/:convoID/:userID', isAuthenticated, async (req, res) => {
     try {
-        console.log('test')
         const user = await UserModel.findOne({_id: req.params.userID})
         const results = await MessageModel.find({
             conversationId: req.params.convoID,
@@ -112,4 +111,20 @@ router.get('/unread/:convoID/:userID', isAuthenticated, async (req, res) => {
     } catch(error) {
         console.log(error)
     }
+})
+
+router.post('/unread/test/', isAuthenticated, async (req, res) => {
+    const {senderID, receiverID } = req.body
+   //console.log(senderID, receiverID._id, 'route hit')
+    //const g = new Date('2023-03-23T07:36:06.742Z')
+    const g = new Date()
+    const results = await MessageModel
+    .find({
+        recipientId: mongoose.Types.ObjectId(senderID),
+        senderId: mongoose.Types.ObjectId(receiverID),
+        createdAt: { $lt: g },
+        read: false
+    })
+    .sort({createdAt: -1})
+    console.log(results)
 })
