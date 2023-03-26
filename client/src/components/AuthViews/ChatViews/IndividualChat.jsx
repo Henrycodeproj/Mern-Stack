@@ -18,6 +18,8 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     const {user, socket, activeUsers } = useContext(accountContext)
 
+    console.log(recievingUserInfo, convoId, 'individual chats')
+
     const [chatAnchor, setChatAnchor] = useState(false);
     const [chatHistory, setChatHistory] = useState([])
     const [message, setMessage] = useState('')
@@ -43,7 +45,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     useEffect(()=> {
         socket.on(`${convoId}`, recievedMessageData => {
-            console.log(recievedMessageData)
             if (recievedMessageData.senderId !== user.id){
                 setNewMessages(true)
                 setChatHistory(newMessage => [...newMessage, recievedMessageData]);
@@ -63,23 +64,9 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                     "authorization":localStorage.getItem("Token")
                 }
             })
-            console.log(response.data)
             if (response.data.results >= 1) setNotification(response.data.results)
         }
-      getUnreadMessages()
-    },[])
-
-    useEffect(() => {
-        async function routeTest() {
-            const url = `http://localhost:3001/message/unread/test`
-            const data = {senderID:user.id, receiverID: recievingUserInfo._id}
-            const response = await axios.post(url, data, {
-                headers:{
-                    "authorization":localStorage.getItem("Token")
-                }
-            })
-        }
-        routeTest()
+        getUnreadMessages()
     },[])
 
     useEffect(()=>{
@@ -97,7 +84,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     //scrolls to bottom when you type own message
     useEffect(()=>{
-        console.log("caller")
         if (chatContainer.current) 
             chatContainer.current.scrollIntoView({behavior: "smooth"})
         setOwnMessage(false)
@@ -130,6 +116,19 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
             },
         })
         setChatHistory(response.data)
+
+        const updateMessageUrl = `http://localhost:3001/message/conversation/read/`
+        const data = {
+            convoId: convoId,
+            senderID: recievingUserInfo._id,
+            recievingUser: user.id
+        }
+        //sends additional request to change read status of chat
+        await axios.post(updateMessageUrl, data, {
+            headers:{
+                "authorization":localStorage.getItem("Token")
+            },
+        })
     };
     
     const handleChatClose = () => {
@@ -139,11 +138,9 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
     };
     
     const handleReplyEnter = (event) =>{
-        console.log(textAreaRef.current.value, 'text area')
         if (event.key === "Enter") {
             event.preventDefault()
             if (textAreaRef.current.value){
-                console.log(data)
                 sendChatMessage(data)
                 socket.emit("sendUserId", data)
                 setChatHistory(newMessage => [...newMessage, data])
@@ -189,7 +186,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                 whileHover={{rotate:45}}
                 whileTap = {{x:5, scale:1.1}}
                 >
-                <CallMadeIcon onClick = { handleClick } 
+                <CallMadeIcon onClick = {(e)=> handleClick(e) } 
                   sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}
                   className = "chat-icon"
                 />

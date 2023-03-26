@@ -53,7 +53,6 @@ export const Display = () => {
   
 
   useEffect(() => {
-    console.log(user,' display usering')
     const getUserInformation = async () => {
       const url = `http://localhost:3001/user/profileInfo/${user.id}/`;
       const response = await axios.get(url, {
@@ -61,7 +60,6 @@ export const Display = () => {
           authorization: localStorage.getItem("Token"),
         },
       });
-      console.log(response, 'the stuff')
       setUser(prevInfo => (
         {
           ...prevInfo,
@@ -74,14 +72,12 @@ export const Display = () => {
 
   useEffect(() => {
     const getUserNotifications = async () => {
-      console.log("caller");
       const url = `http://localhost:3001/user/${user.id}/notifications`;
       const response = await axios.get(url, {
         headers: {
           authorization: localStorage.getItem("Token"),
         },
       });
-      console.log(response.data.notifications, "tess");
       setUserNotification(response.data.notifications);
     };
     getUserNotifications();
@@ -95,7 +91,6 @@ export const Display = () => {
           authorization: localStorage.getItem("Token"),
         },
       });
-      console.log(response.data, "get new not section");
       if (response.data.new > 0) {
         setUnreadNotifications(response.data.new);
         setTime(response.data.lastActive);
@@ -226,7 +221,6 @@ export const Display = () => {
         authorization: localStorage.getItem("Token"),
       },
     });
-    console.log(response);
     if (response) {
       socket.emit("removeUser", {
         user: {
@@ -271,7 +265,6 @@ export const Display = () => {
             className="post_container_section"
             onScroll={(e) => handleScroll(e)}
           >
-            {console.log(posts)}
             <ul>
               {posts.length > 0 ? (
                 posts.map((post) => (
