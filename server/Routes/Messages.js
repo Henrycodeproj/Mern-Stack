@@ -105,26 +105,27 @@ router.get('/unread/:convoID/:userID', isAuthenticated, async (req, res) => {
         const results = await MessageModel.find({
             conversationId: req.params.convoID,
             recipientId: user._id, 
-            createdAt:{ $gt: user.lastActiveDate }
+            read: false
         })
+        console.log(results)
         if (results) res.send({results: results.length})
     } catch(error) {
         console.log(error)
     }
 })
 
-router.post('/unread/test/', isAuthenticated, async (req, res) => {
-    const {senderID, receiverID } = req.body
-   //console.log(senderID, receiverID._id, 'route hit')
-    //const g = new Date('2023-03-23T07:36:06.742Z')
-    const g = new Date()
-    const results = await MessageModel
-    .find({
-        recipientId: mongoose.Types.ObjectId(senderID),
-        senderId: mongoose.Types.ObjectId(receiverID),
-        createdAt: { $lt: g },
+router.post('/conversation/read/', isAuthenticated, async (req, res) => {
+    const todaysDate = new Date()
+    const {recievingUser, senderID} = req.body
+    console.log(recievingUser, senderID, 'ssssseseseses')
+    const filter = {
+        recipientId: mongoose.Types.ObjectId(recievingUser),
+        senderId: mongoose.Types.ObjectId(senderID),
+        createdAt: { $lt: todaysDate },
         read: false
-    })
-    .sort({createdAt: -1})
-    console.log(results)
+    }
+    const update = { read: true }
+
+    const rese = await MessageModel.updateMany(filter, update)
+    console.log(rese, 'reset')
 })

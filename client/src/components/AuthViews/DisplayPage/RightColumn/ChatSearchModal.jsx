@@ -13,7 +13,6 @@ import { SendMessage } from "../../../ReusablesComponents/SendMessage";
 export const ChatSearchModal = ({ totalUsers }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState("");
-  console.log(totalUsers, 'total user')
 
   const navigateTo = useNavigate();
 
