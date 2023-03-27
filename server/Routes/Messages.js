@@ -15,8 +15,8 @@ router.get('/recent/all/:id', isAuthenticated, async (req, res) => {
             {
                 $match:{
                     $or:[
-                        {senderId:mongoose.Types.ObjectId(currentUserId)},
-                        {recipientId:mongoose.Types.ObjectId(currentUserId)}
+                        {senderId: mongoose.Types.ObjectId(currentUserId)},
+                        {recipientId: mongoose.Types.ObjectId(currentUserId)}
                     ] 
                 }
             },
@@ -67,13 +67,14 @@ router.get('/recent/all/:id', isAuthenticated, async (req, res) => {
 })
 
 router.post('/send/', isAuthenticated, async (req, res) =>{
-    const {chatId, message, senderId, recipientId} = req.body
+    const {chatId, message, senderId, recipientId, read} = req.body
 
     const newMessage = new MessageModel({
         conversationId:chatId,
         senderId:senderId,
         message:message,
-        recipientId:recipientId
+        recipientId:recipientId,
+        read: read ? read : false
     })
 
     const savedMessage = await newMessage.save()
@@ -100,6 +101,7 @@ router.get('/conversation/prev/:convoID/:currentNumber', isAuthenticated, async 
 })
 
 router.get('/unread/:convoID/:userID', isAuthenticated, async (req, res) => {
+    console.log(req.params.convoID)
     try {
         const user = await UserModel.findOne({_id: req.params.userID})
         const results = await MessageModel.find({
@@ -107,7 +109,6 @@ router.get('/unread/:convoID/:userID', isAuthenticated, async (req, res) => {
             recipientId: user._id, 
             read: false
         })
-        console.log(results)
         if (results) res.send({results: results.length})
     } catch(error) {
         console.log(error)
@@ -127,5 +128,4 @@ router.post('/conversation/read/', isAuthenticated, async (req, res) => {
     const update = { read: true }
 
     const rese = await MessageModel.updateMany(filter, update)
-    console.log(rese, 'reset')
 })
