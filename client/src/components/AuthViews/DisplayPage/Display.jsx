@@ -51,7 +51,6 @@ export const Display = () => {
   const ref = useRef();
   ref.current = posts;
   
-
   useEffect(() => {
     const getUserInformation = async () => {
       const url = `http://localhost:3001/user/profileInfo/${user.id}/`;

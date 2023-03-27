@@ -23,7 +23,6 @@ router.get("/recent/conversation/:id", isAuthenticated, async (req, res) => {
     const results = await ConversationModel.find({
       participants: req.params.id,
     });
-    console.log(results);
   } catch (error) {
     console.log(err);
   }
@@ -57,7 +56,6 @@ router.patch("/update/socials/:userId", isAuthenticated, async (req, res) => {
     const user = await UserModel.findOne({ _id: req.params.userId });
     if (user) {
       for (const socials in socialMediaLinks) {
-        console.log(socialMediaLinks[socials]);
         if (socialMediaLinks[socials])
           try {
             const validLink = new URL(socialMediaLinks[socials]);
@@ -89,7 +87,6 @@ router.patch(
       if (user.socialMedia.has(socialLink))
         user.socialMedia.set(socialLink, "");
       user.save();
-      console.log(user);
       res.send(user);
     } catch (error) {
       console.log(error);
@@ -206,7 +203,6 @@ router.get("/chat/search/", isAuthenticated, async (req, res) => {
       },
        'username email profilePicture'
     )
-    console.log(response)
     res.send(response)
   } catch (error) {
     console.log(error)

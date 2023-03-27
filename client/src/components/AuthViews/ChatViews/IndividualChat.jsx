@@ -18,8 +18,6 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
 
     const {user, socket, activeUsers } = useContext(accountContext)
 
-    console.log(recievingUserInfo, convoId, 'individual chats')
-
     const [chatAnchor, setChatAnchor] = useState(false);
     const [chatHistory, setChatHistory] = useState([])
     const [message, setMessage] = useState('')
@@ -40,7 +38,8 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
         chatId:convoId,
         message: textAreaRef.current ? textAreaRef.current.value : '',
         senderId: user.id,
-        recipientId: recievingUserInfo._id
+        recipientId: recievingUserInfo._id,
+        read: recievingUserInfo._id in activeUsers ? true : false
     }
 
     useEffect(()=> {
@@ -64,6 +63,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                     "authorization":localStorage.getItem("Token")
                 }
             })
+            console.log(response, 'individ respons')
             if (response.data.results >= 1) setNotification(response.data.results)
         }
         getUnreadMessages()

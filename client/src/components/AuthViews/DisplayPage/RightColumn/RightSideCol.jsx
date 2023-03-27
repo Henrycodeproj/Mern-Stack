@@ -40,15 +40,18 @@ export const RightSideCol = () => {
   
   //gets all messages
   useEffect(() => {
-    const Url = `http://localhost:3001/message/recent/all/${user.id}`;
-    axios
-      .get(Url, {
-        headers: {
-          authorization: localStorage.getItem("Token"),
-        },
-      })
-      .then((res) => setRecentMessages(res.data.reverse()))
-      .catch((err) => console.log(err));
+    async function getMessages() {
+      const Url = `http://localhost:3001/message/recent/all/${user.id}`;
+      const res = await axios
+        .get(Url, {
+          headers: {
+            authorization: localStorage.getItem("Token"),
+          },
+        })
+      console.log(res.data, 'resssyyyy')
+      if (res.data) setRecentMessages(res.data.reverse())
+    }
+    getMessages()
   }, []);
   
   useEffect(() => {
@@ -190,6 +193,7 @@ export const RightSideCol = () => {
           </h2>
         </div>
         <div className="recent_message_avatars">
+          {console.log(recentMessages, 'messages in the')}
           {recentMessages &&
             recentMessages.map((queryInfo, index) => (
               <div
