@@ -23,6 +23,7 @@ export const RightSideCol = () => {
   const [popularPosts, setPopularPosts] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [totalUsers, setTotalUsers] = useState([]);
+  const [messageLoad, setMessageLoad] = useState(true)
 
   useEffect(() => {
     const url = "http://localhost:3001/posts/popular";
@@ -50,8 +51,22 @@ export const RightSideCol = () => {
         })
       console.log(res.data, 'resssyyyy')
       if (res.data) setRecentMessages(res.data.reverse())
+      setMessageLoad(false)
     }
     getMessages()
+  }, []);
+
+  useEffect(() => {
+    async function update() {
+      const Url = `http://localhost:3001/message//updating/`;
+      const res = await axios
+        .get(Url, {
+          headers: {
+            authorization: localStorage.getItem("Token"),
+          },
+        })
+    }
+    update()
   }, []);
   
   useEffect(() => {
@@ -194,7 +209,7 @@ export const RightSideCol = () => {
         </div>
         <div className="recent_message_avatars">
           {console.log(recentMessages, 'messages in the')}
-          {recentMessages &&
+          {recentMessages && !messageLoad &&
             recentMessages.map((queryInfo, index) => (
               <div
                 style={{

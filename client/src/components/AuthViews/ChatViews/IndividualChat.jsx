@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import TextareaAutosize from 'react-textarea-autosize';
 
 export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
+    console.log(recievingUserInfo)
 
     const {user, socket, activeUsers } = useContext(accountContext)
 
