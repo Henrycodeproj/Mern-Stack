@@ -43,14 +43,14 @@ export const RightSideCol = () => {
   useEffect(() => {
     async function getMessages() {
       const Url = `http://localhost:3001/message/recent/all/${user.id}`;
-      const res = await axios
+      const response = await axios
         .get(Url, {
           headers: {
             authorization: localStorage.getItem("Token"),
           },
         })
-      console.log(res.data, 'resssyyyy')
-      if (res.data) setRecentMessages(res.data.reverse())
+      //console.log(res.data, 'resssyyyy')
+      if (response.data) setRecentMessages(response.data.reverse())
       setMessageLoad(false)
     }
     getMessages()
