@@ -187,7 +187,7 @@ export const IndividualChats = ({recievingUserInfo, convoId, isNewMessage}) => {
                 whileHover={{rotate:45}}
                 whileTap = {{x:5, scale:1.1}}
                 >
-                <CallMadeIcon onClick = {(e)=> handleClick(e) } 
+                <CallMadeIcon onClick = { handleClick } 
                   sx = {{ color:"gray", cursor:"pointer", fontSize:"1.7rem" }}
                   className = "chat-icon"
                 />

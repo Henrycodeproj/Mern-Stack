@@ -127,5 +127,5 @@ router.post('/conversation/read/', isAuthenticated, async (req, res) => {
     }
     const update = { read: true }
 
-    const rese = await MessageModel.updateMany(filter, update)
+    await MessageModel.updateMany(filter, update)
 })

@@ -42,6 +42,7 @@ export const SendMessage = ({ userInformation }) => {
   };
 
   const saveNewMessage = (data) => {
+    console.log(data)
     const newMessage = {
       _id: data.chatId,
       recieverInfo: [
