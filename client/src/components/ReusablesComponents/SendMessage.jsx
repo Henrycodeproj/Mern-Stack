@@ -42,19 +42,21 @@ export const SendMessage = ({ userInformation }) => {
   };
 
   const saveNewMessage = (data) => {
-    console.log(data)
+    console.log(data, 'da new messages section')
     const newMessage = {
       _id: data.chatId,
       recieverInfo: [
         {
           _id: data.recipientId,
           username: data.recipientUsername,
+          profilePicture: data.recipientProfilePicture
         },
       ],
       senderInfo: [
         {
           _id: data.senderId,
           username: data.senderUsername,
+          profilePicture: data.senderProfilePicture
         },
       ],
     };
@@ -73,8 +75,10 @@ export const SendMessage = ({ userInformation }) => {
       message: message,
       senderId: user.id,
       senderUsername: user.username,
+      senderProfilePicture: user.profilePicture,
       recipientId: userInformation._id,
       recipientUsername: userInformation.username,
+      recipientProfilePicture: userInformation.profilePicture
     };
     const res = await axios.post(Url, data, {
       headers: {

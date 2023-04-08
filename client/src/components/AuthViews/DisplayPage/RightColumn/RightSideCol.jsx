@@ -242,8 +242,8 @@ export const RightSideCol = () => {
                             ? `https://ucarecdn.com/${queryInfo.senderInfo[0].profilePicture}/`
                             : null
                           : queryInfo.recieverInfo[0].profilePicture
-                          ? `https://ucarecdn.com/${queryInfo.recieverInfo[0].profilePicture}/`
-                          : null
+                            ? `https://ucarecdn.com/${queryInfo.recieverInfo[0].profilePicture}/`
+                            : null
                       }
                     />
                     {queryInfo.recieverInfo[0]._id === user.id
