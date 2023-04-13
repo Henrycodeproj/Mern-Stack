@@ -31,6 +31,11 @@ import * as React from 'react';
 import SidebarOptions from "./SidebarOptions";
 import AddSocialDialog from "./AddSocialDialog"
 
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 //import { Widget } from "@uploadcare/react-widget";
 import { ImageUploader } from "./ImageUploader"
@@ -90,9 +95,9 @@ export const Profile = ()=> {
         setViewedUser(response.data)
         setClicked(false)
         setAffiliation('')
-        const localUserInfo = JSON.parse(localStorage.getItem("User"))
-        localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
-        localStorage.setItem("User", JSON.stringify(localUserInfo))
+        //const localUserInfo = JSON.parse(localStorage.getItem("User"))
+        //localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
+        //localStorage.setItem("User", JSON.stringify(localUserInfo))
         }
       }
     }
@@ -110,9 +115,9 @@ export const Profile = ()=> {
           setViewedUser(response.data)
           setClicked(false)
           setAffiliation('')
-          const localUserInfo = JSON.parse(localStorage.getItem("User"))
-          localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
-          localStorage.setItem("User", JSON.stringify(localUserInfo))
+          //const localUserInfo = JSON.parse(localStorage.getItem("User"))
+          //localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
+          //localStorage.setItem("User", JSON.stringify(localUserInfo))
         }
       }
     }
@@ -183,7 +188,13 @@ export const Profile = ()=> {
     const profileImagehandler = () => {
       const dialog = widgetApi.current.openDialog();
       dialog.switchTab("url");
-    }      
+    }
+    
+    const [age, setAge] = useState('');
+
+    const handleChange = (event) => {
+      setAge(event.target.value);
+    };
 
     return(
         <>
@@ -246,6 +257,31 @@ export const Profile = ()=> {
                                       onKeyDown={e => submitAffliliationHandler(e)}
                                       />
                                       </motion.div>
+
+                                      <Box sx={{ minWidth: 120 }}>
+                                      <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label" sx = {{background:"white"}}>College Affiliation</InputLabel>
+                                        <Select
+                                          labelId="demo-simple-select-label"
+                                          id="demo-simple-select"
+                                          value={age}
+                                          label="Age"
+                                          onChange={handleChange}
+                                        >
+                                          <MenuItem value={'Stevenson'}>Stevenson</MenuItem>
+                                          <MenuItem value={'Cowell'}>Cowell</MenuItem>
+                                          <MenuItem value={'College 9'}>College 9</MenuItem>
+                                          <MenuItem value={'College 10'}>College 10</MenuItem>
+                                          <MenuItem value={'Rachel Carson'}>Rachel Carson</MenuItem>
+                                          <MenuItem value={'Kresge'}>Kresge</MenuItem>
+                                          <MenuItem value={'Porter'}>Porter</MenuItem>
+                                          <MenuItem value={'Oakes'}>Oakes</MenuItem>
+                                          <MenuItem value={'Merill'}>Merill</MenuItem>
+                                          <MenuItem value={'Crown'}>Crown</MenuItem>
+                                        </Select>
+                                      </FormControl>
+                                      </Box>
+
                                       <CheckCircleIcon sx = {{color:"green", cursor:"pointer"}} 
                                       onClick = {e  => submitButtonAffliliationHandler(e)}/>
                                       <CancelIcon sx = {{color:"gray", cursor:"pointer"}} onClick = {()=> setClicked(prevState => !prevState)}/>
