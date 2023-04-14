@@ -241,32 +241,16 @@ export const Profile = ()=> {
                                   <div style = {{display:"flex", flexDirection:"column"}}>
                                     <h4 style = {{marginBottom:"5%"}}>You can press enter on the keyboard or hit the check to change or edit your college.
                                     </h4>
-                                    <div style = {{display:"flex"}}>
-                                      <motion.div
-                                      initial={{ opacity: 0}}
-                                      animate={{ opacity: 1}}
-                                      exit={{ opacity: 0 }}
-                                      transition = {{duration: 1}}
-                                      >
-                                      <input
-                                      className="college_input"
-                                      value={clicked ? affiliation : viewedUser.collegeAffiliation}
-                                      onChange = {e => setAffiliation(e.target.value)}
-                                      style = {{caretColor:"black"}}
-                                      autoFocus 
-                                      onKeyDown={e => submitAffliliationHandler(e)}
-                                      />
-                                      </motion.div>
-
-                                      <Box sx={{ minWidth: 120 }}>
+                                    <div style = {{display:"flex", alignItems:"center"}}>
+                                      <Box sx={{ minWidth: 120}}>
                                       <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label" sx = {{background:"white"}}>College Affiliation</InputLabel>
                                         <Select
                                           labelId="demo-simple-select-label"
                                           id="demo-simple-select"
-                                          value={age}
+                                          value={affiliation}
                                           label="Age"
-                                          onChange={handleChange}
+                                          onChange={e => setAffiliation(e.target.value)}
                                         >
                                           <MenuItem value={'Stevenson'}>Stevenson</MenuItem>
                                           <MenuItem value={'Cowell'}>Cowell</MenuItem>
