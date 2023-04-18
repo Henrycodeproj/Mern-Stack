@@ -18,7 +18,8 @@
 -Send Grid\
 -Jsonwebtokens\
 -Socket Io\
--Emoji Picker
+-Emoji Picker\
+-React Admin
 
 **Getting Started**\
 ```npm run start for each separate directory with cd server/cd client```
