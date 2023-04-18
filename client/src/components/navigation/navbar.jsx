@@ -28,6 +28,9 @@ import List from '@mui/material/List';
 
 
 export const Navbar = () => {
+
+  // last done 
+  
   const navigateTo = useNavigate();
   const ref = useRef();
   const { 
@@ -181,6 +184,7 @@ export const Navbar = () => {
     return (
       <nav>
         <div className="navbar-wrapper">
+          <motion.div whileHover={{ scale: 1.1 }}>
           <img
             className="unplug_logo"
             src={logo}
@@ -189,6 +193,7 @@ export const Navbar = () => {
               !userStatus ? navigateTo("/") : navigateTo("/display")
             }
           />
+          </motion.div>
           <div className="profile_section">
             {searchClicked ? (
               <TravelExploreIcon
@@ -370,14 +375,14 @@ export const Navbar = () => {
         <h1 style={{color:"white", fontSize:"2rem"}}>Unplug</h1>
         </div>
       ) : (
-        <div>
+        <motion.div whileHover={{ scale: 1.1 }}>
           <img
             className="unplug_logo"
             src={logo}
             alt="logo"
             onClick={() => navigateTo("/display")}
           />
-        </div>
+        </motion.div>
       )}
       <div className="profile_section">
         <div>

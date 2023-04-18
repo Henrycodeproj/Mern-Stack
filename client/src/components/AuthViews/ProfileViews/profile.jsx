@@ -81,26 +81,6 @@ export const Profile = ()=> {
       setViewedUser(response.data)
       setState(prev => prev['bottom'] = !prev['bottom'])
     }
-
-    const submitAffliliationHandler = async (event) => {
-      if (event.key === "Enter" && affiliation) {
-        const url = `http://localhost:3001/user/update/college/${user.id}`
-        const data = { affiliation: affiliation }
-        const response = await axios.patch(url, data, {
-          headers:{
-            "authorization": localStorage.getItem("Token")
-          }
-        })
-      if (response) {
-        setViewedUser(response.data)
-        setClicked(false)
-        setAffiliation('')
-        //const localUserInfo = JSON.parse(localStorage.getItem("User"))
-        //localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
-        //localStorage.setItem("User", JSON.stringify(localUserInfo))
-        }
-      }
-    }
     
     const submitButtonAffliliationHandler = async (e) => {
         if (affiliation) {
@@ -115,9 +95,6 @@ export const Profile = ()=> {
           setViewedUser(response.data)
           setClicked(false)
           setAffiliation('')
-          //const localUserInfo = JSON.parse(localStorage.getItem("User"))
-          //localUserInfo["collegeAffiliation"] = response.data.collegeAffiliation
-          //localStorage.setItem("User", JSON.stringify(localUserInfo))
         }
       }
     }
@@ -242,6 +219,7 @@ export const Profile = ()=> {
                                     <h4 style = {{marginBottom:"5%"}}>You can press enter on the keyboard or hit the check to change or edit your college.
                                     </h4>
                                     <div style = {{display:"flex", alignItems:"center"}}>
+                                      
                                       <Box sx={{ minWidth: 120}}>
                                       <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label" sx = {{background:"white"}}>College Affiliation</InputLabel>
@@ -249,7 +227,7 @@ export const Profile = ()=> {
                                           labelId="demo-simple-select-label"
                                           id="demo-simple-select"
                                           value={affiliation}
-                                          label="Age"
+                                          label="College Affiliation"
                                           onChange={e => setAffiliation(e.target.value)}
                                         >
                                           <MenuItem value={'Stevenson'}>Stevenson</MenuItem>
