@@ -2,6 +2,7 @@ import {useState, useRef, useEffect} from 'react'
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 //test 
+//adding other comment
 
 const Testarea = () => {
     const minRows = 5
