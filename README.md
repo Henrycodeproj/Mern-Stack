@@ -1,7 +1,5 @@
 ﻿# Unplug 
  **Demo:** https://unplugme.netlify.app 
-
- **THE BACKEND IS NO LONGER WORKING FOR THE DEMO DUE TO HEROKUS FREE TIER BEING ELIMNATED**
  
  **MERN STACK**
  
